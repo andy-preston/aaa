@@ -10,11 +10,11 @@ const types = {
         "register (R0 - R31)"
     ],
     "immediateRegister": [
-        (operand: number) => operand >=16 && operand <= 31,
+        (operand: number) => operand >= 16 && operand <= 31,
         "immediate register (R16 - R31)"
     ],
     "multiplyRegister": [
-        (operand: number) => operand >=16 && operand <= 23,
+        (operand: number) => operand >= 16 && operand <= 23,
         "multiply register (R16 - R23)"
     ],
     "registerPair": [
@@ -43,15 +43,15 @@ const types = {
         "bit index (0 - 7)"
     ],
     "byte": [
-        (operand: number) => operand >= -128 && operand <= 0xFF,
+        (operand: number) => operand >= -128 && operand <= 0xff,
         "byte (-128 - 127) or (0 - 0xFF)"
     ],
     "nybble": [
-        (operand: number) => operand >= 0 && operand <= 0x0F,
+        (operand: number) => operand >= 0 && operand <= 0x0f,
         "nybble (0 - 0x0F)"
     ],
     "address": [
-        (operand: number) => operand >= 0 && operand <= 0x3FFFFF,
+        (operand: number) => operand >= 0 && operand <= 0x3fffff,
         "branch to 22 bit address (0 - 0x3FFFFF) (4 Meg)"
     ],
     "relativeAddress": [
@@ -59,7 +59,7 @@ const types = {
         "branch to 12 bit address (0 - 0x1000) (4 K)"
     ],
     "ramAddress": [
-        (operand: number) => operand >= 0 || operand <= 0xFFFFFFFF,
+        (operand: number) => operand >= 0 || operand <= 0xffffffff,
         "16 bit RAM address (0 - 0xFFFFFFFF) (64 K)"
     ]
 } satisfies Record<string, Operand>;
@@ -81,7 +81,7 @@ export const check = (
     }
     const positionName = position == 0 ? "first" : "second";
     const displayValue = `${value} / 0x${value.toString(16)}`;
-    const expectation = `expecting ${theType[1]} not`
+    const expectation = `expecting ${theType[1]} not`;
     throw new RangeError(
         `${positionName} operand out of range - ${expectation} ${displayValue}`
     );

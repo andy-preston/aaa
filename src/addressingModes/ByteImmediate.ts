@@ -17,13 +17,14 @@ const mapping: Map<string, string> = new Map([
 const immediate = (mnemonic: string, operand1: number) => {
     switch (mnemonic) {
         // Clear bits in register is an AND with the inverse of the operand
-        case "CBR": return 0xff - operand1;
-        // Set all bits is basically an LDI with FF
-        case "SER": return 0xff;
-        // All the other instructions have "sensible" operands
-        default: return operand1;
+        case "CBR": // Set all bits is basically an LDI with FF
+            return 0xff - operand1;
+        case "SER":
+            return 0xff;
+        default: // All the other instructions have "sensible" operands
+            return operand1;
     }
-}
+};
 
 export const encode = (
     instruction: Instruction,

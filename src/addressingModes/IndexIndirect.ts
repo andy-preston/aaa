@@ -68,7 +68,7 @@ export const encode = (
         instruction.mnemonic
     )!;
     // In the official documentation, the store operations have
-    // "XXXX XXXr rrrr XXXX" as their template rather than "d dddd".
+    // "#### ###r rrrr ####" as their template rather than "d dddd".
     return template(
         `100${firstOperationBit}_00${secondOperationBit}d_dddd_${suffix}`,
         new Map([["d", instruction.operands[0]!]])

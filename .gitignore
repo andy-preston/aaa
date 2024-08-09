@@ -1,3 +1,6 @@
 _deno
 deno.lock
 gavrasm
+test.asm
+test.hex
+test.lst

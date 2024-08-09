@@ -4,7 +4,7 @@ import { twosComplement } from "./binaryMapping.ts";
 Deno.test("Some valid values", () => {
     assertEquals(twosComplement(16, 8, true), 0b00010000);
     assertEquals(twosComplement(-8, 8, true), 0b11111000);
-    assertEquals(twosComplement(1024, 16, true),  0b0000010000000000);
+    assertEquals(twosComplement(1024, 16, true), 0b0000010000000000);
     assertEquals(twosComplement(-1024, 16, true), 0b1111110000000000);
 });
 

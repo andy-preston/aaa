@@ -1,7 +1,7 @@
 type ContextFunction = (n: number) => number;
 
 interface Context {
-    [name: string]: number|string|ContextFunction;
+    [name: string]: number | string | ContextFunction;
 }
 
 export const newContext = (): Context => {
