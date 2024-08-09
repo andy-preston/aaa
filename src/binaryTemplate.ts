@@ -26,8 +26,8 @@ export const template = (
         if (bin[0]) {
             throw `Operand out of range: ${key} = ${operand} in ${templateString}`;
         }
-    }
-    const result = eval('0b' + templateDigits.reverse().join('')) as number;
+    });
+    const result = eval(`0b${templateDigits.reverse().join("")}`) as number;
     return result > 65535
         ? [
               (result >> 16) & 0xff,
