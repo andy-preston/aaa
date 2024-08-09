@@ -2,17 +2,17 @@ import { type GeneratedCode, template } from "../binaryTemplate.ts";
 import type { Instruction } from "../instruction.ts";
 import { check, checkCount, registerFrom16 } from "../operands.ts";
 
-const prefixes: Record<string, string> = {
-    "CPI":  "0011",
-    "SBCI": "0100",
-    "SUBI": "0101",
-    "ORI":  "0110", // SBR and
-    "SBR":  "0110", // ORI are the same instruction
-    "ANDI": "0111", // CBR and
-    "CBR":  "0111", // ANDI are ALMOST the same instruction
-    "LDI":  "1110", // SER and
-    "SER":  "1110"  // LDI are ALMOST the same instruction
-};
+const mapping: Map<string, string> = new Map([
+    ["CPI", "0011"],
+    ["SBCI", "0100"],
+    ["SUBI", "0101"],
+    ["ORI", "0110"], // SBR and
+    ["SBR", "0110"], // ORI are the same instruction
+    ["ANDI", "0111"], // CBR and
+    ["CBR", "0111"], //  ANDI are ALMOST the same instruction
+    ["LDI", "1110"], // SER and
+    ["SER", "1110"] //  LDI are ALMOST the same instruction
+]);
 
 const immediate = (mnemonic: string, operand1: number) => {
     switch (mnemonic) {
@@ -29,7 +29,7 @@ export const encode = (
     instruction: Instruction,
     _programCounter: number
 ): GeneratedCode | undefined => {
-    if (!(instruction.mnemonic in prefixes)) {
+    if (!mapping.has(instruction.mnemonic)) {
         return undefined;
     }
     checkCount(
@@ -42,7 +42,7 @@ export const encode = (
     if (instruction.mnemonic != "SER") {
         check("byte", 1, instruction.operands[1]!);
     }
-    const prefix = prefixes[instruction.mnemonic]!;
+    const prefix = mapping.get(instruction.mnemonic)!;
     return template(`${prefix}_KKKK_dddd_KKKK`, {
         "d": registerFrom16(instruction.operands[0]!),
         "K": immediate(instruction.mnemonic, instruction.operands[1]!)

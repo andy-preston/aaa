@@ -15,20 +15,20 @@ import {
 
 const bigMode = true;
 
-const mapping: Record<string, [string, OperandIndex, OperandIndex]> = {
-    "LDS": ["0", 0, 1],
-    "STS": ["1", 1, 0]
-};
+const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
+    ["LDS", ["0", 0, 1]],
+    ["STS", ["1", 1, 0]]
+]);
 
 export const encode = (
     instruction: Instruction,
     _programCounter: number
 ): GeneratedCode | undefined => {
-    if (!(instruction.mnemonic in mapping)) {
+    if (!mapping.has(instruction.mnemonic)) {
         return undefined;
     }
     const [operationBit, registerIndex, addressIndex] =
-        mapping[instruction.mnemonic]!;
+        mapping.get(instruction.mnemonic)!;
     const registerType: TypeName = bigMode ? "register" : "immediateRegister";
     checkCount(
         instruction.operands,

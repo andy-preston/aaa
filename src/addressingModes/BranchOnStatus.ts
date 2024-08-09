@@ -4,37 +4,37 @@ import { template } from "../binaryTemplate.ts";
 import type { Instruction } from "../instruction.ts";
 import { check, checkCount } from "../operands.ts";
 
-const mappings: Record<string, [string, number?]> = {
-    "BRBC": ["1", undefined],
-    "BRSH": ["1", 0],
-    "BRCC": ["1", 0],
-    "BRNE": ["1", 1],
-    "BRPL": ["1", 2],
-    "BRVC": ["1", 3],
-    "BRGE": ["1", 4],
-    "BRHC": ["1", 5],
-    "BRTC": ["1", 6],
-    "BRID": ["1", 7],
-    "BRBS": ["0", undefined],
-    "BRCS": ["0", 0],
-    "BRLO": ["0", 0],
-    "BREQ": ["0", 1],
-    "BRMI": ["0", 2],
-    "BRVS": ["0", 3],
-    "BRLT": ["0", 4],
-    "BRHS": ["0", 5],
-    "BRTS": ["0", 6],
-    "BRIE": ["0", 7]
-};
+const mapping: Map<string, [string, number?]> = new Map([
+    ["BRBC", ["1", undefined]],
+    ["BRSH", ["1", 0]],
+    ["BRCC", ["1", 0]],
+    ["BRNE", ["1", 1]],
+    ["BRPL", ["1", 2]],
+    ["BRVC", ["1", 3]],
+    ["BRGE", ["1", 4]],
+    ["BRHC", ["1", 5]],
+    ["BRTC", ["1", 6]],
+    ["BRID", ["1", 7]],
+    ["BRBS", ["0", undefined]],
+    ["BRCS", ["0", 0]],
+    ["BRLO", ["0", 0]],
+    ["BREQ", ["0", 1]],
+    ["BRMI", ["0", 2]],
+    ["BRVS", ["0", 3]],
+    ["BRLT", ["0", 4]],
+    ["BRHS", ["0", 5]],
+    ["BRTS", ["0", 6]],
+    ["BRIE", ["0", 7]]
+]);
 
 export const encode = (
     instruction: Instruction,
     programCounter: number
 ): GeneratedCode | undefined => {
-    if (!(instruction.mnemonic in mappings)) {
+    if (!mapping.has(instruction.mnemonic)) {
         return undefined;
     }
-    const [operationBit, impliedOperand] = mappings[instruction.mnemonic]!;
+    const [operationBit, impliedOperand] = mapping.get(instruction.mnemonic)!;
     checkCount(
         instruction.operands,
         impliedOperand == undefined
