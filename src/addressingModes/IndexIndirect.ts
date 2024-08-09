@@ -71,6 +71,6 @@ export const encode = (
     // "XXXX XXXr rrrr XXXX" as their template rather than "d dddd".
     return template(
         `100${firstOperationBit}_00${secondOperationBit}d_dddd_${suffix}`,
-        { "d": instruction.operands[0] }
+        new Map([["d", instruction.operands[0]!]])
     );
 };

@@ -19,6 +19,6 @@ export const encode = (
     const operationBit = mapping.get(instruction.mnemonic)!;
     return template(
         `1001_010k_kkkk_11${operationBit}k_kkkk_kkkk_kkkk_kkkk`,
-        { "k": instruction.operands[0]! }
+        new Map ([["k", instruction.operands[0]!]])
     );
 };

@@ -1,36 +1,25 @@
 export type GeneratedCode = [number, number] | [number, number, number, number];
 
-interface AllTemplateOperands {
-    "A": number;
-    "b": number;
-    "d": number;
-    "k": number;
-    "K": number;
+type TemplateOperandKey = "A" | "b" | "d" | "k" | "K" |
     // In some of the places we've used "d", the official documentation
     // uses "r" but, for code simplicity, we're using "d" across the board
     // EXCEPT where there's a two-register operation, then one is "d" and the
     // other is "r".
-    "r": number;
-    "s": number;
-    "q": number;
-}
-
-type TemplateOperands = Partial<AllTemplateOperands>;
-
-type TemplateOperandKey = keyof AllTemplateOperands;
+    "r" | "s" | "q";
 
 export const template = (
     templateString: string,
-    operands: TemplateOperands
+    operands: Map<TemplateOperandKey, number>
 ): GeneratedCode => {
-    const templateDigits = templateString.split('').reverse();
-    for (const key in operands) {
-        const operand = operands[key as TemplateOperandKey]!;
-        const bin = operand.toString(2).split('').reverse().concat(
-            new Array(32).fill(0)
-        );
-        for (let digit = 0; digit < templateDigits.length; digit++){
-            if (templateDigits[digit] == key){
+    const templateDigits = templateString.split("").reverse();
+    operands.forEach((operand: number, key: TemplateOperandKey) => {
+        const bin = operand
+            .toString(2)
+            .split("")
+            .reverse()
+            .concat(new Array(32).fill(0));
+        for (let digit = 0; digit < templateDigits.length; digit++) {
+            if (templateDigits[digit] == key) {
                 templateDigits[digit] = bin.shift()!;
             }
         }

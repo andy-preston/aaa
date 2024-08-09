@@ -43,8 +43,11 @@ export const encode = (
         check("byte", 1, instruction.operands[1]!);
     }
     const prefix = mapping.get(instruction.mnemonic)!;
-    return template(`${prefix}_KKKK_dddd_KKKK`, {
-        "d": registerFrom16(instruction.operands[0]!),
-        "K": immediate(instruction.mnemonic, instruction.operands[1]!)
-    });
+    return template(
+        `${prefix}_KKKK_dddd_KKKK`,
+        new Map([
+            ["d", registerFrom16(instruction.operands[0]!)],
+            ["K", immediate(instruction.mnemonic, instruction.operands[1]!)]
+        ])
+    );
 };

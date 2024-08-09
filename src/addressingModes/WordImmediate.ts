@@ -22,8 +22,8 @@ export const encode = (
     check("registerPair", 0, instruction.operands[0]!);
     check("sixBits", 1, instruction.operands[1]!);
     const operationBit = mapping.get(instruction.mnemonic)!;
-    return template(`1001_011${operationBit}_KKdd_KKKK`, {
-        "d": registerPair(instruction.operands[0]!, 24),
-        "K": instruction.operands[1]
-    });
+    return template(`1001_011${operationBit}_KKdd_KKKK`, new Map([
+        ["d", registerPair(instruction.operands[0]!, 24)],
+        ["K", instruction.operands[1]!]
+    ]));
 };

@@ -36,12 +36,12 @@ export const encode = (
     } else {
         check("register", 0, instruction.operands[0]!);
     }
-    const register = instruction.operands[usesZ ? 1 : 0];
+    const register = instruction.operands[usesZ ? 1 : 0]!;
     const [operationBits, suffix] = mapping.get(instruction.mnemonic)!;
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
-    return template(`1001_0${operationBits}d_dddd_${suffix}`, {
-        "d": register
-    });
+    return template(`1001_0${operationBits}d_dddd_${suffix}`, new Map([
+        ["d", register]
+    ]));
 };

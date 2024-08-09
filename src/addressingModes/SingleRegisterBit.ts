@@ -23,8 +23,8 @@ export const encode = (
     // In the official documentation, some of these have
     // "#### ###r rrrr #bbb" as their template rather than "d dddd".
     // e.g. `BLD Rd, b` has "d dddd" but `SBRS Rd, b` has "r rrrr".
-    return template(`1111_1${operationBits}d_dddd_0bbb`, {
-        "d": instruction.operands[0]!,
-        "b": instruction.operands[1]!
-    });
+    return template(`1111_1${operationBits}d_dddd_0bbb`, new Map([
+        ["d", instruction.operands[0]!],
+        ["b", instruction.operands[1]!]
+    ]));
 };

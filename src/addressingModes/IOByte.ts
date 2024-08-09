@@ -24,8 +24,8 @@ export const encode = (
     const port = instruction.operands[portIndex]!;
     check("register", registerIndex, register);
     check("port", portIndex, port);
-    return template(`1011_${operationBit}AAd_dddd_AAAA`, {
-        "d": register,
-        "A": port
-    });
+    return template(`1011_${operationBit}AAd_dddd_AAAA`, new Map([
+        ["d", register],
+        ["A", port]
+    ]));
 };

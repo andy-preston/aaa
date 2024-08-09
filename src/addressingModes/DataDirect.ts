@@ -41,8 +41,8 @@ export const encode = (
     const prefix = bigMode ? "1001_00" : "1010_";
     const suffix = bigMode ? "d_dddd_0000_kkkk_kkkk_kkkk_kkkk" : "kkk_dddd_kkkk";
     const register = instruction.operands[registerIndex]!;
-    return template(`${prefix}${operationBit}${suffix}`, {
-        "d": bigMode ? register : registerFrom16(register),
-        "k": instruction.operands[addressIndex]!
-    });
+    return template(`${prefix}${operationBit}${suffix}`, new Map([
+        ["d", bigMode ? register : registerFrom16(register)],
+        ["k", instruction.operands[addressIndex]!]
+    ]));
 };

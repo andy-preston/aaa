@@ -42,15 +42,18 @@ export const encode = (
             : ["relativeAddress"]
     );
     const bit =
-        impliedOperand == undefined ? instruction.operands[0] : impliedOperand;
+        impliedOperand == undefined ? instruction.operands[0]! : impliedOperand;
     const jumpAddress =
         impliedOperand == undefined
             ? instruction.operands[1]
             : instruction.operands[0];
     check("bitIndex", 0, bit!);
     check("relativeAddress", impliedOperand == undefined ? 1 : 0, jumpAddress!);
-    return template(`1111_0${operationBit}kk_kkkk_ksss`, {
-        "s": bit,
-        "k": relativeJump(jumpAddress!, 7, programCounter)
-    });
+    return template(
+        `1111_0${operationBit}kk_kkkk_ksss`,
+        new Map([
+            ["s", bit],
+            ["k", relativeJump(jumpAddress!, 7, programCounter)]
+        ])
+    );
 };

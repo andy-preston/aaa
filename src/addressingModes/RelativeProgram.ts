@@ -18,7 +18,10 @@ export const encode = (
     checkCount(instruction.operands, ["relativeAddress"]);
     check("relativeAddress", 0, instruction.operands[0]!);
     const operationBit = mapping.get(instruction.mnemonic)!;
-    return template(`110${operationBit}_kkkk_kkkk_kkkk`, {
-        "k": relativeJump(instruction.operands[0]!, 12, programCounter)
-    });
+    return template(
+        `110${operationBit}_kkkk_kkkk_kkkk`,
+        new Map([
+            ["k", relativeJump(instruction.operands[0]!, 12, programCounter)]
+        ])
+    );
 };

@@ -12,8 +12,11 @@ export const encode = (
     checkCount(instruction.operands, ["anyRegisterPair", "anyRegisterPair"]);
     check("anyRegisterPair", 0, instruction.operands[0]!);
     check("anyRegisterPair", 1, instruction.operands[1]!);
-    return template("0000_0001_dddd_rrrr", {
-        "d": registerPair(instruction.operands[0]!, 0),
-        "r": registerPair(instruction.operands[1]!, 0)
-    });
+    return template(
+        "0000_0001_dddd_rrrr",
+        new Map([
+            ["d", registerPair(instruction.operands[0]!, 0)],
+            ["r", registerPair(instruction.operands[1]!, 0)]
+        ])
+    );
 };
