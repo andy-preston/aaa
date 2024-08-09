@@ -1,6 +1,5 @@
 import { relativeJump } from "../binaryMapping.ts";
-import type { GeneratedCode } from "../binaryTemplate.ts";
-import { template } from "../binaryTemplate.ts";
+import { type GeneratedCode, template } from "../generated-code.ts";
 import type { Instruction } from "../instruction.ts";
 import { check, checkCount } from "../operands.ts";
 

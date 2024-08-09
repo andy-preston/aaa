@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import { littleEndian, type GeneratedCode } from "./binaryTemplate.ts";
+import { type GeneratedCode, littleEndian } from "./generated-code.ts";
 import { type Instruction, encode, instruction } from "./instruction.ts";
 import type { Operands } from "./operands.ts";
 
