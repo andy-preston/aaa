@@ -4,3 +4,4 @@ gavrasm
 test.asm
 test.hex
 test.lst
+test.err
