@@ -24,7 +24,12 @@ export const template = (
             }
         }
         if (bin[0]) {
-            throw `Operand out of range: ${key} = ${operand} in ${templateString}`;
+            // This error message could be better and more useful
+            // But it may also have been made redundant by higher-level
+            // range checking.
+            throw new Error(
+                `Operand out of range: ${key} = ${operand} in ${templateString}`
+            );
         }
     });
     const result = eval(`0b${templateDigits.reverse().join("")}`) as number;
