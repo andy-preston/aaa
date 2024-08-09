@@ -14,9 +14,9 @@ const mapping: Record<string, [string, string]> = {
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mapping)) {
-        return null;
+        return undefined;
     }
     const registerType: TypeName = instruction.mnemonic == "MULS" ?
         "immediateRegister" : "multiplyRegister";

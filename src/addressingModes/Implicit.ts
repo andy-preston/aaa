@@ -25,9 +25,9 @@ const mappings: Record<string, string> = {
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mappings)) {
-        return null;
+        return undefined;
     }
     checkCount(instruction.operands, []);
     return template(mappings[instruction.mnemonic]!, {});

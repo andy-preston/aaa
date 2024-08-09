@@ -28,9 +28,9 @@ const immediate = (mnemonic: string, operand1: number) => {
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in prefixes)) {
-        return null;
+        return undefined;
     }
     checkCount(
         instruction.operands,

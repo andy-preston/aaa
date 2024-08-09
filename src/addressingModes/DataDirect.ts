@@ -23,9 +23,9 @@ const mapping: Record<string, [string, OperandIndex, OperandIndex]> = {
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mapping)) {
-        return null;
+        return undefined;
     }
     const [operationBit, registerIndex, addressIndex] =
         mapping[instruction.mnemonic]!;

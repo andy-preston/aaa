@@ -188,7 +188,7 @@ const expectedResults: Array<Expected> = [
 const testEncode = (
     instruction: Instruction,
     pc: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     try {
         return encode(instruction, pc);
     } catch (error) {

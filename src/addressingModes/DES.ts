@@ -5,9 +5,9 @@ import { check, checkCount } from "../operands.ts";
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (instruction.mnemonic != "DES") {
-        return null;
+        return undefined;
     }
     checkCount(instruction.operands, ["nybble"]);
     check("nybble", 0, instruction.operands[0]!);

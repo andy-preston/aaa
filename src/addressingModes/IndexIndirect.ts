@@ -58,9 +58,9 @@ case "STD.Z":
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mapping)) {
-        return null;
+        return undefined;
     }
     checkCount(instruction.operands, ["register"]);
     check("register", 0, instruction.operands[0]!);

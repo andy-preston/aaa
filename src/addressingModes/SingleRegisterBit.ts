@@ -12,9 +12,9 @@ const mapping: Record<string, string> = {
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mapping)) {
-        return null;
+        return undefined;
     }
     checkCount(instruction.operands, ["register", "bitIndex"]);
     check("register", 0, instruction.operands[0]!);

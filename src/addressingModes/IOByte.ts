@@ -10,9 +10,9 @@ const mappings: Record<string, [string, OperandIndex, OperandIndex]> = {
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mappings)) {
-        return null;
+        return undefined;
     }
     const [operationBit, registerIndex, portIndex] =
         mappings[instruction.mnemonic]!;

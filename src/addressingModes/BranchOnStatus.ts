@@ -30,9 +30,9 @@ const mappings: Record<string, [string, number?]> = {
 export const encode = (
     instruction: Instruction,
     programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (!(instruction.mnemonic in mappings)) {
-        return null;
+        return undefined;
     }
     const [operationBit, impliedOperand] = mappings[instruction.mnemonic]!;
     checkCount(

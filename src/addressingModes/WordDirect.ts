@@ -5,9 +5,9 @@ import { check, checkCount, registerPair } from "../operands.ts";
 export const encode = (
     instruction: Instruction,
     _programCounter: number
-): GeneratedCode | null => {
+): GeneratedCode | undefined => {
     if (instruction.mnemonic != "MOVW") {
-        return null;
+        return undefined;
     }
     checkCount(instruction.operands, ["anyRegisterPair", "anyRegisterPair"]);
     check("anyRegisterPair", 0, instruction.operands[0]!);
