@@ -1,5 +1,5 @@
-import { GeneratedCode, template } from "../binaryTemplate.ts";
-import { Instruction } from "../instruction.ts";
+import { type GeneratedCode, template } from "../binaryTemplate.ts";
+import type { Instruction } from "../instruction.ts";
 import { check, checkCount, registerFrom16 } from "../operands.ts";
 
 const prefixes: Record<string, string> = {

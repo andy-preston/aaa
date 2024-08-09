@@ -1,5 +1,5 @@
-import { GeneratedCode, template } from "../binaryTemplate.ts";
-import { Instruction } from "../instruction.ts";
+import { type GeneratedCode, template } from "../binaryTemplate.ts";
+import type { Instruction } from "../instruction.ts";
 import { check, registerPair } from "../operands.ts";
 import { checkCount } from "../operands.ts";
 

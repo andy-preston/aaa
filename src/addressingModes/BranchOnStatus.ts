@@ -1,7 +1,7 @@
 import { relativeJump } from "../binaryMapping.ts";
-import { Instruction } from "../instruction.ts";
-import { GeneratedCode } from "../binaryTemplate.ts";
+import type { GeneratedCode } from "../binaryTemplate.ts";
 import { template } from "../binaryTemplate.ts";
+import type { Instruction } from "../instruction.ts";
 import { check, checkCount } from "../operands.ts";
 
 const mappings: Record<string, [string, number?]> = {
