@@ -88,12 +88,14 @@ export const check = (
 };
 
 export const checkCount = (list: Operands, expected: Array<TypeName>) => {
-    if (list.length != expected.length) {
-        const descriptions = expected.length == 0 ?
-            "none" :
-            expected.map(description).join(" and ");
-        throw new Error(`Incorrect number of operands - expecting ${descriptions} got ${list}`);
+    if (list.length == expected.length) {
+        return;
     }
+    const descriptions =
+        expected.length == 0 ? "none" : expected.map(description).join(" and ");
+    throw new Error(
+        `Incorrect number of operands - expecting ${descriptions} got ${list}`
+    );
 };
 
 export const registerFrom16 = (register: number): number => register - 16;

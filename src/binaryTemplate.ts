@@ -39,13 +39,12 @@ export const template = (
         }
     }
     const result = eval('0b' + templateDigits.reverse().join('')) as number;
-    return result > 65535 ? [
-        (result >> 16) & 0xff,
-        (result >> 24) & 0xff,
-        result & 0xff,
-        (result >> 8) & 0xff
-    ]: [
-        result & 0xff,
-        (result >> 8) & 0xff
-    ];
+    return result > 65535
+        ? [
+              (result >> 16) & 0xff,
+              (result >> 24) & 0xff,
+              result & 0xff,
+              (result >> 8) & 0xff
+          ]
+        : [result & 0xff, (result >> 8) & 0xff];
 };

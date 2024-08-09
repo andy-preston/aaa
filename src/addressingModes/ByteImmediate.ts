@@ -34,8 +34,9 @@ export const encode = (
     }
     checkCount(
         instruction.operands,
-        instruction.mnemonic != "SER" ?
-            ["immediateRegister", "byte"] : ["immediateRegister"]
+        instruction.mnemonic != "SER"
+            ? ["immediateRegister", "byte"]
+            : ["immediateRegister"]
     );
     check("immediateRegister", 0, instruction.operands[0]!);
     if (instruction.mnemonic != "SER") {

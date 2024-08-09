@@ -18,8 +18,10 @@ export const encode = (
     if (!(instruction.mnemonic in mapping)) {
         return undefined;
     }
-    const registerType: TypeName = instruction.mnemonic == "MULS" ?
-        "immediateRegister" : "multiplyRegister";
+    const registerType: TypeName =
+        instruction.mnemonic == "MULS"
+            ? "immediateRegister"
+            : "multiplyRegister";
 
     checkCount(instruction.operands, [registerType, registerType]);
     check(registerType, 0, instruction.operands[0]!);
