@@ -12,10 +12,10 @@ export const instruction = (mnemonic: string, operands: Operands) =>
 
 export const encode = (
     instruction: Instruction,
-    pc: number
+    programCounter: number
 ): GeneratedCode => {
     for (const addressingMode of addressingModes) {
-        const generatedCode = addressingMode(instruction, pc);
+        const generatedCode = addressingMode(instruction, programCounter);
         if (generatedCode != null) {
             return generatedCode;
         }

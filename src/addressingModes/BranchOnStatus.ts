@@ -29,7 +29,7 @@ const mappings: Record<string, [string, number?]> = {
 
 export const encode = (
     instruction: Instruction,
-    pc: number
+    programCounter: number
 ): GeneratedCode | null => {
     if (!(instruction.mnemonic in mappings)) {
         return null;
@@ -52,6 +52,6 @@ export const encode = (
     );
     return template(`1111_0${operationBit}kk_kkkk_ksss`, {
         "s": bit,
-        "k": relativeJump(jumpAddress!, 7, pc)
+        "k": relativeJump(jumpAddress!, 7, programCounter)
     });
 };

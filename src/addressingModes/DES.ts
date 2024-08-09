@@ -4,7 +4,7 @@ import { check, checkCount } from "../operands.ts";
 
 export const encode = (
     instruction: Instruction,
-    _pc: number
+    _programCounter: number
 ): GeneratedCode | null => {
     if (instruction.mnemonic != "DES") {
         return null;

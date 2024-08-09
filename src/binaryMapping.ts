@@ -28,7 +28,7 @@ export const twosComplement = (
 export const relativeJump = (
     target: number,
     bits: number,
-    programCounter : number
+    programCounter: number
 ) => {
     try {
         return twosComplement(target - 1 - programCounter, bits, true);

@@ -23,7 +23,7 @@ const mapping: Record<string, [string, number]> = {
 
 export const encode = (
     instruction: Instruction,
-    _pc: number
+    _programCounter: number
 ): GeneratedCode | null => {
     if (!(instruction.mnemonic in mapping)) {
         return null;
