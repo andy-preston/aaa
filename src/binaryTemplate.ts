@@ -7,38 +7,53 @@ type TemplateOperandKey = "A" | "b" | "d" | "k" | "K" |
     // other is "r".
     "r" | "s" | "q";
 
+type Binary = ["0" | "1"];
+
+const operandBits = (operand: number): Binary =>
+    operand.toString(2).split("").reverse().concat(new Array(32).fill("0")) as Binary;
+
 export const template = (
-    templateString: string,
+    templateString: string, // format: "0101_011d dddd_0qqq"
     operands: Map<TemplateOperandKey, number>
 ): GeneratedCode => {
     const templateDigits = templateString.split("").reverse();
-    operands.forEach((operand: number, key: TemplateOperandKey) => {
-        const bin = operand
-            .toString(2)
-            .split("")
-            .reverse()
-            .concat(new Array(32).fill(0));
-        for (let digit = 0; digit < templateDigits.length; digit++) {
-            if (templateDigits[digit] == key) {
-                templateDigits[digit] = bin.shift()!;
+
+    const substitute = (key: TemplateOperandKey, binary: Binary) => {
+        templateDigits.forEach((digit, index) => {
+            if (digit == key) {
+                templateDigits[index] = binary.shift()!;
+            }
+        });
+        for (const remaining of binary) {
+            if (remaining != "0") {
+                // This error message could be better and more useful. But it
+                // may also have been made redundant by higher-level range
+                // checking.
+                throw new Error(
+                    `Operand out of range: ${key} in ${templateString}`
+                );
             }
         }
-        if (bin[0]) {
-            // This error message could be better and more useful
-            // But it may also have been made redundant by higher-level
-            // range checking.
-            throw new Error(
-                `Operand out of range: ${key} = ${operand} in ${templateString}`
-            );
-        }
+    };
+
+    operands.forEach((operand, key) => {
+        substitute(key, operandBits(operand));
     });
-    const result = eval(`0b${templateDigits.reverse().join("")}`) as number;
-    return result > 65535
-        ? [
-              (result >> 16) & 0xff,
-              (result >> 24) & 0xff,
-              result & 0xff,
-              (result >> 8) & 0xff
-          ]
-        : [result & 0xff, (result >> 8) & 0xff];
+    return templateDigits.reverse().join("").split(" ").map(
+        // eval because parseInt doesn't like the underscore
+        (byte: string) => eval(`0b${byte}`)
+    ) as GeneratedCode;
+};
+
+export const littleEndian = (code: GeneratedCode): GeneratedCode => {
+    const little: Array<number> = [];
+    const values = code.values();
+    for (;;) {
+        const even = values.next();
+        if (even.done) {
+            return little as GeneratedCode;
+        }
+        little.push(values.next().value);
+        little.push(even.value);
+    }
 };

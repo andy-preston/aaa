@@ -70,7 +70,7 @@ export const encode = (
     // In the official documentation, the store operations have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     return template(
-        `100${firstOperationBit}_00${secondOperationBit}d_dddd_${suffix}`,
+        `100${firstOperationBit}_00${secondOperationBit}d dddd_${suffix}`,
         new Map([["d", instruction.operands[0]!]])
     );
 };

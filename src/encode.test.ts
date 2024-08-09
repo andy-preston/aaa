@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import type { GeneratedCode } from "./binaryTemplate.ts";
+import { littleEndian, type GeneratedCode } from "./binaryTemplate.ts";
 import { type Instruction, encode, instruction } from "./instruction.ts";
 import type { Operands } from "./operands.ts";
 
@@ -194,7 +194,7 @@ const testEncode = (
     programCounter: number
 ): GeneratedCode | undefined => {
     try {
-        return encode(instruction, programCounter);
+        return littleEndian(encode(instruction, programCounter));
     } catch (error) {
         throw new Error(
             `error testing ${instruction.mnemonic}`,

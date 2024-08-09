@@ -4,11 +4,11 @@ import { registerFrom16 } from "../operands.ts";
 import { type TypeName, check, checkCount } from "../operands.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
-    ["FMUL", ["1_0", "1"]],
-    ["FMULS", ["1_1", "0"]],
-    ["FMULSU", ["1_1", "1"]],
-    ["MULSU", ["1_0", "0"]],
-    ["MULS", ["0_d", "r"]]
+    ["FMUL", ["1 0", "1"]],
+    ["FMULS", ["1 1", "0"]],
+    ["FMULSU", ["1 1", "1"]],
+    ["MULSU", ["1 0", "0"]],
+    ["MULS", ["0 d", "r"]]
 ]);
 
 export const encode = (

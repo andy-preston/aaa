@@ -39,7 +39,7 @@ export const encode = (
         impliedOperand == undefined ? instruction.operands[0]! : impliedOperand;
     check("bitIndex", 0, operand);
     return template(
-        `1001_0100_${operationBit}sss_1000`,
+        `1001_0100 ${operationBit}sss_1000`,
         new Map([["s", operand]])
     );
 };

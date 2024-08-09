@@ -40,7 +40,7 @@ export const encode = (
     check("register", 0, registers[0]!);
     check("register", 1, registers[1]!);
     return template(
-        `${prefix}rd_dddd_rrrr`,
+        `${prefix}rd dddd_rrrr`,
         new Map([
             ["d", registers[0]!],
             ["r", registers[1]!]

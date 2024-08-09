@@ -18,7 +18,7 @@ export const encode = (
     check("address", 0, instruction.operands[0]!);
     const operationBit = mapping.get(instruction.mnemonic)!;
     return template(
-        `1001_010k_kkkk_11${operationBit}k_kkkk_kkkk_kkkk_kkkk`,
+        `1001_010k kkkk_11${operationBit}k kkkk_kkkk kkkk_kkkk`,
         new Map ([["k", instruction.operands[0]!]])
     );
 };
