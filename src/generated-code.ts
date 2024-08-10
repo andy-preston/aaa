@@ -10,18 +10,18 @@ type TemplateOperandKey = "A" | "b" | "d" | "k" | "K" |
 type BinaryDigit = "0" | "1";
 type Binary = Array<BinaryDigit>;
 
-const bitSource = (operand: number) => {
+const bitsWithLeadingZeros = (operand: number) => {
     const bits = operand.toString(2).split("").reverse() as Binary;
     return (): BinaryDigit => bits.length > 0 ? bits.shift()! : "0";
 };
 
 const substitutionMap = (operands: Array<[TemplateOperandKey, number]>) => {
-    const theMap = new Map(operands.map(
-        (operand) => [operand[0] as string, bitSource(operand[1])]
+    const bitSources = new Map(operands.map(
+        (operand) => [operand[0] as string, bitsWithLeadingZeros(operand[1])]
     ));
     return (templateDigit: string) =>
-        theMap.has(templateDigit)
-            ? theMap.get(templateDigit)!()
+        bitSources.has(templateDigit)
+            ? bitSources.get(templateDigit)!()
             : templateDigit;
 };
 
