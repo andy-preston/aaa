@@ -10,26 +10,31 @@ type TemplateOperandKey = "A" | "b" | "d" | "k" | "K" |
 type BinaryDigit = "0" | "1";
 type Binary = Array<BinaryDigit>;
 
-const templateOperand = (operand: number) => {
+const bitSource = (operand: number) => {
     const bits = operand.toString(2).split("").reverse() as Binary;
     return (): BinaryDigit => bits.length > 0 ? bits.shift()! : "0";
+};
+
+const substitutionMap = (operands: Array<[TemplateOperandKey, number]>) => {
+    const theMap = new Map(operands.map(
+        (operand) => [operand[0] as string, bitSource(operand[1])]
+    ));
+    return (templateDigit: string) =>
+        theMap.has(templateDigit)
+            ? theMap.get(templateDigit)!()
+            : templateDigit;
 };
 
 export const template = (
     templateString: string, // format: "0101_011d dddd_0qqq"
     operands: Array<[TemplateOperandKey, number]>
 ): GeneratedCode => {
-    const operandMap = new Map(operands.map(
-        (operand) => [operand[0], templateOperand(operand[1])]
-    ));
-    const templateDigits = templateString.split("").reverse().map(
-        (templateDigit) => {
-            const key = templateDigit as TemplateOperandKey;
-            return operandMap.has(key) ? operandMap.get(key)!() : templateDigit;
-        }
+    const substitutions = substitutionMap(operands);
+    const digits = templateString.split("").reverse().map(
+        (digit) => substitutions(digit)
     );
-    const templateBytes = templateDigits.reverse().join("").split(" ");
-    return templateBytes.map(
+    const bytes = digits.reverse().join("").split(" ");
+    return bytes.map(
         // eval because parseInt doesn't like the underscore
         (byte: string) => eval(`0b${byte}`)
     ) as GeneratedCode;
