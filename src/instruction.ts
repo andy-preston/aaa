@@ -1,4 +1,4 @@
-import { addressingModes } from "./addressingModes/mod.ts";
+import { addressingModes } from "./addressing-modes/mod.ts";
 import type { GeneratedCode } from "./generated-code.ts";
 import type { Operands } from "./operands/mod.ts";
 

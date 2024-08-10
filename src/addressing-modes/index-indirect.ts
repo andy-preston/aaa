@@ -29,6 +29,8 @@ const mapping: Map<string, [string, string, string]> = new Map([
 ]);
 
 /*
+    These all belong in some other addressing mode
+    Need to find out what "q" is!!!
 
 case "LDD.Y":
     return template("10q0_qq0d_dddd_1qqq", {
@@ -40,9 +42,6 @@ case "LDD.Z":
         "d": operands[0],
         "q": operands[1]
     });
-
---------------------------------------------
-
 case "STD.Y":
     return template("10q0_qq1r_rrrr_1qqq", {
         "q": operands[0],
