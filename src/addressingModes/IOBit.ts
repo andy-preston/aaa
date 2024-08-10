@@ -20,11 +20,8 @@ export const encode = (
     check("port", 0, instruction.operands[0]!);
     check("bitIndex", 1, instruction.operands[1]!);
     const operationBits = mapping.get(instruction.mnemonic)!;
-    return template(
-        `1001_10${operationBits} AAAA_Abbb`,
-        new Map([
-            ["A", instruction.operands[0]!],
-            ["b", instruction.operands[1]!]
-        ])
-    );
+    return template(`1001_10${operationBits} AAAA_Abbb`, [
+        ["A", instruction.operands[0]!],
+        ["b", instruction.operands[1]!]
+    ]);
 };

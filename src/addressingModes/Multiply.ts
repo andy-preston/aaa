@@ -29,11 +29,8 @@ export const encode = (
     const [firstOperation, secondOperation] = mapping.get(
         instruction.mnemonic
     )!;
-    return template(
-        `0000_001${firstOperation}ddd_${secondOperation}rrr`,
-        new Map([
-            ["d", registerFrom16(instruction.operands[0]!)],
-            ["r", registerFrom16(instruction.operands[1]!)]
-        ])
-    );
+    return template(`0000_001${firstOperation}ddd_${secondOperation}rrr`, [
+        ["d", registerFrom16(instruction.operands[0]!)],
+        ["r", registerFrom16(instruction.operands[1]!)]
+    ]);
 };

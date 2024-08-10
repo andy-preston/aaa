@@ -48,11 +48,8 @@ export const encode = (
             : instruction.operands[0];
     check("bitIndex", 0, bit!);
     check("relativeAddress", impliedOperand == undefined ? 1 : 0, jumpAddress!);
-    return template(
-        `1111_0${operationBit}kk kkkk_ksss`,
-        new Map([
-            ["s", bit],
-            ["k", relativeJump(jumpAddress!, 7, programCounter)]
-        ])
-    );
+    return template(`1111_0${operationBit}kk kkkk_ksss`, [
+        ["s", bit],
+        ["k", relativeJump(jumpAddress!, 7, programCounter)]
+    ]);
 };

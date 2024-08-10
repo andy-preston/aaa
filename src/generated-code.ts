@@ -7,39 +7,29 @@ type TemplateOperandKey = "A" | "b" | "d" | "k" | "K" |
     // other is "r".
     "r" | "s" | "q";
 
-type Binary = ["0" | "1"];
+type BinaryDigit = "0" | "1";
+type Binary = Array<BinaryDigit>;
 
-const operandBits = (operand: number): Binary =>
-    operand.toString(2).split("").reverse().concat(new Array(32).fill("0")) as Binary;
+const templateOperand = (operand: number) => {
+    const bits = operand.toString(2).split("").reverse() as Binary;
+    return (): BinaryDigit => bits.length > 0 ? bits.shift()! : "0";
+};
 
 export const template = (
     templateString: string, // format: "0101_011d dddd_0qqq"
-    operands: Map<TemplateOperandKey, number>
+    operands: Array<[TemplateOperandKey, number]>
 ): GeneratedCode => {
-    const templateDigits = templateString.split("").reverse();
-
-    const substitute = (key: TemplateOperandKey, binary: Binary) => {
-        templateDigits.forEach((digit, index) => {
-            if (digit == key) {
-                templateDigits[index] = binary.shift()!;
-            }
-        });
-        for (const remaining of binary) {
-            if (remaining != "0") {
-                // This error message could be better and more useful. But it
-                // may also have been made redundant by higher-level range
-                // checking.
-                throw new Error(
-                    `Operand out of range: ${key} in ${templateString}`
-                );
-            }
+    const operandMap = new Map(operands.map(
+        (operand) => [operand[0], templateOperand(operand[1])]
+    ));
+    const templateDigits = templateString.split("").reverse().map(
+        (templateDigit) => {
+            const key = templateDigit as TemplateOperandKey;
+            return operandMap.has(key) ? operandMap.get(key)!() : templateDigit;
         }
-    };
-
-    operands.forEach((operand, key) => {
-        substitute(key, operandBits(operand));
-    });
-    return templateDigits.reverse().join("").split(" ").map(
+    );
+    const templateBytes = templateDigits.reverse().join("").split(" ");
+    return templateBytes.map(
         // eval because parseInt doesn't like the underscore
         (byte: string) => eval(`0b${byte}`)
     ) as GeneratedCode;

@@ -41,7 +41,7 @@ export const encode = (
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
-    return template(`1001_0${operationBits}d dddd_${suffix}`, new Map([
+    return template(`1001_0${operationBits}d dddd_${suffix}`, [
         ["d", register]
-    ]));
+    ]);
 };

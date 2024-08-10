@@ -31,5 +31,5 @@ export const encode = (
         return undefined;
     }
     checkCount(instruction.operands, []);
-    return template(mapping.get(instruction.mnemonic)!, new Map());
+    return template(mapping.get(instruction.mnemonic)!, []);
 };
