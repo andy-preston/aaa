@@ -1,16 +1,6 @@
-import { addressingModes } from "./addressing-modes/mod.ts";
-import type { GeneratedCode } from "./generate/mod.ts";
-import type { Operands } from "./operands/mod.ts";
-
-export type Instruction = {
-    "mnemonic": string;
-    "operands": Operands;
-};
-
-export const instruction = (mnemonic: string, operands: Operands) => ({
-    "mnemonic": mnemonic,
-    "operands": operands
-});
+import { addressingModes } from "../addressing-modes/mod.ts";
+import { GeneratedCode } from "../generate/mod.ts";
+import { Instruction } from "./instruction.ts";
 
 export const encode = (
     instruction: Instruction,

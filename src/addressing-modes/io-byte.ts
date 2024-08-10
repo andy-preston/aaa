@@ -1,4 +1,4 @@
-import type { Instruction } from "../instruction.ts";
+import type { Instruction } from "../instruction/mod.ts";;
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import { check, checkCount, OperandIndex } from "../operands/mod.ts";
 
