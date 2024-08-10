@@ -36,3 +36,9 @@ export const relativeJump = (
         throw new RangeError(`Relative jump ${error.message}`);
     }
 };
+
+export const registerFrom16 = (register: number): number => register - 16;
+
+export const registerPair = (register: number, startingAt: number): number =>
+    (register - startingAt) / 2;
+

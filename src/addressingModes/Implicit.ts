@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generated-code.ts";
 import type { Instruction } from "../instruction.ts";
-import { checkCount } from "../operands.ts";
+import { checkCount } from "../operands/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["BREAK", "1001_0101 1001_1000"],

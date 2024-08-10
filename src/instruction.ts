@@ -1,6 +1,6 @@
 import { addressingModes } from "./addressingModes/mod.ts";
 import type { GeneratedCode } from "./generated-code.ts";
-import type { Operands } from "./operands.ts";
+import type { Operands } from "./operands/mod.ts";
 
 export type Instruction = {
     "mnemonic": string;

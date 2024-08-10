@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generated-code.ts";
 import type { Instruction } from "../instruction.ts";
-import { check, checkCount } from "../operands.ts";
+import { check, checkCount } from "../operands/mod.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BCLR", ["1", undefined]],

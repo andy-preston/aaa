@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generated-code.ts";
 import type { Instruction } from "../instruction.ts";
-import { check, checkCount, registerFrom16 } from "../operands.ts";
+import { check, checkCount, registerFrom16 } from "../operands/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["CPI", "0011"],

@@ -1,7 +1,11 @@
 import { type GeneratedCode, template } from "../generated-code.ts";
 import type { Instruction } from "../instruction.ts";
-import { registerFrom16 } from "../operands.ts";
-import { type TypeName, check, checkCount } from "../operands.ts";
+import {
+    type TypeName,
+    check,
+    checkCount,
+    registerFrom16
+} from "../operands/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["FMUL", ["1 0", "1"]],

@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { twosComplement } from "./binaryMapping.ts";
+import { twosComplement } from "./transformations.ts";
 
 Deno.test("Some valid values", () => {
     assertEquals(twosComplement(16, 8, true), 0b00010000);

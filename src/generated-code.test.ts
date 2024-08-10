@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
 import { type GeneratedCode, littleEndian } from "./generated-code.ts";
 import { type Instruction, encode, instruction } from "./instruction.ts";
-import type { Operands } from "./operands.ts";
+import type { Operands } from "./operands/mod.ts";
 
 const R0 = 0;
 const R1 = 1;

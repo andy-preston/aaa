@@ -1,8 +1,6 @@
-export type Operands = Array<number>;
+import type { OperandIndex, Operands } from "./types.ts";
 
 type CheckFunction = (operand: number) => boolean;
-
-type Operand = [CheckFunction, string];
 
 const types = {
     "register": [
@@ -62,13 +60,9 @@ const types = {
         (operand: number) => operand >= 0 || operand <= 0xffffffff,
         "16 bit RAM address (0 - 0xFFFFFFFF) (64 K)"
     ]
-} satisfies Record<string, Operand>;
+} satisfies Record<string, [CheckFunction, string]>;
 
 export type TypeName = keyof typeof types;
-
-const description = (typeName: TypeName): string => types[typeName][1];
-
-export type OperandIndex = 0 | 1;
 
 export const check = (
     typeName: TypeName,
@@ -87,6 +81,8 @@ export const check = (
     );
 };
 
+const description = (typeName: TypeName): string => types[typeName][1];
+
 export const checkCount = (list: Operands, expected: Array<TypeName>) => {
     if (list.length == expected.length) {
         return;
@@ -97,8 +93,3 @@ export const checkCount = (list: Operands, expected: Array<TypeName>) => {
         `Incorrect number of operands - expecting ${descriptions} got ${list}`
     );
 };
-
-export const registerFrom16 = (register: number): number => register - 16;
-
-export const registerPair = (register: number, startingAt: number): number =>
-    (register - startingAt) / 2;

@@ -1,12 +1,12 @@
 import { type GeneratedCode, template } from "../generated-code.ts";
 import type { Instruction } from "../instruction.ts";
-import { registerFrom16 } from "../operands.ts";
 import {
+    type OperandIndex,
+    type TypeName,
     check,
     checkCount,
-    type OperandIndex,
-    type TypeName
-} from "../operands.ts";
+    registerFrom16
+} from "../operands/mod.ts";
 
 // I am not completely sure at this point how these instructions work
 // there appear to be two versions, and I'm assuming that one operates on
