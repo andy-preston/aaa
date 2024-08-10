@@ -1,6 +1,6 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
-import { GeneratedCode } from "../generate/mod.ts";
-import { Instruction } from "./instruction.ts";
+import { GeneratedCode } from "./generated-code.ts";
+import { Instruction } from "../instruction.ts";
 
 export const encode = (
     instruction: Instruction,
