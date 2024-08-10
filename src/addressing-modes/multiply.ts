@@ -1,4 +1,4 @@
-import { type GeneratedCode, template } from "../generated-code.ts";
+import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { Instruction } from "../instruction.ts";
 import {
     type TypeName,

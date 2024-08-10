@@ -1,5 +1,5 @@
 import type { Instruction } from "../instruction.ts";
-import { type GeneratedCode, template } from "../generated-code.ts";
+import { type GeneratedCode, template } from "../generate/mod.ts";
 import { check, checkCount, OperandIndex } from "../operands/mod.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([

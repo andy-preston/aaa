@@ -1,5 +1,5 @@
 import { addressingModes } from "./addressing-modes/mod.ts";
-import type { GeneratedCode } from "./generated-code.ts";
+import type { GeneratedCode } from "./generate/mod.ts";
 import type { Operands } from "./operands/mod.ts";
 
 export type Instruction = {
