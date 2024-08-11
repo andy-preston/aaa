@@ -1,3 +1,4 @@
+/*
 import { encode as branchOnStatus } from "./branch-on-status.ts";
 import { encode as byteImmediate } from "./byte-immediate.ts";
 import { encode as des } from "./des.ts";
@@ -15,8 +16,9 @@ import { encode as statusManipulation } from "./status-manipulation.ts";
 import { encode as twoRegisterDirect } from "./two-register-direct.ts";
 import { encode as wordDirect } from "./word-direct.ts";
 import { encode as wordImmediate } from "./word-immediate.ts";
-
+*/
 export const addressingModes = [
+    /*
     branchOnStatus,
     byteImmediate,
     des,
@@ -34,4 +36,5 @@ export const addressingModes = [
     twoRegisterDirect,
     wordDirect,
     wordImmediate
+    */
 ];

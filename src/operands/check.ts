@@ -1,4 +1,4 @@
-import type { OperandIndex, Operands } from "./types.ts";
+import type { OperandIndex } from "./types.ts";
 
 type CheckFunction = (operand: number) => boolean;
 
@@ -83,7 +83,7 @@ export const check = (
 
 const description = (typeName: TypeName): string => types[typeName][1];
 
-export const checkCount = (list: Operands, expected: Array<TypeName>) => {
+export const checkCount = (list: Array<string>, expected: Array<TypeName>) => {
     if (list.length == expected.length) {
         return;
     }

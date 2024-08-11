@@ -1,6 +1,6 @@
 import { Context } from "./types.ts";
 
-export const defaults = (): Context => {
+export const defaults = (programCounter: number): Context => {
     const context: Context = {};
     for (let i = 0; i < 32; i++) {
         context[`R${i}`] = i;
@@ -16,6 +16,7 @@ export const defaults = (): Context => {
     context.ZH = 31;
     context.LOW = (n) => n & 0xff;
     context.HIGH = (n) => (n >> 8) & 0xff;
+    context.PC = programCounter;
     return context;
 };
 
