@@ -1,5 +1,3 @@
-export type Tokens = [string, string, string, string, string];
-
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
     return semicolon == -1 ? raw : raw.substring(0, semicolon);
@@ -28,7 +26,9 @@ const clean = (theLine: string): string =>
 
 const expandIndexOffsetOperands = (operands: Array<string>) => {
     const found = (position: number): boolean =>
-        operands[position]!.startsWith("Z+") && operands[position]!.length > 2;
+        operands.length > position
+            && operands[position]!.startsWith("Z+")
+            && operands[position]!.length > 2;
 
     const expand = (position: 0 | 1) => {
         operands[position] = operands[position]!.substring(2);
@@ -36,11 +36,11 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
     };
 
     let second = 1;
-    if (found(0)) {
+    if (operands.length > 0 && found(0)) {
         expand(0);
         second = 2;
     }
-    if (found(second)) {
+    if (operands.length > second && found(second)) {
         if (second == 2) {
             throw SyntaxError(
                 "An instruction can only have 1 index offset (Z+qq) operand"
@@ -48,17 +48,16 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
         }
         expand(1);
     }
-    if (operands.length == 2) {
-        operands.push("");
-    }
 }
 
-export const tokeniseLine = (theLine: string): Tokens => {
+export const tokeniseLine = (theLine: string): Array<string> => {
     const cleaned = clean(theLine);
     const [label, withoutLabel] = split("after", ":", cleaned);
     forbidWhitespace(label);
     const [mnemonic, operandsText] = split("before", " ", withoutLabel);
-    const operandsList = split("before", ",", operandsText);
+    const operandsList = split("before", ",", operandsText).filter(
+        (operand: string) => operand != ""
+    )
     expandIndexOffsetOperands(operandsList);
-    return [label, mnemonic].concat(operandsList) as Tokens;
+    return [label, mnemonic].concat(operandsList);
 };

@@ -16,9 +16,11 @@ export const fromTokens = (
     tokens: Array<string>
 ): Instruction => {
     let indexing = "";
+    const _label = tokens.shift();
     const mnemonic = tokens.shift()!.toUpperCase();
     const operands = tokens.filter((value) => {
-        const indexMode = indexingOperands.includes(value as IndexingOperand);
+        const indexMode =
+            value != "" && indexingOperands.includes(value as IndexingOperand);
         if (indexMode) {
             if (indexing != "") {
                 throw new Error(
@@ -28,9 +30,7 @@ export const fromTokens = (
             indexing = value as IndexingOperand;
         }
         return !indexMode;
-    }).map((value) => {
-        return contextHandler.evaluate(value);
-    }) as Operands;
+    }).map((value) => contextHandler.evaluate(value)) as Operands;
 
     return instruction(mnemonic, operands, indexing as IndexingOperand);
 };
