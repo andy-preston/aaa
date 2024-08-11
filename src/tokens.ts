@@ -1,3 +1,5 @@
+export type Tokens = [string, string, string, string, string];
+
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
     return semicolon == -1 ? raw : raw.substring(0, semicolon);
@@ -24,7 +26,7 @@ const forbidWhitespace = (suspect: string) => {
 const clean = (theLine: string): string =>
     stripComment(theLine).replace(/\s+/g, " ").trim();
 
-const expandIndexOffsetOperands = (operands: Array<string>)/*: Array<string>*/ => {
+const expandIndexOffsetOperands = (operands: Array<string>) => {
     const found = (position: number): boolean =>
         operands[position]!.startsWith("Z+") && operands[position]!.length > 2;
 
@@ -46,14 +48,17 @@ const expandIndexOffsetOperands = (operands: Array<string>)/*: Array<string>*/ =
         }
         expand(1);
     }
+    if (operands.length == 2) {
+        operands.push("");
+    }
 }
 
-export const tokeniseLine = (theLine: string): Array<string> => {
+export const tokeniseLine = (theLine: string): Tokens => {
     const cleaned = clean(theLine);
     const [label, withoutLabel] = split("after", ":", cleaned);
     forbidWhitespace(label);
     const [mnemonic, operandsText] = split("before", " ", withoutLabel);
     const operandsList = split("before", ",", operandsText);
     expandIndexOffsetOperands(operandsList);
-    return [label, mnemonic].concat(operandsList);
+    return [label, mnemonic].concat(operandsList) as Tokens;
 };
