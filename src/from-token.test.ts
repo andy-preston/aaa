@@ -43,7 +43,7 @@ Deno.test("An indexed auto-incrementing instruction", () => {
     assertEquals(instruction.indexingOperand, "Y+");
 });
 
-Deno.test("Bad multiple index specs", () => {
+Deno.test("Bad multiple indexing operations", () => {
     assertThrows(
         () => fromTokens(context, ["LD", "X+", "Y+"]),
         Error,
