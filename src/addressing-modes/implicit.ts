@@ -1,5 +1,4 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction.ts";
 import { checkCount } from "../operands/mod.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -24,12 +23,14 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
+    mnemonic: string,
+    _numericOperands: Array<number | null>,
+    symbolicOperands: Array<string>,
     _programCounter: number
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(instruction.operands, []);
-    return template(mapping.get(instruction.mnemonic)!, []);
+    checkCount(symbolicOperands, []);
+    return template(mapping.get(mnemonic)!, []);
 };
