@@ -24,11 +24,36 @@ const forbidWhitespace = (suspect: string) => {
 const clean = (theLine: string): string =>
     stripComment(theLine).replace(/\s+/g, " ").trim();
 
+const expandIndexOffsetOperands = (operands: Array<string>)/*: Array<string>*/ => {
+    const found = (position: number): boolean =>
+        operands[position]!.startsWith("Z+") && operands[position]!.length > 2;
+
+    const expand = (position: 0 | 1) => {
+        operands[position] = operands[position]!.substring(2);
+        operands.splice(position, 0, "Z+");
+    };
+
+    let second = 1;
+    if (found(0)) {
+        expand(0);
+        second = 2;
+    }
+    if (found(second)) {
+        if (second == 2) {
+            throw SyntaxError(
+                "An instruction can only have 1 index offset (Z+qq) operand"
+            );
+        }
+        expand(1);
+    }
+}
+
 export const tokeniseLine = (theLine: string): Array<string> => {
     const cleaned = clean(theLine);
     const [label, withoutLabel] = split("after", ":", cleaned);
     forbidWhitespace(label);
-    const [mnemonic, operands] = split("before", " ", withoutLabel);
-    const [firstOperand, secondOperand] = split("before", ",", operands);
-    return [label, mnemonic, firstOperand, secondOperand];
+    const [mnemonic, operandsText] = split("before", " ", withoutLabel);
+    const operandsList = split("before", ",", operandsText);
+    expandIndexOffsetOperands(operandsList);
+    return [label, mnemonic].concat(operandsList);
 };

@@ -89,4 +89,22 @@ Deno.test("Operands can contain whitespace and even be JS expressions", () => {
         ["label", "LDI", "baseReg + n", "n * 2"]
     );
 });
+
+Deno.test("Z+q operands are tokenised as a 'Z+' and a q", () => {
+    assertEquals(
+        tokeniseLine("LDD R14, Z+23"),
+        ["", "LDD", "R14", "Z+", "23"]
+    );
+    assertEquals(
+        tokeniseLine("STD Z+0xa7, R17"),
+        ["", "STD", "Z+", "0xa7", "R17"]
+    );
+});
+
+Deno.test("Only one Z+q operand is allowed in an instruction", () => {
+    assertThrows(
+        () => tokeniseLine("LDD Z+12, Z+13"),
+        SyntaxError,
+        "An instruction can only have 1 index offset (Z+qq) operand"
+    );
 });
