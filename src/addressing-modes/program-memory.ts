@@ -1,5 +1,7 @@
+import { ProgramCounter } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import { check } from "../operands/mod.ts";
+import { check, NumericOperands, SymbolicOperands } from "../operands/mod.ts";
+import { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM",     "1001_0101 111b_1000"], // Implied Z OR explicit Z+
@@ -12,10 +14,10 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (
-    mnemonic: string,
-    numericOperands: Array<number | null>,
-    symbolicOperands: Array<string>,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    numericOperands: NumericOperands,
+    symbolicOperands: SymbolicOperands,
+    _programCounter: ProgramCounter
 ): GeneratedCode | undefined => {
     if (!mapping.has(mnemonic)) {
         return undefined;

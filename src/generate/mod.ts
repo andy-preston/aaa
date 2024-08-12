@@ -4,4 +4,4 @@ export { littleEndian } from "./transform.ts";
 
 export { template } from "./template.ts";
 
-export { encoder } from "./generator.ts";
+export { generator } from "./generator.ts";

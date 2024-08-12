@@ -12,6 +12,6 @@ export const generator = (contextHandler: ContextHandler) => {
                 return generatedCode;
             }
         }
-        throw SyntaxError(`unknown instruction ${mnemonic}`);
+        throw SyntaxError(`unknown instruction ${instruction[0]!}`);
     };
 };
