@@ -1,4 +1,4 @@
-import { Context } from "./types.ts";
+import type { Context } from "./types.ts";
 
 export const defaults = (programCounter: number): Context => {
     const context: Context = {};
@@ -19,4 +19,3 @@ export const defaults = (programCounter: number): Context => {
     context.PC = programCounter;
     return context;
 };
-

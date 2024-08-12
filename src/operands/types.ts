@@ -1,7 +1,6 @@
-export const indexingOperands
-    = ["X+", "-X", "Y+", "-Y", "Z+", "-Z"] as const;
+export const indexingOperands = ["X+", "-X", "Y+", "-Y", "Z+", "-Z"] as const;
 
-export type IndexingOperand = typeof indexingOperands[number];
+export type IndexingOperand = (typeof indexingOperands)[number];
 
 type Operand = number;
 

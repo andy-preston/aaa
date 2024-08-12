@@ -17,7 +17,7 @@ const split = (
 
 const forbidWhitespace = (suspect: string) => {
     if (suspect.indexOf(" ") != -1) {
-        throw new SyntaxError("Label must not contain whitespace")
+        throw new SyntaxError("Label must not contain whitespace");
     }
 }
 
@@ -26,9 +26,9 @@ const clean = (theLine: string): string =>
 
 const expandIndexOffsetOperands = (operands: Array<string>) => {
     const found = (position: number): boolean =>
-        operands.length > position
-            && operands[position]!.startsWith("Z+")
-            && operands[position]!.length > 2;
+        operands.length > position &&
+            operands[position]!.startsWith("Z+") &&
+            operands[position]!.length > 2;
 
     const expand = (position: 0 | 1) => {
         operands[position] = operands[position]!.substring(2);
@@ -48,7 +48,7 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
         }
         expand(1);
     }
-}
+};
 
 export const tokeniseLine = (theLine: string): Array<string> => {
     const cleaned = clean(theLine);
@@ -57,7 +57,7 @@ export const tokeniseLine = (theLine: string): Array<string> => {
     const [mnemonic, operandsText] = split("before", " ", withoutLabel);
     const operandsList = split("before", ",", operandsText).filter(
         (operand: string) => operand != ""
-    )
+    );
     expandIndexOffsetOperands(operandsList);
     return [label, mnemonic].concat(operandsList);
 };

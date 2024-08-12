@@ -1,7 +1,7 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
-import type { GeneratedCode } from "./generated-code.ts";
 import type { ContextHandler } from "../context/mod.ts";
-import { IndexingOperand, indexingOperands } from "../operands/mod.ts";
+import { type IndexingOperand, indexingOperands } from "../operands/mod.ts";
+import type { GeneratedCode } from "./generated-code.ts";
 
 export const encoder = (contextHandler: ContextHandler) => {
     return (tokens: Array<string>): GeneratedCode => {
@@ -16,9 +16,7 @@ export const encoder = (contextHandler: ContextHandler) => {
         );
         const symbolicOperands: Array<string> = tokens.map(
             (symbolic: string) =>
-                symbolic.indexOf(" ") == -1
-                    ? symbolic.toUpperCase()
-                    : symbolic
+                symbolic.indexOf(" ") == -1 ? symbolic.toUpperCase() : symbolic
         );
         for (const addressingMode of addressingModes) {
             const generatedCode = addressingMode(
@@ -33,5 +31,5 @@ export const encoder = (contextHandler: ContextHandler) => {
             }
         }
         throw SyntaxError(`unknown instruction ${mnemonic}`);
-    }
+    };
 };

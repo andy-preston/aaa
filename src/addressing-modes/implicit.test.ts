@@ -1,7 +1,6 @@
 import { assertEquals } from "assert";
-import { littleEndian } from "../generate/mod.ts";
-import { encoder } from "../generate/mod.ts";
 import { newContext } from "../context/mod.ts";
+import { encoder, littleEndian } from "../generate/mod.ts";
 
 const encode = encoder(newContext(0));
 
@@ -14,7 +13,7 @@ const tests = [
     ["RET", [0x08, 0x95]],
     ["RETI", [0x18, 0x95]],
     ["SLEEP", [0x88, 0x95]],
-    ["WDR", [0xA8, 0x95]],
+    ["WDR", [0xa8, 0x95]],
     ["IJMP", [0x09, 0x94]],
     ["EIJMP", [0x19, 0x94]],
     ["ICALL", [0x09, 0x95]],

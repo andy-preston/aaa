@@ -1,4 +1,4 @@
-import { GeneratedCode } from "../generate/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 import { defaults } from "./defaults.ts";
 
 export interface ContextHandler {
@@ -18,7 +18,7 @@ export const newContext = (initialProgramCounter: number): ContextHandler => {
             ).call(context);
         },
         "label": (name: string) => {
-            if ('name' in context) {
+            if ("name" in context) {
                 throw Error(`label ${name} already exists`);
             }
             context[name] = context.PC as number;
@@ -27,7 +27,7 @@ export const newContext = (initialProgramCounter: number): ContextHandler => {
             context.PC = newValue;
         },
         "step": (generatedCode: GeneratedCode) => {
-            context.PC = context.PC as number + generatedCode.length;
+            context.PC = (context.PC as number) + generatedCode.length;
         },
         "programCounter": (): number => context.PC as number
     };
