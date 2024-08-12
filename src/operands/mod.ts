@@ -1,5 +1,6 @@
 export {
-    type Operands,
+    type NumericOperands,
+    type SymbolicOperands,
     type OperandIndex,
     type IndexingOperand,
     indexingOperands

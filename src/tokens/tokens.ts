@@ -1,3 +1,5 @@
+import { SymbolicOperands } from "../operands/mod.ts";
+
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
     return semicolon == -1 ? raw : raw.substring(0, semicolon);
@@ -50,7 +52,13 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
     }
 };
 
-export const tokeniseLine = (theLine: string): Array<string> => {
+export type Mnemonic = string;
+
+type Label = string;
+
+export type Tokens = [Label, Mnemonic, SymbolicOperands];
+
+export const tokeniseLine = (theLine: string): Tokens => {
     const cleaned = clean(theLine);
     const [label, withoutLabel] = split("after", ":", cleaned);
     forbidWhitespace(label);
@@ -59,5 +67,5 @@ export const tokeniseLine = (theLine: string): Array<string> => {
         (operand: string) => operand != ""
     );
     expandIndexOffsetOperands(operandsList);
-    return [label, mnemonic].concat(operandsList);
+    return [label, mnemonic, operandsList as SymbolicOperands];
 };
