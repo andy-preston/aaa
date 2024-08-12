@@ -1,4 +1,4 @@
-export type GeneratedCode = [number, number] | [number, number, number, number];
+import type { GeneratedCode } from "./types.ts";
 
 export const littleEndian = (code: GeneratedCode): GeneratedCode => {
     const little: Array<number> = [];

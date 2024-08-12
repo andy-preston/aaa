@@ -1,4 +1,6 @@
-export { type GeneratedCode, littleEndian } from "./generated-code.ts";
+export type { GeneratedCode } from "./types.ts";
+
+export { littleEndian } from "./transform.ts";
 
 export { template } from "./template.ts";
 

@@ -1,7 +1,7 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { ContextHandler } from "../context/mod.ts";
 import { type IndexingOperand, indexingOperands } from "../operands/mod.ts";
-import type { GeneratedCode } from "./generated-code.ts";
+import type { GeneratedCode } from "./types.ts";
 
 export const encoder = (contextHandler: ContextHandler) => {
     return (tokens: Array<string>): GeneratedCode => {
