@@ -1,5 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction.ts";
+import type { Instruction } from "../instruction/mod.ts";
 import { check, checkCount } from "../operands/mod.ts";
 
 export const encode = (
