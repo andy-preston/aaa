@@ -1,7 +1,6 @@
-import { ProgramCounter } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import { check, NumericOperands, SymbolicOperands } from "../operands/mod.ts";
-import { Mnemonic } from "../tokens/tokens.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM",     "1001_0101 111b_1000"], // Implied Z OR explicit Z+
@@ -15,18 +14,17 @@ const mapping: Map<string, string> = new Map([
 
 export const encode = (
     mnemonic: Mnemonic,
-    numericOperands: NumericOperands,
-    symbolicOperands: SymbolicOperands,
-    _programCounter: ProgramCounter
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const isStore = mnemonic == "SPM";
     const validOperands = isStore ? ["Z+"] : ["Z", "Z+"];
-    const valid = symbolicOperands.length == 0 || (
-        symbolicOperands.length == (isStore ? 1 : 2)
-            && validOperands.includes(symbolicOperands[isStore ? 0 : 1]!)
+    const valid = operands.length == 0 || (
+        operands.length == (isStore ? 1 : 2)
+            && validOperands.includes(operands[isStore ? 0 : 1]!)
     );
     if (!valid) {
         const valid = validOperands.join(" or ");
@@ -34,19 +32,20 @@ export const encode = (
             `${mnemonic} can only have either no operands or ${valid}`
         );
     }
-    if (!isStore && numericOperands.length == 2) {
-        check("register", 1, numericOperands[0]!);
-    }
+    const register = (!isStore && operands.length == 2)
+        ? convert.numeric("register", operands[0]!)
+        : undefined;
     if (isStore) {
         return template(mapping.get(mnemonic)!, [
-            ["b", symbolicOperands[0] == "Z+" ? 1 : 0]
+            ["b", operands[0] == "Z+" ? 1 : 0]
         ]);
     }
-    if (numericOperands.length == 2) {
-        // This is still a bit horrible and needs more work
-        return template(mapping.get(`${mnemonic}.${symbolicOperands[1]}`)!, [
-            ["d", numericOperands[0]!]
-        ]);
+    if (register == undefined) {
+        return template(mapping.get(mnemonic)!, []);
     }
-    return template(mapping.get(mnemonic)!, []);
+    // This is still a bit horrible and needs more work
+    const index = convert.symbolic(operands[1]!);
+    return template(mapping.get(`${mnemonic}.${index}`)!, [
+        ["d", register]
+    ]);
 };
