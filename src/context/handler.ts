@@ -6,6 +6,7 @@ export interface ContextHandler {
     "label": (name: string) => void;
     "origin": (newValue: number) => void;
     "step": (generatedCode: GeneratedCode) => void;
+    "org": (newProgramCounter: number) => void;
     "programCounter": () => number;
 }
 
@@ -27,7 +28,10 @@ export const newContext = (initialProgramCounter: number): ContextHandler => {
             context.PC = newValue;
         },
         "step": (generatedCode: GeneratedCode) => {
-            context.PC = (context.PC as number) + generatedCode.length;
+            context.PC = (context.PC as number) + (generatedCode.length / 2);
+        },
+        "org": (newProgramCounter: number) => {
+            context.PC = newProgramCounter;
         },
         "programCounter": (): number => context.PC as number
     };
