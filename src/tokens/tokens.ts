@@ -1,4 +1,4 @@
-import { SymbolicOperands } from "../operands/mod.ts";
+import type { SymbolicOperands } from "../operands/mod.ts";
 
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
@@ -15,13 +15,13 @@ const split = (
         return keep == "before" ? [raw, ""] : ["", raw];
     }
     return [raw.substring(0, position), raw.substring(position + 1).trim()];
-}
+};
 
 const forbidWhitespace = (suspect: string) => {
     if (suspect.indexOf(" ") != -1) {
         throw new SyntaxError("Label must not contain whitespace");
     }
-}
+};
 
 const clean = (theLine: string): string =>
     stripComment(theLine).replace(/\s+/g, " ").trim();
