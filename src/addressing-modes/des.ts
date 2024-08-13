@@ -1,17 +1,20 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount } from "../operands/mod.ts";
+import {
+    type OperandConverter,
+    type SymbolicOperands,
+    checkCount
+} from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (instruction.mnemonic != "DES") {
+    if (mnemonic != "DES") {
         return undefined;
     }
-    checkCount(instruction.operands, ["nybble"]);
-    check("nybble", 0, instruction.operands[0]!);
-    return template("1001_0100 KKKK_1011", [
-        ["K", instruction.operands[0]!]
-    ]);
+    checkCount(operands, ["nybble"]);
+    const nybble = convert.numeric("nybble", operands[0]!);
+    return template("1001_0100 KKKK_1011", [["K", nybble]]);
 };
