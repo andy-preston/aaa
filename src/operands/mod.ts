@@ -8,8 +8,8 @@ export {
 
 export { type TypeName, check, checkCount } from "./check.ts";
 
+export { twosComplement } from "./twos-complement.ts";
 export {
-    twosComplement,
     relativeJump,
     registerFrom16,
     registerPair
