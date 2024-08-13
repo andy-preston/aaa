@@ -1,17 +1,27 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { ContextHandler } from "../context/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
+import { operandConverter } from "../operands/mod.ts";
+import type { Tokens } from "../tokens/tokens.ts";
 import type { GeneratedCode } from "./types.ts";
 
-export const generator = (contextHandler: ContextHandler) => {
-    return (instruction: Instruction): GeneratedCode => {
+export type GeneratorFunction = (tokens: Tokens) => GeneratedCode;
+
+export const generator = (context: ContextHandler): GeneratorFunction => {
+    const converter = operandConverter(context);
+
+    return (tokens: Tokens): GeneratedCode => {
+        context.label(tokens[0]!);
         for (const addressingMode of addressingModes) {
-            const generatedCode = addressingMode(...instruction);
+            const generatedCode = addressingMode(
+                tokens[1]!.toUpperCase(),
+                tokens[2],
+                converter
+            );
             if (generatedCode != null) {
-                contextHandler.step(generatedCode);
+                context.step(generatedCode);
                 return generatedCode;
             }
         }
-        throw SyntaxError(`unknown instruction ${instruction[0]!}`);
+        throw SyntaxError(`unknown instruction ${tokens[1]!}`);
     };
 };
