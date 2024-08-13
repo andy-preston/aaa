@@ -1,6 +1,11 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount, registerFrom16 } from "../operands/mod.ts";
+import {
+    type OperandConverter,
+    type SymbolicOperand,
+    type SymbolicOperands,
+    checkCount
+} from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["CPI", "0011"],
@@ -14,38 +19,38 @@ const mapping: Map<string, string> = new Map([
     ["SER", "1110"] //  LDI are ALMOST the same instruction
 ]);
 
-const immediate = (mnemonic: string, operand1: number) => {
-    switch (mnemonic) {
-        // Clear bits in register is an AND with the inverse of the operand
-        case "CBR": // Set all bits is basically an LDI with FF
-            return 0xff - operand1;
-        case "SER":
-            return 0xff;
-        default: // All the other instructions have "sensible" operands
-            return operand1;
-    }
-};
-
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+
+    const immediate = (operand: SymbolicOperand) => {
+        const numeric =
+            mnemonic != "SER" ? convert.numeric("byte", operand) : 0;
+        switch (mnemonic) {
+            // Clear bits in register is an AND with the inverse of the operand
+            case "CBR": // Set all bits is basically an LDI with FF
+                return 0xff - numeric;
+            case "SER":
+                return 0xff;
+            default: // All the other instructions have "sensible" operands
+                return numeric;
+        }
+    };
+
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
     checkCount(
-        instruction.operands,
-        instruction.mnemonic != "SER"
+        operands,
+        mnemonic != "SER"
             ? ["immediateRegister", "byte"]
             : ["immediateRegister"]
     );
-    check("immediateRegister", 0, instruction.operands[0]!);
-    if (instruction.mnemonic != "SER") {
-        check("byte", 1, instruction.operands[1]!);
-    }
-    const prefix = mapping.get(instruction.mnemonic)!;
+    const prefix = mapping.get(mnemonic)!;
     return template(`${prefix}_KKKK dddd_KKKK`, [
-        ["d", registerFrom16(instruction.operands[0]!)],
-        ["K", immediate(instruction.mnemonic, instruction.operands[1]!)]
+        ["d", convert.immediateRegister(operands[0]!)],
+        ["K", immediate(operands[1]!)]
     ]);
 };
