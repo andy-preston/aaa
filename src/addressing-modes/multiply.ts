@@ -1,7 +1,7 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { Instruction } from "../instruction/mod.ts";
 import {
-    type TypeName,
+    type CheckName,
     check,
     checkCount,
     registerFrom16
@@ -22,10 +22,8 @@ export const encode = (
     if (!mapping.has(instruction.mnemonic)) {
         return undefined;
     }
-    const registerType: TypeName =
-        instruction.mnemonic == "MULS"
-            ? "immediateRegister"
-            : "multiplyRegister";
+    const registerType: CheckName =
+        mnemonic == "MULS" ? "immediateRegister" : "multiplyRegister";
 
     checkCount(instruction.operands, [registerType, registerType]);
     check(registerType, 0, instruction.operands[0]!);

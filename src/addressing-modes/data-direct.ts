@@ -1,8 +1,8 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { Instruction } from "../instruction/mod.ts";
 import {
+    type CheckName,
     type OperandIndex,
-    type TypeName,
     check,
     checkCount,
     registerFrom16

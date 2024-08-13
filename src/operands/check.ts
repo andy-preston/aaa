@@ -6,7 +6,7 @@ import {
 
 type CheckFunction = (operand: number) => boolean;
 
-const types = {
+const checks = {
     "register": [
         (operand: number) => operand >= 0 && operand <= 31,
         "register (R0 - R31)"
@@ -66,30 +66,30 @@ const types = {
     ]
 } satisfies Record<string, [CheckFunction, string]>;
 
-export type TypeName = keyof typeof types;
+export type CheckName = keyof typeof checks;
 
 export const check = (
-    typeName: TypeName,
+    checkName: CheckName,
     position: OperandIndex,
-    value: number
+    numeric: NumericOperand
 ) => {
-    const theType = types[typeName];
-    if (theType[0](value)) {
+    const theCheck = checks[checkName];
+    if (theCheck[0](numeric)) {
         return;
     }
+    const displayValue = `${numeric} / 0x${numeric.toString(16)}`;
+    const expectation = `expecting ${theCheck[1]} not`;
     const positionName = position == 0 ? "first" : "second";
-    const displayValue = `${value} / 0x${value.toString(16)}`;
-    const expectation = `expecting ${theType[1]} not`;
     throw new RangeError(
         `${positionName} operand out of range - ${expectation} ${displayValue}`
     );
 };
 
-const description = (typeName: TypeName): string => types[typeName][1];
+const description = (checkName: CheckName): string => checks[checkName][1];
 
 export const checkCount = (
     list: SymbolicOperands | NumericOperands,
-    expected: Array<TypeName>
+    expected: Array<CheckName>
 ) => {
     if (list.length == expected.length) {
         return;

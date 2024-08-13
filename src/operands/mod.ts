@@ -6,7 +6,7 @@ export {
     indexingOperands
 } from "./types.ts";
 
-export { type TypeName, check, checkCount } from "./check.ts";
+export { type CheckName, check, checkCount } from "./check.ts";
 
 export { twosComplement } from "./twos-complement.ts";
 export {
