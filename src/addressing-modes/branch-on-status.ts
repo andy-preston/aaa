@@ -1,6 +1,10 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount, relativeJump } from "../operands/mod.ts";
+import {
+    type OperandConverter,
+    type SymbolicOperands,
+    checkCount
+} from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BRBC", ["1", undefined]],
@@ -26,29 +30,27 @@ const mapping: Map<string, [string, number?]> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const [operationBit, impliedOperand] = mapping.get(instruction.mnemonic)!;
+    const [operationBit, impliedOperand] = mapping.get(mnemonic)!;
     checkCount(
-        instruction.operands,
+        operands,
         impliedOperand == undefined
-            ? ["bitIndex", "relativeAddress"]
-            : ["relativeAddress"]
+            ? ["bitIndex", "relative7bit"]
+            : ["relative7bit"]
     );
     const bit =
-        impliedOperand == undefined ? instruction.operands[0]! : impliedOperand;
-    const jumpAddress =
         impliedOperand == undefined
-            ? instruction.operands[1]
-            : instruction.operands[0];
-    check("bitIndex", 0, bit!);
-    check("relativeAddress", impliedOperand == undefined ? 1 : 0, jumpAddress!);
+            ? convert.numeric("bitIndex", operands[0]!)
+            : impliedOperand;
+    const jumpIndex = impliedOperand == undefined ? 1 : 0;
     return template(`1111_0${operationBit}kk kkkk_ksss`, [
         ["s", bit],
-        ["k", relativeJump(jumpAddress!, 7, programCounter)]
+        ["k", convert.relative7bit(operands[jumpIndex]!, 7)]
     ]);
 };
