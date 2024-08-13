@@ -1,7 +1,10 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import { ProgramCounter } from "../context/mod.ts";
-import { checkCount, NumericOperands, SymbolicOperands } from "../operands/mod.ts";
-import { Mnemonic } from "../tokens/tokens.ts";
+import {
+    type OperandConverter,
+    type SymbolicOperands,
+    checkCount
+} from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["BREAK", "1001_0101 1001_1000"],
@@ -19,13 +22,12 @@ const mapping: Map<string, string> = new Map([
 
 export const encode = (
     mnemonic: Mnemonic,
-    _numericOperands: NumericOperands,
-    symbolicOperands: SymbolicOperands,
-    _programCounter: ProgramCounter
+    operands: SymbolicOperands,
+    _convert: OperandConverter
 ): GeneratedCode | undefined => {
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(symbolicOperands, []);
+    checkCount(operands, []);
     return template(mapping.get(mnemonic)!, []);
 };
