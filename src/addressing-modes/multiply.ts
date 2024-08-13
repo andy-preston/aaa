@@ -1,11 +1,11 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
 import {
     type CheckName,
-    check,
-    checkCount,
-    registerFrom16
+    type OperandConverter,
+    type SymbolicOperands,
+    checkCount
 } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["FMUL", ["1 0", "1"]],
@@ -16,23 +16,19 @@ const mapping: Map<string, [string, string]> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const registerType: CheckName =
         mnemonic == "MULS" ? "immediateRegister" : "multiplyRegister";
-
-    checkCount(instruction.operands, [registerType, registerType]);
-    check(registerType, 0, instruction.operands[0]!);
-    check(registerType, 1, instruction.operands[1]!);
-    const [firstOperation, secondOperation] = mapping.get(
-        instruction.mnemonic
-    )!;
+    checkCount(operands, [registerType, registerType]);
+    const [firstOperation, secondOperation] = mapping.get(mnemonic)!;
     return template(`0000_001${firstOperation}ddd_${secondOperation}rrr`, [
-        ["d", registerFrom16(instruction.operands[0]!)],
-        ["r", registerFrom16(instruction.operands[1]!)]
+        ["d", convert[registerType](operands[0]!)],
+        ["r", convert[registerType](operands[1]!)]
     ]);
 };
