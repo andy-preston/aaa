@@ -1,10 +1,8 @@
-import {
-    NumericOperands,
-    OperandIndex,
+import type {
+    NumericOperand,
+    SymbolicOperand,
     SymbolicOperands
 } from "./types.ts";
-
-type CheckFunction = (operand: number) => boolean;
 
 const checks = {
     "register": [
@@ -64,13 +62,13 @@ const checks = {
         (operand: number) => operand >= 0 || operand <= 0xffffffff,
         "16 bit RAM address (0 - 0xFFFFFFFF) (64 K)"
     ]
-} satisfies Record<string, [CheckFunction, string]>;
+} as const;
 
 export type CheckName = keyof typeof checks;
 
 export const check = (
     checkName: CheckName,
-    position: OperandIndex,
+    raw: SymbolicOperand,
     numeric: NumericOperand
 ) => {
     const theCheck = checks[checkName];
@@ -79,16 +77,15 @@ export const check = (
     }
     const displayValue = `${numeric} / 0x${numeric.toString(16)}`;
     const expectation = `expecting ${theCheck[1]} not`;
-    const positionName = position == 0 ? "first" : "second";
     throw new RangeError(
-        `${positionName} operand out of range - ${expectation} ${displayValue}`
+        `Operand out of range - ${expectation} ${raw} (${displayValue})`
     );
 };
 
 const description = (checkName: CheckName): string => checks[checkName][1];
 
 export const checkCount = (
-    list: SymbolicOperands | NumericOperands,
+    list: SymbolicOperands,
     expected: Array<CheckName>
 ) => {
     if (list.length == expected.length) {
