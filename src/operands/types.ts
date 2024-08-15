@@ -2,18 +2,14 @@ export const indexingOperands = ["X+", "-X", "Y+", "-Y", "Z+", "-Z"] as const;
 
 export type IndexingOperand = (typeof indexingOperands)[number];
 
-type NumericOperand = number | null;
+export type NumericOperand = number;
 
-export type NumericOperands = |
-    [] |
-    [NumericOperand] |
-    [NumericOperand, NumericOperand] |
-    [NumericOperand, NumericOperand, NumericOperand];
+export type SymbolicOperand = string;
 
-export type SymbolicOperands = |
-    [] |
-    [string] |
-    [string, string] |
-    [string, string, string];
+export type SymbolicOperands =
+    | []
+    | [SymbolicOperand]
+    | [SymbolicOperand, SymbolicOperand]
+    | [SymbolicOperand, SymbolicOperand, SymbolicOperand];
 
 export type OperandIndex = 0 | 1;
