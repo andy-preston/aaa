@@ -66,3 +66,5 @@ export const operandConverter = (contextHandler: ContextHandler) => {
         "checkCount": checkCount
     };
 };
+
+export type OperandConverter = ReturnType<typeof operandConverter>;

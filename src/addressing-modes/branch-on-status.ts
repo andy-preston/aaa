@@ -1,9 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import {
-    type OperandConverter,
-    type SymbolicOperands,
-    checkCount
-} from "../operands/mod.ts";
+import type { SymbolicOperands, OperandConverter } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
@@ -38,7 +34,7 @@ export const encode = (
         return undefined;
     }
     const [operationBit, impliedOperand] = mapping.get(mnemonic)!;
-    checkCount(
+    convert.checkCount(
         operands,
         impliedOperand == undefined
             ? ["bitIndex", "relative7bit"]
@@ -51,6 +47,6 @@ export const encode = (
     const jumpIndex = impliedOperand == undefined ? 1 : 0;
     return template(`1111_0${operationBit}kk kkkk_ksss`, [
         ["s", bit],
-        ["k", convert.relative7bit(operands[jumpIndex]!, 7)]
+        ["k", convert.numeric("relative7bit", operands[jumpIndex]!)]
     ]);
 };

@@ -7,8 +7,8 @@ export {
     indexingOperands
 } from "./types.ts";
 
-export { type OperandType, check, checkCount } from "./check.ts";
-
 export { twosComplement } from "./twos-complement.ts";
+
+export type { TypeName } from "./operand-types.ts";
 
 export { type OperandConverter, operandConverter } from "./converter.ts";

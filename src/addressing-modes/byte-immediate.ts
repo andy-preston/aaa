@@ -1,10 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import {
-    type OperandConverter,
-    type SymbolicOperand,
-    type SymbolicOperands,
-    checkCount
-} from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperand, SymbolicOperands } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -42,7 +37,7 @@ export const encode = (
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(
+    convert.checkCount(
         operands,
         mnemonic != "SER"
             ? ["immediateRegister", "byte"]
@@ -50,7 +45,7 @@ export const encode = (
     );
     const prefix = mapping.get(mnemonic)!;
     return template(`${prefix}_KKKK dddd_KKKK`, [
-        ["d", convert.immediateRegister(operands[0]!)],
+        ["d", convert.numeric("immediateRegister", operands[0]!)],
         ["K", immediate(operands[1]!)]
     ]);
 };

@@ -1,11 +1,10 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import {
-    type CheckName,
-    type NumericOperand,
-    type OperandConverter,
-    type OperandIndex,
-    type SymbolicOperands,
-    checkCount
+import type {
+    TypeName,
+    NumericOperand,
+    OperandConverter,
+    OperandIndex,
+    SymbolicOperands
 } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
@@ -14,7 +13,7 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["STS", ["1", 1, 0]]
 ]);
 
-type Options = [CheckName, CheckName, () => NumericOperand, string, string];
+type Options = [TypeName, TypeName, () => NumericOperand, string, string];
 
 export const encode = (
     mnemonic: Mnemonic,
@@ -30,18 +29,18 @@ export const encode = (
         convert.numeric("register", operands[registerIndex]!);
 
     const smallRegister = (): NumericOperand =>
-        convert.immediateRegister(operands[registerIndex]!);
+        convert.numeric("immediateRegister", operands[registerIndex]!);
 
     const bigMode: Map<boolean, Options> = new Map([
         [ true, [
-            "register" as CheckName,
-            "16bitAddress" as CheckName,
+            "register" as TypeName,
+            "16bitAddress" as TypeName,
             bigRegister,
             "1001_00",
             "d dddd_0000 kkkk_kkkk kkkk_kkkk"
         ]], [ false, [
-            "immediateRegister" as CheckName,
-            "7bitAddress" as CheckName,
+            "immediateRegister" as TypeName,
+            "7bitAddress" as TypeName,
             smallRegister,
             "1010_",
             "kkk dddd_kkkk"
@@ -55,7 +54,7 @@ export const encode = (
     // and the "little one" as LDS.RC
 
     const [registerType, addressType, register, prefix, suffix] = bigMode.get(true)!;
-    checkCount(
+    convert.checkCount(
         operands,
         registerIndex == 0
             ? [registerType, addressType]
