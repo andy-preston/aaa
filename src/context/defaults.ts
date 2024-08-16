@@ -1,4 +1,8 @@
-import type { Context } from "./types.ts";
+type ContextFunction = (n: number) => number;
+
+export interface Context {
+    [name: string]: number | ContextFunction;
+}
 
 export const defaults = (programCounter: number): Context => {
     const context: Context = {};

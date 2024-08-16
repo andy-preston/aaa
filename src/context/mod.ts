@@ -1,3 +1,5 @@
-export type { ProgramCounter } from "./types.ts";
-
-export { type ContextHandler, newContext } from "./handler.ts";
+export {
+    type ContextHandler,
+    type ProgramCounter,
+    newContext
+} from "./handler.ts";
