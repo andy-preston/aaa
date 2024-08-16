@@ -1,9 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import {
-    type OperandConverter,
-    type SymbolicOperands,
-    checkCount
-} from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -23,11 +19,11 @@ const mapping: Map<string, string> = new Map([
 export const encode = (
     mnemonic: Mnemonic,
     operands: SymbolicOperands,
-    _convert: OperandConverter
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(operands, []);
+    convert.checkCount(operands, []);
     return template(mapping.get(mnemonic)!, []);
 };

@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount, relativeJump } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["RCALL", "1"],
@@ -8,16 +8,16 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(instruction.operands, ["relativeAddress"]);
-    check("relativeAddress", 0, instruction.operands[0]!);
-    const operationBit = mapping.get(instruction.mnemonic)!;
+    convert.checkCount(operands, ["relative12bits"]);
+    const operationBit = mapping.get(mnemonic)!;
     return template(`110${operationBit}_kkkk kkkk_kkkk`, [
-        ["k", relativeJump(instruction.operands[0]!, 12, programCounter)]
+        ["k", convert.numeric("relative12bits", operands[0]!)]
     ]);
 };

@@ -1,10 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import {
-    type CheckName,
-    type OperandConverter,
-    type SymbolicOperands,
-    checkCount
-} from "../operands/mod.ts";
+import type { TypeName, OperandConverter, SymbolicOperands } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
@@ -23,12 +18,12 @@ export const encode = (
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const registerType: CheckName =
+    const registerType: TypeName =
         mnemonic == "MULS" ? "immediateRegister" : "multiplyRegister";
-    checkCount(operands, [registerType, registerType]);
+    convert.checkCount(operands, [registerType, registerType]);
     const [firstOperation, secondOperation] = mapping.get(mnemonic)!;
     return template(`0000_001${firstOperation}ddd_${secondOperation}rrr`, [
-        ["d", convert[registerType](operands[0]!)],
-        ["r", convert[registerType](operands[1]!)]
+        ["d", convert.numeric(registerType, operands[0]!)],
+        ["r", convert.numeric(registerType, operands[1]!)]
     ]);
 };
