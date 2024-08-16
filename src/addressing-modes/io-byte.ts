@@ -1,6 +1,6 @@
-import type { Instruction } from "../instruction.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import { check, checkCount, OperandIndex } from "../operands/mod.ts";
+import type { OperandConverter, OperandIndex, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["IN", ["0", 0, 1]],
@@ -8,24 +8,20 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const [operationBit, registerIndex, portIndex] =
-        mapping.get(instruction.mnemonic)!;
-    checkCount(
-        instruction.operands,
-        registerIndex < portIndex ? ["register", "port"] : ["port", "register"]
+    const [operationBit, register, port] = mapping.get(mnemonic)!;
+    convert.checkCount(
+        operands,
+        register == 0 ? ["register", "port"] : ["port", "register"]
     );
-    const register = instruction.operands[registerIndex]!;
-    const port = instruction.operands[portIndex]!;
-    check("register", registerIndex, register);
-    check("port", portIndex, port);
     return template(`1011_${operationBit}AAd dddd_AAAA`, [
-        ["d", register],
-        ["A", port]
+        ["d", convert.numeric("register", operands[register]!)],
+        ["A", convert.numeric("port", operands[port]!)]
     ]);
 };

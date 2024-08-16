@@ -3,10 +3,8 @@ import { encode as byteImmediate } from "./byte-immediate.ts";
 import { encode as des } from "./des.ts";
 import { encode as dataDirect } from "./data-direct.ts";
 import { encode as directProgram } from "./direct-program.ts";
-/*
 import { encode as iOBit } from "./io-bit.ts";
 import { encode as iOByte } from "./io-byte.ts";
-*/
 import { encode as implicit } from "./implicit.ts";
 /*
 import { encode as indexIndirect } from "./index-indirect.ts";
@@ -29,10 +27,8 @@ export const addressingModes = [
     des,
     dataDirect,
     directProgram,
-    /*
     iOBit,
     iOByte,
-    */
     implicit,
     /*
     indexIndirect,
@@ -48,4 +44,4 @@ export const addressingModes = [
     twoRegisterDirect,
     wordDirect,
     wordImmediate
-];
+] as const;
