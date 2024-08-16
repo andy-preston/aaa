@@ -108,8 +108,8 @@ export const operandTypes = (context: ContextHandler) => {
             (operand: SymbolicOperand) => relativeJump(operand, 7)
         ],
         "16bitAddress": [
-            "16 bit RAM address (0 - 0xFFFFFFFF) (64 K)",
-            (operand: SymbolicOperand) => between(0, operand, 0xffffffff),
+            "16 bit RAM address (0 - 0xFFFF) (64 K)",
+            (operand: SymbolicOperand) => between(0, operand, 0xffff),
             numeric
         ],
         "7bitAddress": [

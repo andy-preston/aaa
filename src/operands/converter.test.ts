@@ -179,3 +179,49 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
         "256 out of range - should be between -127 and 128 or 0 and 255"
     );
 });
+
+Deno.test("A nybble should be between 0 and 0x0f", () => {
+    assertEquals(converter.numeric("nybble", "0"), 0);
+    assertEquals(converter.numeric("nybble", "6"), 6);
+    assertEquals(converter.numeric("nybble", "15"), 15);
+    assertThrows(
+        () => converter.numeric("nybble", "17"),
+        RangeError,
+        "Operand out of range - expecting nybble (0 - 0x0F) not 17"
+    );
+    assertThrows(
+        () => converter.numeric("nybble", "-1"),
+        RangeError,
+        "Operand out of range - expecting nybble (0 - 0x0F) not -1"
+    );
+});
+
+Deno.test("An address is 0 - 0x3FFFFF", () => {
+    assertEquals(converter.numeric("address", "0"), 0);
+    assertEquals(converter.numeric("address", "0x3FFFFF"), 0x3fffff);
+    assertThrows(
+        () => converter.numeric("address", "-1"),
+        RangeError,
+        "Operand out of range - expecting branch to 22 bit address (0 - 0x3FFFFF) (4 Meg) not -1"
+    );
+    assertThrows(
+        () => converter.numeric("address", "0x400000"),
+        RangeError,
+        "Operand out of range - expecting branch to 22 bit address (0 - 0x3FFFFF) (4 Meg) not 0x400000"
+    );
+});
+
+Deno.test("A RAM address is 0 - 0xFFFF", () => {
+    assertEquals(converter.numeric("16bitAddress", "0"), 0);
+    assertEquals(converter.numeric("16bitAddress", "0xFFFF"), 0xffff);
+    assertThrows(
+        () => converter.numeric("16bitAddress", "-1"),
+        RangeError,
+        "Operand out of range - expecting 16 bit RAM address (0 - 0xFFFF) (64 K) not -1"
+    );
+    assertThrows(
+        () => converter.numeric("16bitAddress", "0x10000"),
+        RangeError,
+        "Operand out of range - expecting 16 bit RAM address (0 - 0xFFFF) (64 K) not 0x10000"
+    );
+});
