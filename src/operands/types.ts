@@ -12,4 +12,4 @@ export type SymbolicOperands =
     | [SymbolicOperand, SymbolicOperand]
     | [SymbolicOperand, SymbolicOperand, SymbolicOperand];
 
-export type OperandIndex = 0 | 1;
+export type OperandIndex = 0 | 1 | 2;

@@ -1,13 +1,9 @@
-export {
-    type NumericOperand,
-    type SymbolicOperand,
-    type SymbolicOperands,
-    type OperandIndex,
-    type IndexingOperand,
-    indexingOperands
+export type {
+    NumericOperand,
+    SymbolicOperand,
+    SymbolicOperands,
+    OperandIndex
 } from "./types.ts";
-
-export { twosComplement } from "./twos-complement.ts";
 
 export type { TypeName } from "./operand-types.ts";
 

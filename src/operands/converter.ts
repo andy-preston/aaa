@@ -24,24 +24,21 @@ export const operandConverter = (contextHandler: ContextHandler) => {
 
     const check = (
         theType: OperandType,
-        raw: SymbolicOperand,
-        numeric: NumericOperand
+        symbolic: SymbolicOperand
     ) => {
-        if (theType[1](numeric)) {
+        if (theType[1](symbolic)) {
             return;
         }
-        const displayValue = `${numeric} / 0x${numeric.toString(16)}`;
-        const expectation = `expecting ${theType[0]} not`;
+        const expectation = `expecting ${theType[0]} not ${symbolic}`;
         throw new RangeError(
-            `Operand out of range - ${expectation} ${raw} (${displayValue})`
+            `Operand out of range - ${expectation}`
         );
     };
 
     const standaloneCheck = (
         typeName: TypeName,
-        raw: SymbolicOperand,
-        numeric: NumericOperand
-    ) => check (operands[typeName], raw,numeric);
+        raw: SymbolicOperand
+    ) => check (operands[typeName], raw);
 
 
     const symbolic = (operand: SymbolicOperand): SymbolicOperand =>
@@ -55,7 +52,7 @@ export const operandConverter = (contextHandler: ContextHandler) => {
     ): NumericOperand => {
         const operandType = operands[typeName];
         const numericOperand = operandType[2](operand);
-        check(operandType, operand, numericOperand);
+        check(operandType, operand);
         return numericOperand;
     };
 
