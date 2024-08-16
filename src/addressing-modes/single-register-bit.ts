@@ -3,8 +3,8 @@ import type { Instruction } from "../instruction/mod.ts";
 import { check, checkCount } from "../operands/mod.ts";
 
 const mapping: Map<string, string> = new Map([
-    ["BLD",  "00"],
-    ["BST",  "01"],
+    ["BLD", "00"],
+    ["BST", "01"],
     ["SBRC", "10"],
     ["SBRS", "11"]
 ]);
