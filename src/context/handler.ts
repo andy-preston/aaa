@@ -1,16 +1,9 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import { defaults } from "./defaults.ts";
 
-export interface ContextHandler {
-    "evaluate": (jsExpression: string) => number;
-    "label": (name: string) => void;
-    "origin": (newValue: number) => void;
-    "step": (generatedCode: GeneratedCode) => void;
-    "org": (newProgramCounter: number) => void;
-    "programCounter": () => number;
-}
+export type ProgramCounter = number;
 
-export const newContext = (initialProgramCounter: number): ContextHandler => {
+export const newContext = (initialProgramCounter: ProgramCounter) => {
     const context = defaults(initialProgramCounter);
     return {
         "evaluate": (jsExpression: string): number => {
@@ -18,21 +11,23 @@ export const newContext = (initialProgramCounter: number): ContextHandler => {
                 `with (this) { return eval('"use strict"; ${jsExpression}'); }`
             ).call(context);
         },
-        "label": (name: string) => {
+        "label": (name: string): void => {
             if ("name" in context) {
                 throw Error(`label ${name} already exists`);
             }
             context[name] = context.PC as number;
         },
-        "origin": (newValue: number) => {
-            context.PC = newValue;
-        },
-        "step": (generatedCode: GeneratedCode) => {
-            context.PC = (context.PC as number) + (generatedCode.length / 2);
-        },
-        "org": (newProgramCounter: number) => {
+        "origin": (newProgramCounter: ProgramCounter): void => {
             context.PC = newProgramCounter;
         },
-        "programCounter": (): number => context.PC as number
+        "step": (generatedCode: GeneratedCode): void => {
+            context.PC = (context.PC as number) + (generatedCode.length / 2);
+        },
+        "org": (newProgramCounter: ProgramCounter): void => {
+            context.PC = newProgramCounter;
+        },
+        "programCounter": (): ProgramCounter => context.PC as number
     };
 };
+
+export type ContextHandler = ReturnType<typeof newContext>;
