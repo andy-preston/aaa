@@ -83,9 +83,9 @@ export const operandTypes = (context: ContextHandler) => {
             numeric
         ],
         "byte": [
-            "byte (-128 - 127) or (0 - 0xFF)",
+            "byte (-127 - 128) or (0 - 0xFF)",
             (operand: SymbolicOperand) => between(-128, operand, 0xff),
-            numeric
+            (operand: SymbolicOperand) => twosComplement(numeric(operand), 8, false)
         ],
         "nybble": [
             "nybble (0 - 0x0F)",
