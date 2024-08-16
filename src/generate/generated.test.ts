@@ -1,46 +1,4 @@
 /*
-import { assertEquals, assertThrows } from "assert";
-import { type GeneratedCode, littleEndian } from "./generated-code.ts";
-import { type Instruction, instruction } from "../instruction/mod.ts";
-import type { Operands } from "../operands/mod.ts";
-import { encoder } from "./encode.ts";
-
-const R0 = 0;
-const R1 = 1;
-const R2 = 2;
-const R3 = 3;
-const R4 = 4;
-const R5 = 5;
-const R6 = 6;
-const R7 = 7;
-const R8 = 8;
-const R9 = 9;
-const R10 = 10;
-const R11 = 11;
-const R12 = 12;
-const R13 = 13;
-const R14 = 14;
-const R15 = 15;
-const R16 = 16;
-const R17 = 17;
-const R18 = 18;
-const R19 = 19;
-const R20 = 20;
-const R21 = 21;
-const R22 = 22;
-const R23 = 23;
-// const R24 = 24;
-// const R25 = 25;
-const R26 = 26;
-const R30 = 30;
-const R31 = 31;
-const Z = R30;
-const branch = 0x00000C;
-
-type Expected = [GeneratedCode, string, Operands];
-
-// The initial test results come from assembly with the last edition of
-// GAVRAsm that I could get hold of.
 const expectedResults: Array<Expected> = [
     [[0xA5, 0x94], "ASR", [R10]],
     [[0xF8, 0x94], "BCLR", [7]],
@@ -113,35 +71,4 @@ const expectedResults: Array<Expected> = [
     [[0x72, 0x94], "SWAP", [R7]],
     // XCH.Z
 ];
-
-const testEncode = (
-    instruction: Instruction,
-    programCounter: number
-): GeneratedCode | undefined => {
-    try {
-        return littleEndian(encode(instruction, programCounter));
-    } catch (error) {
-        throw new Error(
-            `error testing ${instruction.mnemonic}`,
-            {"cause": error}
-        );
-    }
-};
-
-Deno.test("Code generation is the same as GAVRAsm", () => {
-    let programCounter = 0;
-    for (const test of expectedResults) {
-        const [expected, mnemonic, operands] = test;
-        const generatedCode = testEncode(
-            instruction(mnemonic, operands),
-            programCounter
-        );
-        assertEquals(
-            generatedCode,
-            expected,
-            `Code generation failed for ${mnemonic} ${operands}`
-        );
-        programCounter += generatedCode!.length / 2;
-    }
-});
 */
