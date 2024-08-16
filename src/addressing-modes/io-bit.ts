@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SBI", "10"],
@@ -10,18 +10,17 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(instruction.operands, ["port", "bitIndex"]);
-    check("port", 0, instruction.operands[0]!);
-    check("bitIndex", 1, instruction.operands[1]!);
-    const operationBits = mapping.get(instruction.mnemonic)!;
+    convert.checkCount(operands, ["port", "bitIndex"]);
+    const operationBits = mapping.get(mnemonic)!;
     return template(`1001_10${operationBits} AAAA_Abbb`, [
-        ["A", instruction.operands[0]!],
-        ["b", instruction.operands[1]!]
+        ["A", convert.numeric("port", operands[0]!)],
+        ["b", convert.numeric("bitIndex", operands[1]!)]
     ]);
 };
