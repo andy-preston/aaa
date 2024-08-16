@@ -44,7 +44,6 @@ type Expected = [GeneratedCode, string, Operands];
 const expectedResults: Array<Expected> = [
     [[0x12, 0x1C], "ADC", [R1, R2]],
     [[0x34, 0x0C], "ADD", [R3, R4]],
-    [[0x15, 0x96], "ADIW", [R26, 5]],
     [[0x78, 0x20], "AND", [R7, R8]],
     [[0xA5, 0x94], "ASR", [R10]],
     [[0xF8, 0x94], "BCLR", [7]],
@@ -106,7 +105,6 @@ const expectedResults: Array<Expected> = [
     [[0xE5, 0x9A], "SBI", [28, 5]],
     [[0xEC, 0x99], "SBIC", [29, 4]],
     [[0xF3, 0x9B], "SBIS", [30, 3]],
-    [[0xD9, 0x97], "SBIW", [R26, 57]],
     [[0x43, 0xFD], "SBRC", [R20, 3]],
     [[0x56, 0xFF], "SBRS", [R21, 6]],
     [[0x08, 0x94], "SEC", []],

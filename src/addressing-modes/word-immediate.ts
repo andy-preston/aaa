@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount, registerPair } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
     ["ADIW", "0"],
@@ -8,21 +8,17 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(
-        instruction.operands,
-        ["registerPair", "sixBits"]
-    );
-    check("registerPair", 0, instruction.operands[0]!);
-    check("sixBits", 1, instruction.operands[1]!);
-    const operationBit = mapping.get(instruction.mnemonic)!;
+    convert.checkCount(operands, ["registerPair", "sixBits"]);
+    const operationBit = mapping.get(mnemonic)!;
     return template(`1001_011${operationBit} KKdd_KKKK`, [
-        ["d", registerPair(instruction.operands[0]!, 24)],
-        ["K", instruction.operands[1]!]
+        ["d", convert.numeric("registerPair", operands[0]!)],
+        ["K", convert.numeric("sixBits", operands[1]!)]
     ]);
 };
