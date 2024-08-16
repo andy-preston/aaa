@@ -1,19 +1,18 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount, registerPair } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (instruction.mnemonic != "MOVW") {
+    if (mnemonic != "MOVW") {
         return undefined;
     }
-    checkCount(instruction.operands, ["anyRegisterPair", "anyRegisterPair"]);
-    check("anyRegisterPair", 0, instruction.operands[0]!);
-    check("anyRegisterPair", 1, instruction.operands[1]!);
+    convert.checkCount(operands, ["anyRegisterPair", "anyRegisterPair"]);
     return template("0000_0001 dddd_rrrr", [
-        ["d", registerPair(instruction.operands[0]!, 0)],
-        ["r", registerPair(instruction.operands[1]!, 0)]
+        ["d", convert.numeric("anyRegisterPair", operands[0]!)],
+        ["r", convert.numeric("anyRegisterPair", operands[1]!)]
     ]);
 };

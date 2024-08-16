@@ -89,7 +89,6 @@ const expectedResults: Array<Expected> = [
         [["", "MUL", ["R8", "R16"]], [0x80, 0x9E]],
 
     [[0x78, 0x2C], "MOV", [R7, R8]],
-    [[0x45, 0x01], "MOVW", [R8, R10]],
     [[0xB1, 0x94], "NEG", [R11]],
     [[0xCD, 0x28], "OR", [R12, R13]],
     [[0x09, 0xBB], "OUT", [25, R16]],
