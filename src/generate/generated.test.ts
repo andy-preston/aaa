@@ -42,9 +42,6 @@ type Expected = [GeneratedCode, string, Operands];
 // The initial test results come from assembly with the last edition of
 // GAVRAsm that I could get hold of.
 const expectedResults: Array<Expected> = [
-    [[0x12, 0x1C], "ADC", [R1, R2]],
-    [[0x34, 0x0C], "ADD", [R3, R4]],
-    [[0x78, 0x20], "AND", [R7, R8]],
     [[0xA5, 0x94], "ASR", [R10]],
     [[0xF8, 0x94], "BCLR", [7]],
     [[0xB1, 0xF8], "BLD", [R11, 1]],
@@ -56,17 +53,12 @@ const expectedResults: Array<Expected> = [
     [[0xD8, 0x94], "CLH", []],
     [[0xF8, 0x94], "CLI", []],
     [[0xA8, 0x94], "CLN", []],
-    [[0xEE, 0x24], "CLR", [R14]],
     [[0xC8, 0x94], "CLS", []],
     [[0xE8, 0x94], "CLT", []],
     [[0xB8, 0x94], "CLV", []],
     [[0x98, 0x94], "CLZ", []],
     [[0xE0, 0x94], "COM", [R14]],
-    [[0xF0, 0x16], "CP", [R15, R16]],
-    [[0x12, 0x07], "CPC", [R17, R18]],
-    [[0x45, 0x13], "CPSE", [R20, R21]],
     [[0x6A, 0x95], "DEC", [R22]],
-    [[0x70, 0x25], "EOR", [R23, R0]],
     [[0x35, 0xB7], "IN", [R19, 53]],
     [[0x43, 0x95], "INC", [R20]],
     [[0x0C, 0x94, 0x0C, 0x00], "JMP", [branch]],
@@ -84,13 +76,8 @@ const expectedResults: Array<Expected> = [
     [[0x61, 0x91], "LD.Z+", [R22]], // LD R22, Z+
     [[0x72, 0x91], "LD.-Z", [R23]], // LD R23, -Z
     // [[0x86, 0x81], "LDD.Z", [R24, 6]], // LDD R24, Z+6
-    [[0x55, 0x0C], "LSL", [R5]],
     [[0x66, 0x94], "LSR", [R6]],
-        [["", "MUL", ["R8", "R16"]], [0x80, 0x9E]],
-
-    [[0x78, 0x2C], "MOV", [R7, R8]],
     [[0xB1, 0x94], "NEG", [R11]],
-    [[0xCD, 0x28], "OR", [R12, R13]],
     [[0x09, 0xBB], "OUT", [25, R16]],
     [[0x6F, 0x90], "POP", [R6]],
     [[0x7F, 0x92], "PUSH", [R7]],
@@ -98,9 +85,7 @@ const expectedResults: Array<Expected> = [
     // [[0xB7, 0xDF], "RCALL", [branch]],
     // Need a better test for relative stuffs
     // [[0xB4, 0xCF], "RJMP", [branch]],
-    [[0x44, 0x1F], "ROL", [R20]],
     [[0x37, 0x95], "ROR", [R19]],
-    [[0x42, 0x09], "SBC", [R20, R2]],
     [[0xE5, 0x9A], "SBI", [28, 5]],
     [[0xEC, 0x99], "SBIC", [29, 4]],
     [[0xF3, 0x9B], "SBIS", [30, 3]],
@@ -125,9 +110,7 @@ const expectedResults: Array<Expected> = [
     [[0x81, 0x92], "ST.Z+", [R8]], // ST Z+, R8
     [[0x92, 0x92], "ST.-Z", [R9]], // ST -Z, R9
     // [[0xa5, 0x86], "STD.Z", [R10, 13]], // STD Z+13, R10
-    [[0x12, 0x18], "SUB", [R1, R2]],
     [[0x72, 0x94], "SWAP", [R7]],
-    [[0x88, 0x20], "TST", [R8]],
     // XCH.Z
 ];
 

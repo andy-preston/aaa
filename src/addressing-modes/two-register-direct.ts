@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, number]> = new Map([
     ["CPC", ["0000_01", 2]],
@@ -22,25 +22,24 @@ const mapping: Map<string, [string, number]> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const [prefix, operandCount] = mapping.get(instruction.mnemonic)!;
-    checkCount(
-        instruction.operands,
+    const [prefix, operandCount] = mapping.get(mnemonic)!;
+    convert.checkCount(
+        operands,
         operandCount == 1 ? ["register"] : ["register", "register"]
     );
-    const registers = instruction.operands;
+    const registers = operands;
     if (operandCount == 1) {
         registers[1] = registers[0]!;
     }
-    check("register", 0, registers[0]!);
-    check("register", 1, registers[1]!);
     return template(`${prefix}rd dddd_rrrr`, [
-        ["d", registers[0]!],
-        ["r", registers[1]!]
+        ["d", convert.numeric("register", registers[0]!)],
+        ["r", convert.numeric("register", registers[1]!)]
     ]);
 };
