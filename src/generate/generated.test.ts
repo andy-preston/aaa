@@ -1,17 +1,9 @@
 /*
 const expectedResults: Array<Expected> = [
-    [[0xA5, 0x94], "ASR", [R10]],
     [[0xB1, 0xF8], "BLD", [R11, 1]],
     [[0xC3, 0xFA], "BST", [R12, 3]],
     [[0x0E, 0x94, 0x0C, 0x00], "CALL", [branch]],
-    [[0xE0, 0x94], "COM", [R14]],
-    [[0x6A, 0x95], "DEC", [R22]],
-    [[0x35, 0xB7], "IN", [R19, 53]],
-    [[0x43, 0x95], "INC", [R20]],
     [[0x0C, 0x94, 0x0C, 0x00], "JMP", [branch]],
-    [[0x46, 0x93], "LAC", [Z, R20]],
-    [[0x55, 0x93], "LAS", [Z, R21]],
-    [[0x67, 0x93], "LAT", [Z, R22]],
     [[0xec, 0x90], "LD.X", [R14]], // LD R14, X
     [[0xfd, 0x90], "LD.X+", [R15]], // LD R15, X+
     [[0x0e, 0x91], "LD.-X", [R16]], // LD R16, -X
@@ -23,19 +15,10 @@ const expectedResults: Array<Expected> = [
     [[0x61, 0x91], "LD.Z+", [R22]], // LD R22, Z+
     [[0x72, 0x91], "LD.-Z", [R23]], // LD R23, -Z
     // [[0x86, 0x81], "LDD.Z", [R24, 6]], // LDD R24, Z+6
-    [[0x66, 0x94], "LSR", [R6]],
-    [[0xB1, 0x94], "NEG", [R11]],
-    [[0x09, 0xBB], "OUT", [25, R16]],
-    [[0x6F, 0x90], "POP", [R6]],
-    [[0x7F, 0x92], "PUSH", [R7]],
     // Need a better test for relative stuffs
     // [[0xB7, 0xDF], "RCALL", [branch]],
     // Need a better test for relative stuffs
     // [[0xB4, 0xCF], "RJMP", [branch]],
-    [[0x37, 0x95], "ROR", [R19]],
-    [[0xE5, 0x9A], "SBI", [28, 5]],
-    [[0xEC, 0x99], "SBIC", [29, 4]],
-    [[0xF3, 0x9B], "SBIS", [30, 3]],
     [[0x43, 0xFD], "SBRC", [R20, 3]],
     [[0x56, 0xFF], "SBRS", [R21, 6]],
     [[0x0c, 0x92], "ST.X", [R0]], // ST X, R0
@@ -49,7 +32,6 @@ const expectedResults: Array<Expected> = [
     [[0x81, 0x92], "ST.Z+", [R8]], // ST Z+, R8
     [[0x92, 0x92], "ST.-Z", [R9]], // ST -Z, R9
     // [[0xa5, 0x86], "STD.Z", [R10, 13]], // STD Z+13, R10
-    [[0x72, 0x94], "SWAP", [R7]],
     // XCH.Z
 ];
 */

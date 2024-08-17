@@ -14,8 +14,8 @@ import { encode as programMemory } from "./program-memory.ts";
 /*
 import { encode as relativeProgram } from "./relative-program.ts";
 import { encode as singleRegisterBit } from "./single-register-bit.ts";
-import { encode as singleRegisterDirect } from "./single-register-direct.ts";
 */
+import { encode as singleRegisterDirect } from "./single-register-direct.ts";
 import { encode as statusManipulation } from "./status-manipulation.ts";
 import { encode as twoRegisterDirect } from "./two-register-direct.ts";
 import { encode as wordDirect } from "./word-direct.ts";
@@ -38,8 +38,8 @@ export const addressingModes = [
     /*
     relativeProgram,
     singleRegisterBit,
-    singleRegisterDirect,
     */
+    singleRegisterDirect,
     statusManipulation,
     twoRegisterDirect,
     wordDirect,

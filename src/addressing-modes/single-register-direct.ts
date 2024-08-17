@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["POP",     ["00", "1111"]],
@@ -19,29 +19,23 @@ const mapping: Map<string, [string, string]> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const usesZ = ["LAC", "LAS", "LAT"].includes(instruction.mnemonic);
-    checkCount(
-        instruction.operands,
-        usesZ ? ["Z", "register"] : ["register"]
-    );
+    const usesZ = ["LAC", "LAS", "LAT"].includes(mnemonic);
+    convert.checkCount(operands, usesZ ? ["Z", "register"] : ["register"]);
     if (usesZ) {
-        check("Z", 0, instruction.operands[0]!);
-        check("register", 1, instruction.operands[1]!);
-    } else {
-        check("register", 0, instruction.operands[0]!);
+        convert.check("Z", operands[0]!);
     }
-    const register = instruction.operands[usesZ ? 1 : 0]!;
-    const [operationBits, suffix] = mapping.get(instruction.mnemonic)!;
+    const [operationBits, suffix] = mapping.get(mnemonic)!;
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
     return template(`1001_0${operationBits}d dddd_${suffix}`, [
-        ["d", register]
+        ["d", convert.numeric("register", operands[usesZ ? 1 : 0]!)]
     ]);
 };
