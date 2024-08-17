@@ -5,6 +5,7 @@ import type { Mnemonic } from "../tokens/tokens.ts";
 const mapping: Map<string, [string, string]> = new Map([
     ["POP", ["00", "1111"]],
     ["LAC", ["01", "0110"]],
+    ["XCH", ["01", "0100"]],
     ["LAS", ["01", "0101"]],
     ["LAT", ["01", "0111"]],
     ["COM", ["10", "0000"]],
@@ -26,7 +27,7 @@ export const encode = (
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const usesZ = ["LAC", "LAS", "LAT"].includes(mnemonic);
+    const usesZ = ["LAC", "LAS", "LAT", "XCH"].includes(mnemonic);
     convert.checkCount(operands, usesZ ? ["z", "register"] : ["register"]);
     if (usesZ) {
         convert.check("z", operands[0]!);
