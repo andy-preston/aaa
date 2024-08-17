@@ -1,77 +1,55 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount } from "../operands/mod.ts";
+import {
+    type OperandConverter,
+    type OperandIndex,
+    type SymbolicOperands,
+    operandMessage
+} from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
-const mapping: Map<string, [string, string, string]> = new Map([
-    ["LD.Z",    ["0", "0", "0000"]],
-    ["LD.Z+",   ["1", "0", "0001"]],
-    ["LD.-Z",   ["1", "0", "0010"]],
-
-    ["LD.Y",    ["0", "0", "1000"]],
-    ["LD.Y+",   ["1", "0", "1001"]],
-    ["LD.-Y",   ["1", "0", "1010"]],
-
-    ["LD.X",    ["1", "0", "1100"]],
-    ["LD.X+",   ["1", "0", "1101"]],
-    ["LD.-X",   ["1", "0", "1110"]],
-
-    ["ST.Z",    ["0", "1", "0000"]],
-    ["ST.Z+",   ["1", "1", "0001"]],
-    ["ST.-Z",   ["1", "1", "0010"]],
-
-    ["ST.Y",    ["0", "1", "1000"]],
-    ["ST.Y+",   ["1", "1", "1001"]],
-    ["ST.-Y",   ["1", "1", "1010"]],
-
-    ["ST.X",    ["1", "1", "1100"]],
-    ["ST.X+",   ["1", "1", "1101"]],
-    ["ST.-X",   ["1", "1", "1110"]],
-
-    ["XCH.Z",   ["1", "1", "0100"]],
+const mapping: Map<string, [OperandIndex, OperandIndex, string]> = new Map([
+    ["LD", [0, 1, "0"]],
+    ["ST", [1, 0, "1"]]
 ]);
 
-/*
-    These all belong in some other addressing mode
-    Need to find out what "q" is!!!
+const indexMapping: Map<string, [string, string]> = new Map([
+    ["Z",  ["0", "0000"]],
+    ["Z+", ["1", "0001"]],
+    ["-Z", ["1", "0010"]],
+    ["Y",  ["0", "1000"]],
+    ["Y+", ["1", "1001"]],
+    ["-Y", ["1", "1010"]],
+    ["X",  ["1", "1100"]],
+    ["X+", ["1", "1101"]],
+    ["-X", ["1", "1110"]],
+]);
 
-case "LDD.Y":
-    return template("10q0_qq0d_dddd_1qqq", {
-        "d": operands[0],
-        "q": operands[1]
-    });
-case "LDD.Z":
-    return template("10q0_qq0d_dddd_0qqq", {
-        "d": operands[0],
-        "q": operands[1]
-    });
-case "STD.Y":
-    return template("10q0_qq1r_rrrr_1qqq", {
-        "q": operands[0],
-        "r": operands[1]
-    });
-case "STD.Z":
-    return template("10q0_qq1r_rrrr_0qqq", {
-        "q": operands[0],
-        "r": operands[1]
-    });
-*/
+const indexDesc = Array.from(indexMapping.keys()).join(", ");
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    checkCount(instruction.operands, ["register"]);
-    check("register", 0, instruction.operands[0]!);
-    const [firstOperationBit, secondOperationBit, suffix] = mapping.get(
-        instruction.mnemonic
-    )!;
+    const [registerIndex, indexIndex, secondOperationBit] =
+        mapping.get(mnemonic)!;
+    convert.checkCount(
+        operands,
+        registerIndex == 0 ? ["register", "symbolic"] : ["symbolic", "register"]
+    );
+    const register = convert.numeric("register", operands[registerIndex]!);
+    const index = operands[indexIndex]!;
+    if (!indexMapping.has(index)) {
+        throw new SyntaxError(operandMessage(indexDesc, index));
+    }
+    const [firstOperationBit, suffix] = indexMapping.get(index)!;
     // In the official documentation, the store operations have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     return template(
         `100${firstOperationBit}_00${secondOperationBit}d dddd_${suffix}`,
-        [["d", instruction.operands[0]!]]
+        [["d", register]]
     );
 };

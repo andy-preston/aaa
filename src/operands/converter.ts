@@ -10,6 +10,9 @@ import type {
     SymbolicOperands
 } from "./types.ts";
 
+export const operandMessage = (expectation: string, actual: string) =>
+    `Operand out of range - expecting ${expectation} not ${actual}`;
+
 export const operandConverter = (contextHandler: ContextHandler) => {
     const operands = operandTypes(contextHandler);
 
@@ -32,8 +35,7 @@ export const operandConverter = (contextHandler: ContextHandler) => {
         if (theType[1](symbolic)) {
             return;
         }
-        const expectation = `expecting ${theType[0]} not ${symbolic}`;
-        throw new RangeError(`Operand out of range - ${expectation}`);
+        throw new RangeError(operandMessage(theType[0], symbolic));
     };
 
     const standaloneCheck = (typeName: TypeName, raw: SymbolicOperand) =>

@@ -6,9 +6,7 @@ import { encode as directProgram } from "./direct-program.ts";
 import { encode as iOBit } from "./io-bit.ts";
 import { encode as iOByte } from "./io-byte.ts";
 import { encode as implicit } from "./implicit.ts";
-/*
 import { encode as indexIndirect } from "./index-indirect.ts";
-*/
 import { encode as multiply } from "./multiply.ts";
 import { encode as programMemory } from "./program-memory.ts";
 import { encode as relativeProgram } from "./relative-program.ts";
@@ -28,9 +26,7 @@ export const addressingModes = [
     iOBit,
     iOByte,
     implicit,
-    /*
     indexIndirect,
-    */
     multiply,
     programMemory,
     relativeProgram,

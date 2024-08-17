@@ -35,6 +35,11 @@ export const operandTypes = (context: ContextHandler) => {
     };
 
     return {
+        "symbolic": [
+            "symbolic operand only here for checkCount",
+            (_operand: SymbolicOperand) => true,
+            (_operand: SymbolicOperand) => 0
+        ],
         "register": [
             "register (R0 - R31)",
             (operand: SymbolicOperand) => between(0, operand, 31),
