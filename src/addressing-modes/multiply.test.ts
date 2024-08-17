@@ -8,7 +8,7 @@ import { type Tests, testing } from "./testing.ts";
 const tests: Tests = [
     [
         ["", "FMUL", ["R16", "R23"]],
-        [0x0F, 0x03]
+        [0x0f, 0x03]
     ],
     [
         ["", "FMULS", ["R17", "R20"]],
@@ -16,11 +16,11 @@ const tests: Tests = [
     ],
     [
         ["", "FMULSU", ["R18", "R21"]],
-        [0xAD, 0x03]
+        [0xad, 0x03]
     ],
     [
         ["", "MULS", ["R16", "R31"]],
-        [0x0F, 0x02]
+        [0x0f, 0x02]
     ],
     [
         ["", "MULSU", ["R16", "R18"]],

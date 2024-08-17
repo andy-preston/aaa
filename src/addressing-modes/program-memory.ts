@@ -3,13 +3,13 @@ import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, string> = new Map([
-    ["SPM",     "1001_0101 111b_1000"], // Implied Z OR explicit Z+
-    ["ELPM",    "1001_0101 1101_1000"], // Implied [RAMPZ + Z]   -> R0
-    ["ELPM.Z",  "1001_000d dddd_0110"], //         [RAMPZ + Z]   -> Rd
+    ["SPM", "1001_0101 111b_1000"], //     Implied Z OR explicit Z+
+    ["ELPM", "1001_0101 1101_1000"], //    Implied [RAMPZ + Z]   -> R0
+    ["ELPM.Z", "1001_000d dddd_0110"], //          [RAMPZ + Z]   -> Rd
     ["ELPM.Z+", "1001_000d dddd_0111"], //         [RAMPZ + Z++] -> Rd
-    ["LPM",     "1001_0101 1100_1000"], // Implied [Z]           -> R0
-    ["LPM.Z",   "1001_000d dddd_0100"], //         [Z]           -> Rd
-    ["LPM.Z+",  "1001_000d dddd_0101"]  //         [Z++]         -> Rd
+    ["LPM", "1001_0101 1100_1000"], //     Implied [Z]           -> R0
+    ["LPM.Z", "1001_000d dddd_0100"], //           [Z]           -> Rd
+    ["LPM.Z+", "1001_000d dddd_0101"] //           [Z++]         -> Rd
 ]);
 
 export const encode = (

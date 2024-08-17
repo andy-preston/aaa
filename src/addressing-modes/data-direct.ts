@@ -1,10 +1,10 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type {
-    TypeName,
     NumericOperand,
     OperandConverter,
     OperandIndex,
-    SymbolicOperands
+    SymbolicOperands,
+    TypeName
 } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
@@ -53,7 +53,8 @@ export const encode = (
     // in avrlass, he refers to the "big one" as LDS
     // and the "little one" as LDS.RC
 
-    const [registerType, addressType, register, prefix, suffix] = bigMode.get(true)!;
+    const [registerType, addressType, register, prefix, suffix] =
+        bigMode.get(true)!;
     convert.checkCount(
         operands,
         registerIndex == 0

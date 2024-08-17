@@ -4,7 +4,7 @@ import {
     type GeneratorFunction,
     littleEndian
 } from "../generate/mod.ts";
-import { Tokens } from "../tokens/tokens.ts";
+import type { Tokens } from "../tokens/tokens.ts";
 
 export type Tests = Array<[Tokens, GeneratedCode]>;
 
@@ -12,7 +12,7 @@ export const testDescription = (source: Tokens): string => {
     const operands = source[2].join(", ");
     const description = operands ? operands : "; No operands";
     return `${source[1]} ${description}`;
-}
+};
 
 export const testing = (tests: Tests, generate: GeneratorFunction) => {
     for (const test of tests) {

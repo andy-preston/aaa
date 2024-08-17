@@ -43,7 +43,8 @@ const tests: Tests = [
         [0x55, 0x0c]
     ],
     [
-        ["", "MOV", ["R7", "R8"]], [0x78, 0x2c]
+        ["", "MOV", ["R7", "R8"]],
+        [0x78, 0x2c]
     ],
     [
         ["", "MUL", ["R8", "R16"]],
@@ -68,7 +69,7 @@ const tests: Tests = [
     [
         ["", "TST", ["R8"]],
         [0x88, 0x20]
-    ],
+    ]
 ];
 
 testing(tests, generator(newContext(0)));

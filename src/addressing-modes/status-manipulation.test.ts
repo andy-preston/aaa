@@ -10,7 +10,7 @@ const generate = generator(newContext(0));
 const tests: Tests = [
     [
         ["", "BCLR", ["7"]],
-        [0xF8, 0x94]
+        [0xf8, 0x94]
     ],
     [
         ["", "CLC", []],
@@ -18,27 +18,27 @@ const tests: Tests = [
     ],
     [
         ["", "CLH", []],
-        [0xD8, 0x94]
+        [0xd8, 0x94]
     ],
     [
         ["", "CLI", []],
-        [0xF8, 0x94]
+        [0xf8, 0x94]
     ],
     [
         ["", "CLN", []],
-        [0xA8, 0x94]
+        [0xa8, 0x94]
     ],
     [
         ["", "CLS", []],
-        [0xC8, 0x94]
+        [0xc8, 0x94]
     ],
     [
         ["", "CLT", []],
-        [0xE8, 0x94]
+        [0xe8, 0x94]
     ],
     [
         ["", "CLV", []],
-        [0xB8, 0x94]
+        [0xb8, 0x94]
     ],
     [
         ["", "CLZ", []],

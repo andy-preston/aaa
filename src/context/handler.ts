@@ -21,7 +21,7 @@ export const newContext = (initialProgramCounter: ProgramCounter) => {
             context.PC = newProgramCounter;
         },
         "step": (generatedCode: GeneratedCode): void => {
-            context.PC = (context.PC as number) + (generatedCode.length / 2);
+            context.PC = (context.PC as number) + generatedCode.length / 2;
         },
         "org": (newProgramCounter: ProgramCounter): void => {
             context.PC = newProgramCounter;

@@ -21,7 +21,7 @@ const tests: Tests = [
     [
         ["", "SBIS", ["30", "3"]],
         [0xf3, 0x9b]
-    ],
+    ]
 ];
 
 testing(tests, generator(newContext(0)));

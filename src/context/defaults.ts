@@ -6,7 +6,7 @@ export interface Context {
 
 export const defaults = (programCounter: number): Context => {
     const context: Context = Object.fromEntries(
-        [...Array(32).keys()].map(r => [`R${r}`, r])
+        [...Array(32).keys()].map((register) => [`R${register}`, register])
     );
     context.X = 26;
     context.XL = 26;

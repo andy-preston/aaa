@@ -13,7 +13,7 @@ const tests: Tests = [
     [
         ["", "OUT", ["25", "R16"]],
         [0x09, 0xbb]
-    ],
+    ]
 ];
 
 testing(tests, generator(newContext(0)));

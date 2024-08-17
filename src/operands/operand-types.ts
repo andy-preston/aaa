@@ -1,6 +1,6 @@
-import { ContextHandler } from "../context/mod.ts";
+import type { ContextHandler } from "../context/mod.ts";
 import { twosComplement } from "./twos-complement.ts";
-import { NumericOperand, SymbolicOperand } from "./types.ts";
+import type { NumericOperand, SymbolicOperand } from "./types.ts";
 
 export type OperandType = [
     string,
@@ -9,19 +9,18 @@ export type OperandType = [
 ];
 
 export const operandTypes = (context: ContextHandler) => {
-
     const numeric = (operand: SymbolicOperand): NumericOperand => {
         return context.evaluate(operand) as NumericOperand;
     };
 
     const pairs = [24, 26, 28, 30];
 
-    const allPairs = [...Array(16).keys()].map(i => i * 2);
+    const allPairs = [...Array(16).keys()].map((i) => i * 2);
 
     const between = (min: number, operand: SymbolicOperand, max: number) => {
         const value = numeric(operand);
-        return Number.isInteger(value) ? (value >= min && value <= max) : false;
-    }
+        return Number.isInteger(value) ? value >= min && value <= max : false;
+    };
 
     const relativeJump = (
         operand: SymbolicOperand,
@@ -59,7 +58,7 @@ export const operandTypes = (context: ContextHandler) => {
         "anyRegisterPair": [
             "any register pair (R0:R1 - R30:R31)",
             (operand: SymbolicOperand) => allPairs.includes(numeric(operand)),
-            (operand: SymbolicOperand) => (numeric(operand)) / 2
+            (operand: SymbolicOperand) => numeric(operand) / 2
         ],
         "z": [
             "Z Register only (R30:R31)",
@@ -85,7 +84,8 @@ export const operandTypes = (context: ContextHandler) => {
         "byte": [
             "byte (-127 - 128) or (0 - 0xFF)",
             (operand: SymbolicOperand) => between(-128, operand, 0xff),
-            (operand: SymbolicOperand) => twosComplement(numeric(operand), 8, false)
+            (operand: SymbolicOperand) =>
+                twosComplement(numeric(operand), 8, false)
         ],
         "nybble": [
             "nybble (0 - 0x0F)",

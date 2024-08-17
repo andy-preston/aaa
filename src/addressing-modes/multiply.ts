@@ -1,5 +1,9 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { TypeName, OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type {
+    OperandConverter,
+    SymbolicOperands,
+    TypeName
+} from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
