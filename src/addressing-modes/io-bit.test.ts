@@ -6,10 +6,22 @@ import { type Tests, testing } from "./testing.ts";
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "CBI", ["30", "1"]], [0xf1, 0x98]],
-    [["", "SBI", ["28", "5"]], [0xe5, 0x9a]],
-    [["", "SBIC", ["29", "4"]], [0xec, 0x99]],
-    [["", "SBIS", ["30", "3"]], [0xf3, 0x9b]],
+    [
+        ["", "CBI", ["30", "1"]],
+        [0xf1, 0x98]
+    ],
+    [
+        ["", "SBI", ["28", "5"]],
+        [0xe5, 0x9a]
+    ],
+    [
+        ["", "SBIC", ["29", "4"]],
+        [0xec, 0x99]
+    ],
+    [
+        ["", "SBIS", ["30", "3"]],
+        [0xf3, 0x9b]
+    ],
 ];
 
 testing(tests, generator(newContext(0)));

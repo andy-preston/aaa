@@ -10,8 +10,14 @@ context.org(3);
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "CALL", ["branch"]], [0x0e, 0x94, 0, 0]],
-    [["", "JMP",  ["branch"]], [0x0c, 0x94, 0, 0]],
+    [
+        ["", "CALL", ["branch"]],
+        [0x0e, 0x94, 0, 0]
+    ],
+    [
+        ["", "JMP", ["branch"]],
+        [0x0c, 0x94, 0, 0]
+    ],
 ];
 
 testing(tests, generator(context));
