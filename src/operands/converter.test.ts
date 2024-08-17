@@ -4,6 +4,20 @@ import { operandConverter } from "./converter.ts";
 
 const converter = operandConverter(newContext(0));
 
+Deno.test("Symbolic is only used for Check Count", () => {
+    assertThrows(
+        () => converter.numeric("symbolic", "anything"),
+        Error,
+        "Internal error - symbolic is only for checkCount"
+    );
+    assertThrows(
+        () => converter.check("symbolic", "anything"),
+        Error,
+        "Internal error - symbolic is only for checkCount"
+    );
+    converter.checkCount(["A", "B"], ["symbolic", "symbolic"]);
+});
+
 Deno.test("A register should be between zero and 31", () => {
     assertEquals(converter.numeric("register", "R0"), 0);
     assertEquals(converter.numeric("register", "6"), 6);
@@ -87,7 +101,6 @@ Deno.test("Any register pair is any even numbered register", () => {
         RangeError,
         "Operand out of range - expecting any register pair (R0:R1 - R30:R31) not 32"
     );
-
 });
 
 Deno.test("Some instructions require Z and no other register", () => {

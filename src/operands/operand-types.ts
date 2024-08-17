@@ -34,11 +34,15 @@ export const operandTypes = (context: ContextHandler) => {
         }
     };
 
+    const symbolicIsOnlyForCheckCount = (_operand: SymbolicOperand) => {
+        throw Error("Internal error - symbolic is only for checkCount");
+    };
+
     return {
         "symbolic": [
             "symbolic operand only here for checkCount",
-            (_operand: SymbolicOperand) => true,
-            (_operand: SymbolicOperand) => 0
+            symbolicIsOnlyForCheckCount,
+            symbolicIsOnlyForCheckCount
         ],
         "register": [
             "register (R0 - R31)",
