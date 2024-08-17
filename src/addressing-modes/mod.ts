@@ -11,9 +11,7 @@ import { encode as indexIndirect } from "./index-indirect.ts";
 */
 import { encode as multiply } from "./multiply.ts";
 import { encode as programMemory } from "./program-memory.ts";
-/*
 import { encode as relativeProgram } from "./relative-program.ts";
-*/
 import { encode as singleRegisterBit } from "./single-register-bit.ts";
 import { encode as singleRegisterDirect } from "./single-register-direct.ts";
 import { encode as statusManipulation } from "./status-manipulation.ts";
@@ -35,9 +33,7 @@ export const addressingModes = [
     */
     multiply,
     programMemory,
-    /*
     relativeProgram,
-    */
     singleRegisterBit,
     singleRegisterDirect,
     statusManipulation,

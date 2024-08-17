@@ -13,10 +13,6 @@ const expectedResults: Array<Expected> = [
     [[0x61, 0x91], "LD.Z+", [R22]], // LD R22, Z+
     [[0x72, 0x91], "LD.-Z", [R23]], // LD R23, -Z
     // [[0x86, 0x81], "LDD.Z", [R24, 6]], // LDD R24, Z+6
-    // Need a better test for relative stuffs
-    // [[0xB7, 0xDF], "RCALL", [branch]],
-    // Need a better test for relative stuffs
-    // [[0xB4, 0xCF], "RJMP", [branch]],
     [[0x0c, 0x92], "ST.X", [R0]], // ST X, R0
     [[0x1d, 0x92], "ST.X+", [R1]], // ST X+, R1
     [[0x2e, 0x92], "ST.-X", [R2]], // ST -X, R2
