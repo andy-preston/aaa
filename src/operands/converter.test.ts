@@ -238,3 +238,18 @@ Deno.test("A RAM address is 0 - 0xFFFF", () => {
         "Operand out of range - expecting 16 bit RAM address (0 - 0xFFFF) (64 K) not 0x10000"
     );
 });
+
+Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
+    assertEquals(converter.numeric("7bitAddress", "0"), 0);
+    assertEquals(converter.numeric("7bitAddress", "0x7F"), 0x7f);
+    assertThrows(
+        () => converter.numeric("7bitAddress", "-1"),
+        RangeError,
+        "Operand out of range - expecting 7 bit RAM address (0 - 0x7F) (127 Bytes) not -1"
+    );
+    assertThrows(
+        () => converter.numeric("7bitAddress", "0x80"),
+        RangeError,
+        "Operand out of range - expecting 7 bit RAM address (0 - 0x7F) (127 Bytes) not 0x80"
+    );
+});
