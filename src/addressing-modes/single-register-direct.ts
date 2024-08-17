@@ -27,9 +27,9 @@ export const encode = (
         return undefined;
     }
     const usesZ = ["LAC", "LAS", "LAT"].includes(mnemonic);
-    convert.checkCount(operands, usesZ ? ["Z", "register"] : ["register"]);
+    convert.checkCount(operands, usesZ ? ["z", "register"] : ["register"]);
     if (usesZ) {
-        convert.check("Z", operands[0]!);
+        convert.check("z", operands[0]!);
     }
     const [operationBits, suffix] = mapping.get(mnemonic)!;
     // In the official documentation, some of these have

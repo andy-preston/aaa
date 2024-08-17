@@ -61,7 +61,7 @@ export const operandTypes = (context: ContextHandler) => {
             (operand: SymbolicOperand) => allPairs.includes(numeric(operand)),
             (operand: SymbolicOperand) => (numeric(operand)) / 2
         ],
-        "Z": [
+        "z": [
             "Z Register only (R30:R31)",
             (operand: SymbolicOperand) => numeric(operand) == 30,
             numeric

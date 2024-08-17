@@ -91,21 +91,21 @@ Deno.test("Any register pair is any even numbered register", () => {
 });
 
 Deno.test("Some instructions require Z and no other register", () => {
-    assertEquals(converter.numeric("Z", "R30"), 30);
-    assertEquals(converter.numeric("Z", "Z"), 30);
-    assertEquals(converter.numeric("Z", "30"), 30);
+    assertEquals(converter.numeric("z", "R30"), 30);
+    assertEquals(converter.numeric("z", "Z"), 30);
+    assertEquals(converter.numeric("z", "30"), 30);
     assertThrows(
-        () => converter.numeric("Z", "R31"),
+        () => converter.numeric("z", "R31"),
         RangeError,
         "Operand out of range - expecting Z Register only (R30:R31) not R31"
     );
     assertThrows(
-        () => converter.numeric("Z", "ZH"),
+        () => converter.numeric("z", "ZH"),
         RangeError,
         "Operand out of range - expecting Z Register only (R30:R31) not ZH"
     );
     assertThrows(
-        () => converter.numeric("Z", "X"),
+        () => converter.numeric("z", "X"),
         RangeError,
         "Operand out of range - expecting Z Register only (R30:R31) not X"
     );
