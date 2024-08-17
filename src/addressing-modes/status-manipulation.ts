@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Instruction } from "../instruction/mod.ts";
-import { check, checkCount } from "../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/tokens.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BCLR", ["1", undefined]],
@@ -24,21 +24,21 @@ const mapping: Map<string, [string, number?]> = new Map([
 ]);
 
 export const encode = (
-    instruction: Instruction,
-    _programCounter: number
+    mnemonic: Mnemonic,
+    operands: SymbolicOperands,
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
-    if (!mapping.has(instruction.mnemonic)) {
+    if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    const [operationBit, impliedOperand] = mapping.get(instruction.mnemonic)!;
-    checkCount(
-        instruction.operands,
+    const [operationBit, impliedOperand] = mapping.get(mnemonic)!;
+    convert.checkCount(
+        operands,
         impliedOperand == undefined ? ["bitIndex"] : []
     );
     const operand =
-        impliedOperand == undefined ? instruction.operands[0]! : impliedOperand;
-    check("bitIndex", 0, operand);
-    return template(`1001_0100 ${operationBit}sss_1000`, [
-        ["s", operand]
-    ]);
+        impliedOperand == undefined
+            ? convert.numeric("bitIndex", operands[0]!)
+            : impliedOperand;
+    return template(`1001_0100 ${operationBit}sss_1000`, [["s", operand]]);
 };
