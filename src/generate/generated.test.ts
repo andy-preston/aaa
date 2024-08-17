@@ -1,7 +1,5 @@
 /*
 const expectedResults: Array<Expected> = [
-    [[0xB1, 0xF8], "BLD", [R11, 1]],
-    [[0xC3, 0xFA], "BST", [R12, 3]],
     [[0x0E, 0x94, 0x0C, 0x00], "CALL", [branch]],
     [[0x0C, 0x94, 0x0C, 0x00], "JMP", [branch]],
     [[0xec, 0x90], "LD.X", [R14]], // LD R14, X
@@ -19,8 +17,6 @@ const expectedResults: Array<Expected> = [
     // [[0xB7, 0xDF], "RCALL", [branch]],
     // Need a better test for relative stuffs
     // [[0xB4, 0xCF], "RJMP", [branch]],
-    [[0x43, 0xFD], "SBRC", [R20, 3]],
-    [[0x56, 0xFF], "SBRS", [R21, 6]],
     [[0x0c, 0x92], "ST.X", [R0]], // ST X, R0
     [[0x1d, 0x92], "ST.X+", [R1]], // ST X+, R1
     [[0x2e, 0x92], "ST.-X", [R2]], // ST -X, R2
