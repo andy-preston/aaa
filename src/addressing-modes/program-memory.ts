@@ -12,6 +12,27 @@ const mapping: Map<string, string> = new Map([
     ["LPM.Z+", "1001_000d dddd_0101"] //           [Z++]         -> Rd
 ]);
 
+const validIndexOperand = (
+    isStore: boolean,
+    operands: SymbolicOperands
+) => {
+    const allowedOperands = isStore ? ["Z+"] : ["Z", "Z+"];
+    const hasExtraOperand = operands.length == (isStore ? 1 : 2);
+    const hasAllowedOperand = allowedOperands.includes(
+        operands[isStore ? 0 : 1]!
+    );
+    const valid = operands.length == 0 || (
+        hasExtraOperand && hasAllowedOperand
+    );
+    if (!valid) {
+        const allowed = allowedOperands.join(" or ");
+        throw new SyntaxError(
+            `Can only have either no operands or ${allowed}`
+        );
+    }
+
+}
+
 export const encode = (
     mnemonic: Mnemonic,
     operands: SymbolicOperands,
@@ -21,20 +42,11 @@ export const encode = (
         return undefined;
     }
     const isStore = mnemonic == "SPM";
-    const validOperands = isStore ? ["Z+"] : ["Z", "Z+"];
-    const valid = operands.length == 0 || (
-        operands.length == (isStore ? 1 : 2)
-            && validOperands.includes(operands[isStore ? 0 : 1]!)
-    );
-    if (!valid) {
-        const valid = validOperands.join(" or ");
-        throw new SyntaxError(
-            `${mnemonic} can only have either no operands or ${valid}`
-        );
-    }
-    const register = (!isStore && operands.length == 2)
-        ? convert.numeric("register", operands[0]!)
-        : undefined;
+    validIndexOperand(isStore, operands);
+    const register =
+        !isStore && operands.length == 2
+            ? convert.numeric("register", operands[0]!)
+            : undefined;
     if (isStore) {
         return template(mapping.get(mnemonic)!, [
             ["b", operands[0] == "Z+" ? 1 : 0]

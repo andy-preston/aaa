@@ -60,7 +60,7 @@ for (const test of failingTests) {
         assertThrows(
             () => generate(test),
             SyntaxError,
-            "SPM can only have either no operands or Z+"
+            "Can only have either no operands or Z+"
         );
     });
 }
