@@ -32,19 +32,26 @@ export const encode = (
         convert.numeric("immediateRegister", operands[registerIndex]!);
 
     const bigMode: Map<boolean, Options> = new Map([
-        [ true, [
-            "register" as TypeName,
-            "16bitAddress" as TypeName,
-            bigRegister,
-            "1001_00",
-            "d dddd_0000 kkkk_kkkk kkkk_kkkk"
-        ]], [ false, [
-            "immediateRegister" as TypeName,
-            "7bitAddress" as TypeName,
-            smallRegister,
-            "1010_",
-            "kkk dddd_kkkk"
-        ]]
+        [
+            true,
+            [
+                "register" as TypeName,
+                "16bitAddress" as TypeName,
+                bigRegister,
+                "1001_00",
+                "d dddd_0000 kkkk_kkkk kkkk_kkkk"
+            ]
+        ],
+        [
+            false,
+            [
+                "immediateRegister" as TypeName,
+                "7bitAddress" as TypeName,
+                smallRegister,
+                "1010_",
+                "kkk dddd_kkkk"
+            ]
+        ]
     ]);
 
     // I'm not completely sure at this point how these instructions work

@@ -7,14 +7,15 @@ import {
 } from "../operands/mod.ts";
 import type { Mnemonic } from "../tokens/tokens.ts";
 
-const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]> = new Map([
-    ["LDD", [0, 1, 2, "0"]],
-    ["STD", [2, 0, 1, "1"]]
-]);
+const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]>
+    = new Map([
+        ["LDD", [0, 1, 2, "0"]],
+        ["STD", [2, 0, 1, "1"]]
+    ]);
 
 const indexMapping: Map<string, string> = new Map([
     ["Z+", "0"],
-    ["Y+", "1"],
+    ["Y+", "1"]
 ]);
 
 const indexDesc = Array.from(indexMapping.keys()).join(", ");

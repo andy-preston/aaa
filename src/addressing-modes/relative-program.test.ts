@@ -19,7 +19,7 @@ const tests: Tests = [
     [
         ["", "RJMP", ["branch"]],
         [0xfb, 0xcf]
-    ],
+    ]
 ];
 
 testing(tests, generator(context));

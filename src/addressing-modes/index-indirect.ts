@@ -13,15 +13,15 @@ const mapping: Map<string, [OperandIndex, OperandIndex, string]> = new Map([
 ]);
 
 const indexMapping: Map<string, [string, string]> = new Map([
-    ["Z",  ["0", "0000"]],
+    ["Z", ["0", "0000"]],
     ["Z+", ["1", "0001"]],
     ["-Z", ["1", "0010"]],
-    ["Y",  ["0", "1000"]],
+    ["Y", ["0", "1000"]],
     ["Y+", ["1", "1001"]],
     ["-Y", ["1", "1010"]],
-    ["X",  ["1", "1100"]],
+    ["X", ["1", "1100"]],
     ["X+", ["1", "1101"]],
-    ["-X", ["1", "1110"]],
+    ["-X", ["1", "1110"]]
 ]);
 
 const indexDesc = Array.from(indexMapping.keys()).join(", ");
