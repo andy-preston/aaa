@@ -1,6 +1,7 @@
 {
     "imports": {
-        "assert": "https://deno.land/std@0.224.0/assert/mod.ts"
+        "assert": "https://deno.land/std@0.224.0/assert/mod.ts",
+        "vento/": "https://deno.land/x/vento@v0.9.1/"
     },
     "compilerOptions": {
         "noUncheckedIndexedAccess": true,
@@ -8,5 +9,5 @@
         "noImplicitReturns": true,
         "strict": true
     },
-    "exclude": ["_deno", "avrlass.js", "avrlass.cli.js"]
+    "exclude": ["_deno", "avrdass.js", "avrlass.js", "avrlass.cli.js"]
 }

@@ -1,21 +1,26 @@
-import { Environment } from "https://deno.land/x/vento@v0.9.1/src/environment.ts";
-import { FileLoader } from "https://deno.land/x/vento@v0.9.1/src/loader.ts";
-import ifTag from "https://deno.land/x/vento@v0.9.1/plugins/if.ts";
-import forTag from "https://deno.land/x/vento@v0.9.1/plugins/for.ts";
-import includeTag from "https://deno.land/x/vento@v0.9.1/plugins/include.ts";
-import setTag from "https://deno.land/x/vento@v0.9.1/plugins/set.ts";
-import jsTag from "https://deno.land/x/vento@v0.9.1/plugins/js.ts";
-import functionTag from "https://deno.land/x/vento@v0.9.1/plugins/function.ts";
-import echoTag from "https://deno.land/x/vento@v0.9.1/plugins/echo.ts";
+import { Environment } from "vento/src/environment.ts";
+import { FileLoader } from "vento/src/loader.ts";
+import ifTag from "vento/plugins/if.ts";
+import forTag from "vento/plugins/for.ts";
+import includeTag from "vento/plugins/include.ts";
+import setTag from "vento/plugins/set.ts";
+import jsTag from "vento/plugins/js.ts";
+import functionTag from "vento/plugins/function.ts";
+import echoTag from "vento/plugins/echo.ts";
 
 // see interface Options in https://github.com/ventojs/vento/blob/main/mod.ts
 
-// cSpell:words autoescape
+////////////////////////////////////////////////////////////////////////////////
+//
+// I think we're going to need an option in aaa to set the includes directories
+//
+////////////////////////////////////////////////////////////////////////////////
 
 export const preprocessor = (): Environment => {
     const env = new Environment({
         "loader": new FileLoader(Deno.cwd()),
         "dataVarname": "it",
+        // cSpell:words autoescape
         "autoescape": false,
         "useWith": true
     });
