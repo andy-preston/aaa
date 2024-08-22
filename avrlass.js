@@ -558,26 +558,6 @@ export const assemble = (lst) => {
     return code;
 };
 
-export const to_ihex = (code) => {
-    function hex(x,n){
-      return x.toString(16).toUpperCase().padStart(n,'0');
-    }
-    const oo = [':020000020000FC'];
-    for (let i = 0; i < code.length; i+=16){
-      const page = code.slice(i,i+16);
-      let o = `:${hex(page.length,2)}${hex(i,4)}00`;
-      let s = page.length+((i>>8)&0xff)+(i&0xff);
-      for (let j = 0; j < page.length; j++){
-        o += hex(page[j],2);
-        s += page[j];
-      }
-      s = ((~s)+1) & 0xff;
-      o += hex(s,2);
-      oo.push(o);
-    }
-    oo.push(':00000001FF\n')
-    return oo.join('\n');
-};
 
 export const print_summary = () => {
     function nf(n){
