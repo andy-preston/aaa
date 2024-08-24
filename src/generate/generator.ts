@@ -18,7 +18,7 @@ export const generator = (context: ContextHandler): GeneratorFunction => {
                 converter
             );
             if (generatedCode != null) {
-                context.step(generatedCode);
+                context.flashStep(generatedCode);
                 return generatedCode;
             }
         }

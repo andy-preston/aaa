@@ -4,7 +4,7 @@ export interface Context {
     [name: string]: number | ContextFunction;
 }
 
-export const defaults = (programCounter: number): Context => {
+export const defaults = (): Context => {
     const context: Context = Object.fromEntries(
         [...Array(32).keys()].map((register) => [`R${register}`, register])
     );
@@ -19,6 +19,7 @@ export const defaults = (programCounter: number): Context => {
     context.ZH = 31;
     context.LOW = (n) => n & 0xff;
     context.HIGH = (n) => (n >> 8) & 0xff;
-    context.PC = programCounter;
+    context.flashOrg = 0;
+    context.ramOrg = 0;
     return context;
 };

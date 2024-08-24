@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "assert";
 import { newContext } from "./handler.ts";
 
 Deno.test("execute returns a string from the last expression evaluated", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertEquals(
         handler.execute('"simple test";'),
         "simple test"
@@ -22,7 +22,7 @@ Deno.test("execute returns a string from the last expression evaluated", () => {
 });
 
 Deno.test("If the result is undefined, execute returns empty string", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertEquals(
         handler.execute("undefined;"),
         ""
@@ -34,7 +34,7 @@ Deno.test("If the result is undefined, execute returns empty string", () => {
 });
 
 Deno.test("Javascript can contain newlines", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertEquals(
         handler.execute("let x = 4;\nlet y = 6;\nx + y;"),
         "10"
@@ -42,7 +42,7 @@ Deno.test("Javascript can contain newlines", () => {
 });
 
 Deno.test("An unknown variable throws a reference error", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertThrows(
         () => handler.execute("let x = plop * 10;"),
         ReferenceError,
@@ -51,7 +51,7 @@ Deno.test("An unknown variable throws a reference error", () => {
 });
 
 Deno.test("Syntax errors get thrown too", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertThrows(
         () => handler.execute("this is just nonsense"),
         SyntaxError,
@@ -60,7 +60,7 @@ Deno.test("Syntax errors get thrown too", () => {
 });
 
 Deno.test("evaluate returns an integer from the last expression", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertEquals(
         handler.evaluate("20 / 2"),
         10
@@ -68,7 +68,7 @@ Deno.test("evaluate returns an integer from the last expression", () => {
 });
 
 Deno.test("evaluate throws if it doesn't return a number", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertThrows(
         () => handler.evaluate('"no" + " " + "use!"'),
         TypeError,
@@ -77,7 +77,7 @@ Deno.test("evaluate throws if it doesn't return a number", () => {
 });
 
 Deno.test("evaluate throws on Javascript errors", () => {
-    const handler = newContext(0);
+    const handler = newContext();
     assertThrows(
         () => handler.evaluate("plop * 10;"),
         ReferenceError,

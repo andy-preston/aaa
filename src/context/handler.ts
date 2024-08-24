@@ -1,10 +1,9 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import { defaults } from "./defaults.ts";
 
-export type ProgramCounter = number;
+export const newContext = () => {
+    const context = defaults();
 
-export const newContext = (initialProgramCounter: ProgramCounter) => {
-    const context = defaults(initialProgramCounter);
 
     const boundEval = eval.bind(context);
 
@@ -29,18 +28,13 @@ export const newContext = (initialProgramCounter: ProgramCounter) => {
             if ("name" in context) {
                 throw Error(`label ${name} already exists`);
             }
-            context[name] = context.PC as number;
+            context[name] = context.flashOrg as number;
         },
-        "step": (generatedCode: GeneratedCode): void => {
-            context.PC = (context.PC as number) + generatedCode.length / 2;
+        "flashStep": (code: GeneratedCode): void => {
+            context.flashOrg = context.flashOrg as number + code.length / 2;
         },
-        "origin": (newProgramCounter: ProgramCounter): void => {
-            context.PC = newProgramCounter;
-        },
-        "org": (newProgramCounter: ProgramCounter): void => {
-            context.PC = newProgramCounter;
-        },
-        "programCounter": (): ProgramCounter => context.PC as number
+        "flashPos": (): number => context.flashOrg as number,
+        "bound": context
     };
 };
 

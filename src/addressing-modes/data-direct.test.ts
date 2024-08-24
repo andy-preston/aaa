@@ -26,4 +26,4 @@ const tests: Tests = [
     ////////////////////////////////////////////////////////////////////////////
 ];
 
-testing(tests, generator(newContext(0)));
+testing(tests, generator(newContext()));

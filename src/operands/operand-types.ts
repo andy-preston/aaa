@@ -26,7 +26,7 @@ export const operandTypes = (context: ContextHandler) => {
         operand: SymbolicOperand,
         bits: number
     ): NumericOperand => {
-        const target = numeric(operand) - 1 - context.programCounter();
+        const target = numeric(operand) - 1 - context.flashPos();
         try {
             return twosComplement(target, bits, true);
         } catch (error) {
