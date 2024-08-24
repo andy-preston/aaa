@@ -58,7 +58,7 @@ type Label = string;
 
 export type Tokens = [Label, Mnemonic, SymbolicOperands];
 
-export const tokeniseLine = (theLine: string): Tokens => {
+export const lineTokens = (theLine: string): Tokens => {
     const cleaned = clean(theLine);
     const [label, withoutLabel] = split("after", ":", cleaned);
     forbidWhitespace(label);
