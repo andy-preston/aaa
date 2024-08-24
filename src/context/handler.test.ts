@@ -4,19 +4,19 @@ import { newContext } from "./handler.ts";
 Deno.test("execute returns a string from the last expression evaluated", () => {
     const handler = newContext();
     assertEquals(
-        handler.execute('"simple test";'),
+        handler.execute('return "simple test";'),
         "simple test"
     );
     assertEquals(
-        handler.execute("'simple ' + \"test\";"),
+        handler.execute("return 'simple ' + \"test\";"),
         "simple test"
     );
     assertEquals(
-        handler.execute('"simple " + \'test\';'),
+        handler.execute('return "simple " + \'test\';'),
         "simple test"
     );
     assertEquals(
-        handler.execute("20 / 2;"),
+        handler.execute("return 20 / 2;"),
         "10"
     );
 });
@@ -36,7 +36,7 @@ Deno.test("If the result is undefined, execute returns empty string", () => {
 Deno.test("Javascript can contain newlines", () => {
     const handler = newContext();
     assertEquals(
-        handler.execute("let x = 4;\nlet y = 6;\nx + y;"),
+        handler.execute("let x = 4;\nlet y = 6;\n return x + y;"),
         "10"
     );
 });

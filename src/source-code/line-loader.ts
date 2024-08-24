@@ -17,7 +17,7 @@ const change = (token: string) => {
     state = newState;
 }
 
-export const lineLoader = (context: ContextHandler) => {
+export const newLineLoader = (context: ContextHandler) => {
     const usePart = (part: string) => {
         if (part == "{{") {
             change(part);

@@ -5,12 +5,10 @@ export const newContext = () => {
     const context = defaults();
 
 
-    const boundEval = eval.bind(context);
-
     return {
         "evaluate": (jsExpression: string): number => {
             const result = new Function(
-                `with (this) { return eval('"use strict"; ${jsExpression}'); }`
+                `with (this) { return ${jsExpression}; }`
             ).call(context);
             const numeric = parseInt(result);
             if (`${numeric}` != `${result}`) {
@@ -21,7 +19,7 @@ export const newContext = () => {
             return numeric;
         },
         "execute": (jsSource: string): string => {
-            const result = boundEval(jsSource);
+            const result = new Function(jsSource).call(context);
             return result == undefined ? "" : `${result}`;
         },
         "label": (name: string): void => {
@@ -31,6 +29,7 @@ export const newContext = () => {
             context[name] = context.flashOrg as number;
         },
         "flashStep": (code: GeneratedCode): void => {
+            // Flash addresses are in 16-bit words, not bytes
             context.flashOrg = context.flashOrg as number + code.length / 2;
         },
         "flashPos": (): number => context.flashOrg as number,
