@@ -6,7 +6,7 @@ import type { GeneratedCode } from "./types.ts";
 
 export type GeneratorFunction = (tokens: Tokens) => GeneratedCode;
 
-export const generator = (context: ContextHandler): GeneratorFunction => {
+export const newGenerator = (context: ContextHandler): GeneratorFunction => {
     const converter = operandConverter(context);
 
     return (tokens: Tokens): GeneratedCode => {

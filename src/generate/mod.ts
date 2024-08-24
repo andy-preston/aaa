@@ -4,4 +4,4 @@ export { littleEndian } from "./little-endian.ts";
 
 export { template } from "./template.ts";
 
-export { type GeneratorFunction, generator } from "./generator.ts";
+export { type GeneratorFunction, newGenerator } from "./generator.ts";
