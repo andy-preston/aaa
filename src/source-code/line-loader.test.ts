@@ -18,7 +18,7 @@ Deno.test(
     () => {
         const loader = newLineLoader(newContext());
         assertEquals(
-            loader("MOV {{ return this.R6 }}, R2"),
+            loader("MOV {{ R6 }}, R2"),
             "MOV 6, R2"
         );
     }

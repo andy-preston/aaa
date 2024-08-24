@@ -10,7 +10,14 @@ export type OperandType = [
 
 export const operandTypes = (context: ContextHandler) => {
     const numeric = (operand: SymbolicOperand): NumericOperand => {
-        return context.evaluate(operand) as NumericOperand;
+        const result = context.execute(operand).trim();
+        const intResult = parseInt(result);
+        if (`${intResult}` != result) {
+            throw new TypeError(
+                `${operand} evaluates to ${result} not an integer`
+            );
+        }
+        return intResult;
     };
 
     const pairs = [24, 26, 28, 30];

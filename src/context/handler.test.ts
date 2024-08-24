@@ -1,50 +1,32 @@
 import { assertEquals, assertThrows } from "assert";
 import { newContext } from "./handler.ts";
 
-Deno.test("execute returns a string from the last expression evaluated", () => {
+Deno.test("execute returns the value of a single expression", () => {
     const handler = newContext();
-    assertEquals(
-        handler.execute('return "simple test";'),
-        "simple test"
-    );
-    assertEquals(
-        handler.execute("return 'simple ' + \"test\";"),
-        "simple test"
-    );
-    assertEquals(
-        handler.execute('return "simple " + \'test\';'),
-        "simple test"
-    );
-    assertEquals(
-        handler.execute("return 20 / 2;"),
-        "10"
-    );
+    assertEquals(handler.execute("20 / 2"), "10");
 });
 
 Deno.test("If the result is undefined, execute returns empty string", () => {
     const handler = newContext();
-    assertEquals(
-        handler.execute("undefined;"),
-        ""
-    );
-    assertEquals(
-        handler.execute("let x = 4;"),
-        ""
-    );
+    assertEquals(handler.execute("undefined;"), "");
+});
+
+Deno.test("A plain assignment will be 'forced' to return a value", () => {
+    const handler = newContext();
+    assertEquals(handler.execute("this.test = 4;"), "4");
 });
 
 Deno.test("Javascript can contain newlines", () => {
     const handler = newContext();
-    assertEquals(
-        handler.execute("let x = 4;\nlet y = 6;\n return x + y;"),
-        "10"
-    );
+    assertEquals(handler.execute(
+        "this.test1 = 4;\nthis.test2 = 6;\n return test1 + test2;"
+    ), "10");
 });
 
 Deno.test("An unknown variable throws a reference error", () => {
     const handler = newContext();
     assertThrows(
-        () => handler.execute("let x = plop * 10;"),
+        () => handler.execute("this.test = plop * 10;"),
         ReferenceError,
         "plop is not defined"
     );
@@ -56,31 +38,5 @@ Deno.test("Syntax errors get thrown too", () => {
         () => handler.execute("this is just nonsense"),
         SyntaxError,
         "Unexpected identifier 'is'"
-    );
-});
-
-Deno.test("evaluate returns an integer from the last expression", () => {
-    const handler = newContext();
-    assertEquals(
-        handler.evaluate("20 / 2"),
-        10
-    );
-});
-
-Deno.test("evaluate throws if it doesn't return a number", () => {
-    const handler = newContext();
-    assertThrows(
-        () => handler.evaluate('"no" + " " + "use!"'),
-        TypeError,
-        '{"no" + " " + "use!"} does not have an integer result: "no use!"'
-    );
-});
-
-Deno.test("evaluate throws on Javascript errors", () => {
-    const handler = newContext();
-    assertThrows(
-        () => handler.evaluate("plop * 10;"),
-        ReferenceError,
-        "plop is not defined"
     );
 });

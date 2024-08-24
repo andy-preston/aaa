@@ -7,17 +7,20 @@ const buffer = {
 
 type State = keyof typeof buffer;
 
-let state: State = "assembler";
-
-const change = (token: string) => {
-    const newState: State = token == "{{" ? "javascript" : "assembler";
-    if (state == newState) {
-        throw new SyntaxError(`"${token}" when already in ${state} mode`);
-    }
-    state = newState;
-}
-
 export const newLineLoader = (context: ContextHandler) => {
+    let state: State = "assembler";
+
+    const change = (token: string) => {
+        const newState: State = token == "{{" ? "javascript" : "assembler";
+        if (state == newState) {
+            throw new SyntaxError(`"${token}" when already in ${state} mode`);
+        }
+        state = newState;
+    }
+
+    buffer.javascript = [];
+    buffer.assembler = [];
+
     const usePart = (part: string) => {
         if (part == "{{") {
             change(part);

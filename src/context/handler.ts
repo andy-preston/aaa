@@ -4,24 +4,22 @@ import { defaults } from "./defaults.ts";
 export const newContext = () => {
     const context = defaults();
 
+    const execute = (jsSource: string): string => {
+        const trimmed = jsSource.trim().replace(/;*$/g, "").trim() + ";"
+        if (trimmed == ";") {
+            return "";
+        }
+        const lines = (trimmed.match(/\n/g) || "").length + 1;
+        const semicolons = (trimmed.match(/;/g) || "").length;
+        const prefix = lines == 1 && semicolons == 1 ? "return " : "";
+        const result = new Function(
+            `with (this) { ${prefix}${trimmed }}`
+        ).call(context);
+        return result == undefined ? "" : `${result}`;
+    };
 
     return {
-        "evaluate": (jsExpression: string): number => {
-            const result = new Function(
-                `with (this) { return ${jsExpression}; }`
-            ).call(context);
-            const numeric = parseInt(result);
-            if (`${numeric}` != `${result}`) {
-                throw new TypeError(
-                    `{${jsExpression}} does not have an integer result: "${result}"`
-                );
-            }
-            return numeric;
-        },
-        "execute": (jsSource: string): string => {
-            const result = new Function(jsSource).call(context);
-            return result == undefined ? "" : `${result}`;
-        },
+        "execute": execute,
         "label": (name: string): void => {
             if ("name" in context) {
                 throw Error(`label ${name} already exists`);
