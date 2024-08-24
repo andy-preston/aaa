@@ -5,11 +5,25 @@ export type ProgramCounter = number;
 
 export const newContext = (initialProgramCounter: ProgramCounter) => {
     const context = defaults(initialProgramCounter);
+
+    const boundEval = eval.bind(context);
+
     return {
         "evaluate": (jsExpression: string): number => {
-            return new Function(
+            const result = new Function(
                 `with (this) { return eval('"use strict"; ${jsExpression}'); }`
             ).call(context);
+            const numeric = parseInt(result);
+            if (`${numeric}` != `${result}`) {
+                throw new TypeError(
+                    `{${jsExpression}} does not have an integer result: "${result}"`
+                );
+            }
+            return numeric;
+        },
+        "execute": (jsSource: string): string => {
+            const result = boundEval(jsSource);
+            return result == undefined ? "" : `${result}`;
         },
         "label": (name: string): void => {
             if ("name" in context) {
@@ -17,11 +31,11 @@ export const newContext = (initialProgramCounter: ProgramCounter) => {
             }
             context[name] = context.PC as number;
         },
-        "origin": (newProgramCounter: ProgramCounter): void => {
-            context.PC = newProgramCounter;
-        },
         "step": (generatedCode: GeneratedCode): void => {
             context.PC = (context.PC as number) + generatedCode.length / 2;
+        },
+        "origin": (newProgramCounter: ProgramCounter): void => {
+            context.PC = newProgramCounter;
         },
         "org": (newProgramCounter: ProgramCounter): void => {
             context.PC = newProgramCounter;
