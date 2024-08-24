@@ -5,12 +5,18 @@ type ContextFunction = (n: number) => number;
 type Context = Record<string, number|ContextFunction>;
 
 const registers = (context: Context) => {
-    for (let r = 0; r < 32; r++) {
-        Object.defineProperty(context, `R${r}`, {
+    const define = (name: string, value: number) => Object.defineProperty(
+        context,
+        name, {
             "configurable": false,
-            "value": r,
+            "enumerable": true,
+            "value": value,
             "writable": false
-        });
+        }
+    );
+
+    for (let r = 0; r < 32; r++) {
+        define(`R${r}`, r);
     }
     const specials: Array<[string, number]> = [
         ['X', 26],
@@ -23,21 +29,18 @@ const registers = (context: Context) => {
         ['ZL', 30],
         ['ZH', 31]
     ];
-    for (const [name, index] of specials) {
-        Object.defineProperty(context, name, {
-            "configurable": false,
-            "value": index,
-            "writable": false
-        });
+    for (const [name, value] of specials) {
+        define(name, value);
     }
 }
 
 export const defaults = (): Context => {
-    const context: Context = {};
+    const context: Context = {
+        "LOW": (n) => n & 0xff,
+        "HIGH": (n) => (n >> 8) & 0xff,
+        "flashOrg": 0,
+        "ramOrg": 0
+    };
     registers(context);
-    context.LOW = (n) => n & 0xff;
-    context.HIGH = (n) => (n >> 8) & 0xff;
-    context.flashOrg = 0;
-    context.ramOrg = 0;
     return context;
 };
