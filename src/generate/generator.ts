@@ -11,9 +11,13 @@ export const newGenerator = (context: ContextHandler): GeneratorFunction => {
 
     return (tokens: Tokens): GeneratedCode => {
         context.label(tokens[0]!);
+        const mnemonic = tokens[1]!.toUpperCase();
+        if (mnemonic == "") {
+            return [];
+        }
         for (const addressingMode of addressingModes) {
             const generatedCode = addressingMode(
-                tokens[1]!.toUpperCase(),
+                mnemonic,
                 tokens[2],
                 converter
             );
@@ -22,6 +26,6 @@ export const newGenerator = (context: ContextHandler): GeneratorFunction => {
                 return generatedCode;
             }
         }
-        throw SyntaxError(`unknown instruction ${tokens[1]!}`);
+        throw SyntaxError(`unknown instruction ${mnemonic}`);
     };
 };

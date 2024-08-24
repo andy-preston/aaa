@@ -1,1 +1,1 @@
-export type GeneratedCode = [number, number] | [number, number, number, number];
+export type GeneratedCode = [] | [number, number] | [number, number, number, number];
