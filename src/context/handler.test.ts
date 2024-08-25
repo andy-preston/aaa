@@ -1,9 +1,14 @@
 import { assertEquals, assertThrows } from "assert";
 import { newContext } from "./handler.ts";
 
-Deno.test("execute returns the value of a single expression", () => {
+Deno.test("simple expressions do not require a `return`", () => {
     const handler = newContext();
     assertEquals(handler.execute("20 / 2"), "10");
+});
+
+Deno.test("but you can include one if you want", () => {
+    const handler = newContext();
+    assertEquals(handler.execute("return R20 / 2"), "10");
 });
 
 Deno.test("If the result is undefined, execute returns empty string", () => {

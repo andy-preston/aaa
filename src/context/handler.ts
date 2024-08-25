@@ -10,12 +10,13 @@ export const newContext = () => {
         const singleLine = trimmedJs.match(/\n/) == null;
         const noSemicolons = trimmedJs.match(/;/) == null;
         const noAssignments = trimmedJs.match(/[^!><=]=[^=]/) == null;
-        return singleLine && noSemicolons && noAssignments
+        const noExplicitReturn = trimmedJs.match(/^return/) == null;
+        return singleLine && noSemicolons && noAssignments && noExplicitReturn
             ? `return ${trimmedJs}` : trimmedJs;
     }
 
     const execute = (jsSource: string): string => {
-        const trimmed = jsSource.trim().replace(/;*$/g, "").trim();
+        const trimmed = jsSource.trim().replace(/;*$/, "").trim();
         if (trimmed == "") {
             return "";
         }
