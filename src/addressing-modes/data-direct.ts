@@ -6,7 +6,7 @@ import type {
     SymbolicOperands,
     TypeName
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../tokens/tokens.ts";
+import type { Mnemonic } from "../load-tokenise/mod.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["LDS", ["0", 0, 1]],

@@ -1,7 +1,7 @@
 import { assertThrows } from "assert";
 import { newContext } from "../context/mod.ts";
 import { newGenerator } from "../generate/mod.ts";
-import type { Tokens } from "../tokens/tokens.ts";
+import type { Tokens } from "../load-tokenise/mod.ts";
 import { type Tests, testDescription, testing } from "./testing.ts";
 
 const generate = newGenerator(newContext());

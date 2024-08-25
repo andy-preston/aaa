@@ -4,7 +4,7 @@ import {
     type GeneratorFunction,
     littleEndian
 } from "../generate/mod.ts";
-import type { Tokens } from "../tokens/tokens.ts";
+import type { Tokens } from "../load-tokenise/mod.ts";
 
 export type Tests = Array<[Tokens, GeneratedCode]>;
 

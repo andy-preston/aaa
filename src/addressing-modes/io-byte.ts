@@ -4,7 +4,7 @@ import type {
     OperandIndex,
     SymbolicOperands
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../tokens/tokens.ts";
+import type { Mnemonic } from "../load-tokenise/mod.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["IN", ["0", 0, 1]],

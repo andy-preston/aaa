@@ -1,6 +1,6 @@
 import { newContext } from "../context/mod.ts";
 import { newGenerator } from "../generate/mod.ts";
-import { lineTokens } from "../tokens/tokens.ts";
+import { lineTokens } from "../load-tokenise/mod.ts";
 import { newLineLoader } from "./line-loader.ts";
 
 const includedFile = (line: string) =>
@@ -18,9 +18,13 @@ export const load = (fileName: string) => {
             continue;
         }
         try {
+            console.log(fileName, lineNumber + 1, rawLine);
             const line = loadLine(rawLine);
+            console.log(fileName, lineNumber + 1, line);
             const tokens = lineTokens(line);
+            console.log(fileName, lineNumber + 1, tokens);
             const code = generate(tokens);
+            console.log(fileName, lineNumber + 1, code);
         } catch (error) {
             console.error(`${error.name}: ${error.message}`);
         }
