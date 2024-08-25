@@ -4,16 +4,23 @@ import { defaults } from "./defaults.ts";
 export const newContext = () => {
     const context = defaults();
 
+    const autoReturn = (trimmedJs: string): string => {
+        // This is both "magic" and "clever", so it could well turn out to
+        // be a massive annoyance and have to be removed.
+        const singleLine = trimmedJs.match(/\n/) == null;
+        const noSemicolons = trimmedJs.match(/;/) == null;
+        const noAssignments = trimmedJs.match(/[^!><=]=[^=]/) == null;
+        return singleLine && noSemicolons && noAssignments
+            ? `return ${trimmedJs}` : trimmedJs;
+    }
+
     const execute = (jsSource: string): string => {
-        const trimmed = jsSource.trim().replace(/;*$/g, "").trim() + ";"
-        if (trimmed == ";") {
+        const trimmed = jsSource.trim().replace(/;*$/g, "").trim();
+        if (trimmed == "") {
             return "";
         }
-        const lines = (trimmed.match(/\n/g) || "").length + 1;
-        const semicolons = (trimmed.match(/;/g) || "").length;
-        const prefix = lines == 1 && semicolons == 1 ? "return " : "";
         const result = new Function(
-            `with (this) { ${prefix}${trimmed }}`
+            `with (this) { ${autoReturn(trimmed)}; }`
         ).call(context);
         return result == undefined ? "" : `${result}`;
     };

@@ -11,9 +11,9 @@ Deno.test("If the result is undefined, execute returns empty string", () => {
     assertEquals(handler.execute("undefined;"), "");
 });
 
-Deno.test("A plain assignment will be 'forced' to return a value", () => {
+Deno.test("A plain assignment will not return a value", () => {
     const handler = newContext();
-    assertEquals(handler.execute("this.test = 4;"), "4");
+    assertEquals(handler.execute("this.test = 4;"), "");
 });
 
 Deno.test("Javascript can contain newlines", () => {
