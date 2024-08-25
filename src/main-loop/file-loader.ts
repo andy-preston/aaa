@@ -1,7 +1,6 @@
 import { newContext } from "../context/mod.ts";
 import { newGenerator } from "../generate/mod.ts";
-import { lineTokens } from "../load-tokenise/mod.ts";
-import { newLineLoader } from "../load-tokenise/mod.ts";
+import { lineTokens, newLineLoader } from "../load-tokenise/mod.ts";
 
 const includedFile = (line: string) =>
     line.replace(".include", "").trim();
