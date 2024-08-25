@@ -17,8 +17,12 @@ export const load = (fileName: string) => {
             load(includedFile(rawLine));
             continue;
         }
-        const line = loadLine(rawLine);
-        const tokens = lineTokens(line);
-        const code = generate(tokens);
+        try {
+            const line = loadLine(rawLine);
+            const tokens = lineTokens(line);
+            const code = generate(tokens);
+        } catch (error) {
+            console.error(`${error.name}: ${error.message}`);
+        }
     }
 };
