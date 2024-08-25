@@ -1,3 +1,2 @@
-import { load } from "./main-loop.ts";
-
-load("file1.txt");
+import { loader } from "./main-loop.ts";
+loader("./file1.txt");
