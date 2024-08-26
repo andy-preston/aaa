@@ -7,7 +7,7 @@ export const loader = (topFileName: string) => {
     const context = newContext();
     const loadLine = newLineLoader(context);
     const generate = newGenerator(context);
-    const listing = newListing();
+    const listing = newListing(topFileName);
 
     const includedFile = (line: string) =>
         line.replace(".include", "").trim();
@@ -18,7 +18,7 @@ export const loader = (topFileName: string) => {
         const lines = Deno.readTextFileSync(fileName).split("\n").entries();
         for (const [lineNumber, rawLine] of lines) {
             if (rawLine.includes(".include")) {
-                listing.add(fileName, lineNumber, 0, [], rawLine, "");
+                listing.line(fileName, lineNumber, 0, [], rawLine, "");
                 load(includedFile(rawLine));
                 continue;
             }
@@ -30,7 +30,14 @@ export const loader = (topFileName: string) => {
                 errorMessage = `${error.name}: ${error.message}`;
                 code = [];
             }
-            listing.add(fileName, lineNumber, flashAddress, code, rawLine, errorMessage);
+            listing.line(
+                fileName,
+                lineNumber,
+                flashAddress,
+                code,
+                rawLine,
+                errorMessage
+            );
             if (!errorMessage) {
                 //hexFile(flashAddress, code);
             }
@@ -38,5 +45,5 @@ export const loader = (topFileName: string) => {
     };
 
     load(topFileName);
-    listing.write(topFileName);
+    listing.close();
 };
