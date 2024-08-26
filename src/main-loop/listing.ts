@@ -1,27 +1,17 @@
 import { GeneratedCode } from "../generate/mod.ts";
+import { newFile } from "./file.ts";
 
 export const newListing = (topFileName: string) => {
-    const encoder = new TextEncoder();
-
     let currentFileName = "";
 
-    const theFile = Deno.openSync(
-        topFileName.substring(0, topFileName.lastIndexOf(".")) + ".lst",
-        { create: true, write: true, truncate: true}
-    );
-
-    const writeLine = (text: string) => {
-        theFile.writeSync(encoder.encode(`${text}\n`));
-    };
+    const theFile = newFile(topFileName, ".lst");
 
     const listFileName = (name: string) => {
         if (name != currentFileName) {
-            writeLine(`\n${name}\n${"=".repeat(name.length)}\n`);
+            theFile.writeLine(`\n${name}\n${"=".repeat(name.length)}\n`);
             currentFileName = name;
         }
     };
-
-    const close = () => theFile.close();
 
     const line = (
         sourceFile: string,
@@ -37,11 +27,15 @@ export const newListing = (topFileName: string) => {
         const object = generatedCode.map(
             (byte) => byte.toString(16).padStart(2, "0")
         ).join(" ").padEnd(11, " ").toUpperCase();
-        writeLine(`${addressString} ${object} ${lineNumberString} ${source}`);
+        theFile.writeLine(
+            `${addressString} ${object} ${lineNumberString} ${source}`
+        );
         if (errorMessage != "") {
-            writeLine(`${">".repeat(17)} ${lineNumberString} ${errorMessage}`);
+            theFile.writeLine(
+                `${">".repeat(17)} ${lineNumberString} ${errorMessage}`
+            );
         }
     };
 
-    return {"line": line, "close": close};
+    return {"line": line, "close": theFile.close};
 };
