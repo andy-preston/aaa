@@ -1,2 +1,2 @@
-import { loader } from "./main-loop.ts";
+import { loader } from "./mod.ts";
 loader("./file1.txt");
