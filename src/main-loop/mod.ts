@@ -1,5 +1,5 @@
 import { newContext } from "../context/mod.ts";
-import { GeneratedCode, newGenerator } from "../generate/mod.ts";
+import { type GeneratedCode, newGenerator } from "../generate/mod.ts";
 import { lineTokens, newLineLoader } from "../load-tokenise/mod.ts";
 import { newListing } from "./listing.ts";
 

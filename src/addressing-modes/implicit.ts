@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
 import type { Mnemonic } from "../load-tokenise/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["BREAK", "1001_0101 1001_1000"],

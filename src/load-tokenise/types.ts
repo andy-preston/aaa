@@ -1,4 +1,4 @@
-import { SymbolicOperands } from "../operands/mod.ts";
+import type { SymbolicOperands } from "../operands/mod.ts";
 
 export type Mnemonic = string;
 

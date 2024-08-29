@@ -1,5 +1,5 @@
 import type { SymbolicOperands } from "../operands/mod.ts";
-import { Tokens } from "./types.ts";
+import type { Tokens } from "./types.ts";
 
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");

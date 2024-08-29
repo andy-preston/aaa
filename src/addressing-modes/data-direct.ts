@@ -1,4 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
+import type { Mnemonic } from "../load-tokenise/mod.ts";
 import type {
     NumericOperand,
     OperandConverter,
@@ -6,7 +7,6 @@ import type {
     SymbolicOperands,
     TypeName
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../load-tokenise/mod.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["LDS", ["0", 0, 1]],

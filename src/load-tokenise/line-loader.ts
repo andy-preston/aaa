@@ -1,4 +1,4 @@
-import { ContextHandler } from "../context/mod.ts";
+import type { ContextHandler } from "../context/mod.ts";
 
 const buffer = {
     "javascript": [] as Array<string>,

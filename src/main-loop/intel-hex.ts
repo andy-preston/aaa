@@ -1,4 +1,4 @@
-import { GeneratedCode } from "../generate/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 // twosComplement shouldn't be in operands if it's finding use out here
 import { twosComplement } from "../operands/twos-complement.ts";
 import { newFile } from "./file.ts";

@@ -1,11 +1,11 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
+import type { Mnemonic } from "../load-tokenise/mod.ts";
 import {
     type OperandConverter,
     type OperandIndex,
     type SymbolicOperands,
     operandMessage
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../load-tokenise/mod.ts";
 
 const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]>
     = new Map([

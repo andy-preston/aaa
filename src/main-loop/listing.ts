@@ -1,4 +1,4 @@
-import { GeneratedCode } from "../generate/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 import { newFile } from "./file.ts";
 
 export const newListing = (topFileName: string) => {

@@ -1,10 +1,10 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
+import type { Mnemonic } from "../load-tokenise/mod.ts";
 import type {
     OperandConverter,
     SymbolicOperands,
     TypeName
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../load-tokenise/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["FMUL", ["1 0", "1"]],

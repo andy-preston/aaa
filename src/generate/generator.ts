@@ -1,7 +1,7 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { ContextHandler } from "../context/mod.ts";
-import { operandConverter } from "../operands/mod.ts";
 import type { Tokens } from "../load-tokenise/mod.ts";
+import { operandConverter } from "../operands/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
 export type GeneratorFunction = (tokens: Tokens) => GeneratedCode;
