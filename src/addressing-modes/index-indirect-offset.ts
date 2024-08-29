@@ -48,6 +48,9 @@ export const encode = (
     // e.g. `LDD Rd, Y` has "d dddd" but `STD Rd, Y` has "r rrrr".
     return template(
         `10q0_qq${firstOperationBit}d dddd_${secondOperationBit}qqq`,
-        [["d", register], ["q", offset]]
+        [
+            ["d", register],
+            ["q", offset]
+        ]
     );
 };

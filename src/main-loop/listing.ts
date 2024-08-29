@@ -23,10 +23,15 @@ export const newListing = (topFileName: string) => {
     ) => {
         listFileName(sourceFile);
         const lineNumberString = `${lineNumber + 1}`.padStart(4, " ");
-        const addressString = address.toString(16).padStart(5, "0").toUpperCase();
-        const object = generatedCode.map(
-            (byte) => byte.toString(16).padStart(2, "0")
-        ).join(" ").padEnd(11, " ").toUpperCase();
+        const addressString = address
+            .toString(16)
+            .padStart(5, "0")
+            .toUpperCase();
+        const object = generatedCode
+            .map((byte) => byte.toString(16).padStart(2, "0"))
+            .join(" ")
+            .padEnd(11, " ")
+            .toUpperCase();
         theFile.writeLine(
             `${addressString} ${object} ${lineNumberString} ${source}`
         );
