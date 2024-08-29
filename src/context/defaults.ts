@@ -34,8 +34,8 @@ const registers = (context: Context) => {
 
 export const defaults = (): Context => {
     const context: Context = {
-        "LOW": (n) => n & 0xff,
-        "HIGH": (n) => (n >> 8) & 0xff,
+        "low": (n) => n & 0xff,
+        "high": (n) => (n >> 8) & 0xff,
         "flashOrg": 0,
         "ramOrg": 0
     };
