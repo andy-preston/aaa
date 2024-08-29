@@ -65,7 +65,7 @@ export const newHex = () => {
         recordStash.forEach(theFile.writeLine);
         theFile.writeLine(":00000001FF");
         theFile.close();
-    }
+    };
 
     return { "add": add, "save": save };
 };

@@ -14,7 +14,7 @@ export const newContext = () => {
         return singleLine && noSemicolons && noAssignments && noExplicitReturn
             ? `return ${trimmedJs}`
             : trimmedJs;
-    }
+    };
 
     const execute = (jsSource: string): string => {
         const trimmed = jsSource.trim().replace(/;*$/, "").trim();

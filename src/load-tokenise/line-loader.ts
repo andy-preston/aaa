@@ -16,7 +16,7 @@ export const newLineLoader = (context: ContextHandler) => {
             throw new SyntaxError(`"${token}" when already in ${state} mode`);
         }
         state = newState;
-    }
+    };
 
     buffer.javascript = [];
     buffer.assembler = [];

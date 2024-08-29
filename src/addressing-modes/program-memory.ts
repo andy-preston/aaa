@@ -25,7 +25,7 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
         const allowed = allowedOperands.join(" or ");
         throw new SyntaxError(`Can only have either no operands or ${allowed}`);
     }
-}
+};
 
 export const encode = (
     mnemonic: Mnemonic,

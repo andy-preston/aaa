@@ -30,7 +30,7 @@ const registers = (context: Context) => {
     for (const [name, value] of specials) {
         define(name, value);
     }
-}
+};
 
 export const defaults = (): Context => {
     const context: Context = {
