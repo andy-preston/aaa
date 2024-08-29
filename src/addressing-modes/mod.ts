@@ -6,8 +6,8 @@ import { encode as directProgram } from "./direct-program.ts";
 import { encode as implicit } from "./implicit.ts";
 import { encode as indexIndirectOffset } from "./index-indirect-offset.ts";
 import { encode as indexIndirect } from "./index-indirect.ts";
-import { encode as iOBit } from "./io-bit.ts";
-import { encode as iOByte } from "./io-byte.ts";
+import { encode as ioBit } from "./io-bit.ts";
+import { encode as ioByte } from "./io-byte.ts";
 import { encode as multiply } from "./multiply.ts";
 import { encode as programMemory } from "./program-memory.ts";
 import { encode as relativeProgram } from "./relative-program.ts";
@@ -27,8 +27,8 @@ export const addressingModes = [
     implicit,
     indexIndirectOffset,
     indexIndirect,
-    iOBit,
-    iOByte,
+    ioBit,
+    ioByte,
     multiply,
     programMemory,
     relativeProgram,
