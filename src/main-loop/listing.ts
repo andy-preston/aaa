@@ -19,7 +19,7 @@ export const newListing = (topFileName: string) => {
         address: number,
         generatedCode: GeneratedCode,
         source: string,
-        errorMessage: string,
+        errorMessage: string
     ) => {
         listFileName(sourceFile);
         const lineNumberString = `${lineNumber + 1}`.padStart(4, " ");
