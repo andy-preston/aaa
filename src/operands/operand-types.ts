@@ -11,7 +11,7 @@ export type OperandType = [
 export const operandTypes = (context: ContextHandler) => {
     const numeric = (operand: SymbolicOperand): NumericOperand => {
         const result = context.execute(operand).trim();
-        const intResult = parseInt(result);
+        const intResult = Number.parseInt(result);
         if (`${intResult}` != result) {
             throw new TypeError(
                 `${operand} evaluates to ${result} not an integer`
