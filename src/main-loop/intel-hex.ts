@@ -11,7 +11,7 @@ export const newHex = () => {
     let stashedAddress: number = 0;
 
     const hex = (value: number, digits: number) =>
-        value.toString(16).toUpperCase().padStart(digits, '0');
+        value.toString(16).toUpperCase().padStart(digits, "0");
 
     const aRecord = (address: number, bytes: number) => {
         const byteBuffer: Array<string> = [];
