@@ -3,7 +3,7 @@ export const twosComplement = (
     bits: number,
     required: boolean
 ): number => {
-    const highValue = Math.pow(2, bits);
+    const highValue = 2 ** bits;
     const maxPositive = highValue - 1;
     const max = highValue / 2;
     const min = -(max - 1);
