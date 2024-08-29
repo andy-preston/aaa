@@ -7,8 +7,8 @@ import {
     operandMessage
 } from "../operands/mod.ts";
 
-const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]>
-    = new Map([
+const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]> =
+    new Map([
         ["LDD", [0, 1, 2, "0"]],
         ["STD", [2, 0, 1, "1"]]
     ]);

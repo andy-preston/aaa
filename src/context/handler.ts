@@ -12,7 +12,8 @@ export const newContext = () => {
         const noAssignments = trimmedJs.match(/[^!><=]=[^=]/) == null;
         const noExplicitReturn = trimmedJs.match(/^return/) == null;
         return singleLine && noSemicolons && noAssignments && noExplicitReturn
-            ? `return ${trimmedJs}` : trimmedJs;
+            ? `return ${trimmedJs}`
+            : trimmedJs;
     }
 
     const execute = (jsSource: string): string => {
@@ -36,7 +37,7 @@ export const newContext = () => {
         },
         "flashStep": (code: GeneratedCode): void => {
             // Flash addresses are in 16-bit words, not bytes
-            context.flashOrg = context.flashOrg as number + code.length / 2;
+            context.flashOrg = (context.flashOrg as number) + code.length / 2;
         },
         "flashPos": (): number => context.flashOrg as number,
         "bound": context

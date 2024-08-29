@@ -23,7 +23,6 @@ export const encode = (
     operands: SymbolicOperands,
     convert: OperandConverter
 ): GeneratedCode | undefined => {
-
     const immediate = (operand: SymbolicOperand) => {
         const numeric =
             mnemonic != "SER" ? convert.numeric("byte", operand) : 0;

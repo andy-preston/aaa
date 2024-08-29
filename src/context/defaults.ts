@@ -2,18 +2,16 @@
 
 type ContextFunction = (n: number) => number;
 
-type Context = Record<string, number|ContextFunction>;
+type Context = Record<string, number | ContextFunction>;
 
 const registers = (context: Context) => {
-    const define = (name: string, value: number) => Object.defineProperty(
-        context,
-        name, {
+    const define = (name: string, value: number) =>
+        Object.defineProperty(context, name, {
             "configurable": false,
             "enumerable": true,
             "value": value,
             "writable": false
-        }
-    );
+        });
 
     for (let r = 0; r < 32; r++) {
         define(`R${r}`, r);

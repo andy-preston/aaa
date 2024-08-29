@@ -12,10 +12,7 @@ const mapping: Map<string, string> = new Map([
     ["LPM.Z+", "1001_000d dddd_0101"] //           [Z++]         -> Rd
 ]);
 
-const validIndexOperand = (
-    isStore: boolean,
-    operands: SymbolicOperands
-) => {
+const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
     const allowedOperands = isStore ? ["Z+"] : ["Z", "Z+"];
     const hasExtraOperand = operands.length == (isStore ? 1 : 2);
     const hasAllowedOperand = allowedOperands.includes(
@@ -26,11 +23,8 @@ const validIndexOperand = (
     );
     if (!valid) {
         const allowed = allowedOperands.join(" or ");
-        throw new SyntaxError(
-            `Can only have either no operands or ${allowed}`
-        );
+        throw new SyntaxError(`Can only have either no operands or ${allowed}`);
     }
-
 }
 
 export const encode = (

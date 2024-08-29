@@ -9,8 +9,7 @@ export const loader = (topFileName: string) => {
     const generate = newGenerator(context);
     const listing = newListing(topFileName);
 
-    const includedFile = (line: string) =>
-        line.replace(".include", "").trim();
+    const includedFile = (line: string) => line.replace(".include", "").trim();
 
     const load = (fileName: string) => {
         let errorMessage = "";

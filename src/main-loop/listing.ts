@@ -37,5 +37,5 @@ export const newListing = (topFileName: string) => {
         }
     };
 
-    return {"line": line, "close": theFile.close};
+    return { "line": line, "close": theFile.close };
 };

@@ -3,7 +3,7 @@ export const newFile = (fileName: string, extension: string) => {
 
     const theFile = Deno.openSync(
         fileName.substring(0, fileName.lastIndexOf(".")) + extension,
-        { create: true, write: true, truncate: true}
+        { create: true, write: true, truncate: true }
     );
 
     return {
