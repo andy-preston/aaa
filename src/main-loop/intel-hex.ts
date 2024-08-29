@@ -8,7 +8,7 @@ export const newHex = () => {
 
     const codeStash: Array<number> = [];
 
-    let stashedAddress: number = 0;
+    let stashedAddress = 0;
 
     const hex = (value: number, digits: number) =>
         value.toString(16).toUpperCase().padStart(digits, "0");
