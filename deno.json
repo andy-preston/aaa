@@ -1,7 +1,6 @@
 {
     "imports": {
-        "assert": "https://deno.land/std@0.224.0/assert/mod.ts",
-        "vento/": "https://deno.land/x/vento@v0.9.1/"
+        "assert": "https://deno.land/std@0.224.0/assert/mod.ts"
     },
     "compilerOptions": {
         "noUncheckedIndexedAccess": true,

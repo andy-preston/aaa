@@ -28,6 +28,9 @@
         "enabled": true,
         "rules": {
             "all": true,
+            "complexity": {
+                "noForEach": "off"
+            },
             "correctness": {
                 "noNodejsModules": "off"
             },

@@ -14,10 +14,13 @@ check)
     deno test --allow-read
     deno check -q $(find -name \*.ts | grep -v -e ./_deno/)
     deno lint
+    deno run -A npm:@biomejs/biome check --javascript-formatter-enabled=false
+    ;;
+biome)
     deno run -A npm:@biomejs/biome check
     ;;
 *)
-    echo "./run [check|run]"
+    echo "./run [check|biome|run]"
     exit 1
     ;;
 esac
