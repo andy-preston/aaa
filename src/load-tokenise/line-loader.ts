@@ -1,4 +1,4 @@
-import type { ContextHandler } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 
 const buffer = {
     "javascript": [] as Array<string>,
@@ -7,7 +7,7 @@ const buffer = {
 
 type State = keyof typeof buffer;
 
-export const newLineLoader = (context: ContextHandler) => {
+export const newLineLoader = (ourContext: OurContext) => {
     let state: State = "assembler";
 
     const change = (token: string) => {
@@ -31,7 +31,7 @@ export const newLineLoader = (context: ContextHandler) => {
         if (part == "}}") {
             change(part);
             buffer.assembler.push(
-                context.execute(
+                ourContext.execute(
                     buffer.javascript.join("\n")
                 )
             );

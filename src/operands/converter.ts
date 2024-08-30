@@ -1,4 +1,4 @@
-import type { ContextHandler } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 import {
     type OperandType,
     type TypeName,
@@ -13,8 +13,8 @@ import type {
 export const operandMessage = (expectation: string, actual: string) =>
     `Operand out of range - expecting ${expectation} not ${actual}`;
 
-export const operandConverter = (contextHandler: ContextHandler) => {
-    const operands = operandTypes(contextHandler);
+export const operandConverter = (ourContext: OurContext) => {
+    const operands = operandTypes(ourContext);
 
     const description = (typeName: TypeName): string => operands[typeName][0];
 

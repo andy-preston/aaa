@@ -1,8 +1,8 @@
-import { newContext } from "../context/mod.ts";
+import { createOurContext } from "../context/mod.ts";
 import { newGenerator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 
-const context = newContext();
+const context = createOurContext();
 context.label("branch");
 context.bound.flashOrg = 3;
 

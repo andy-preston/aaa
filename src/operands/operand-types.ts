@@ -1,4 +1,4 @@
-import type { ContextHandler } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 import { twosComplement } from "./twos-complement.ts";
 import type { NumericOperand, SymbolicOperand } from "./types.ts";
 
@@ -8,9 +8,9 @@ export type OperandType = [
     (operand: SymbolicOperand) => NumericOperand
 ];
 
-export const operandTypes = (context: ContextHandler) => {
+export const operandTypes = (ourContext: OurContext) => {
     const numeric = (operand: SymbolicOperand): NumericOperand => {
-        const result = context.execute(operand).trim();
+        const result = ourContext.execute(operand).trim();
         const intResult = Number.parseInt(result);
         if (`${intResult}` != result) {
             throw new TypeError(
@@ -33,7 +33,7 @@ export const operandTypes = (context: ContextHandler) => {
         operand: SymbolicOperand,
         bits: number
     ): NumericOperand => {
-        const target = numeric(operand) - 1 - context.flashPos();
+        const target = numeric(operand) - 1 - ourContext.flashPos();
         try {
             return twosComplement(target, bits, true);
         } catch (error) {

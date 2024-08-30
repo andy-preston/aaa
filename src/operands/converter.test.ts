@@ -1,8 +1,8 @@
 import { assertEquals, assertThrows } from "assert";
-import { newContext } from "../context/mod.ts";
+import { createOurContext } from "../context/mod.ts";
 import { operandConverter } from "./converter.ts";
 
-const converter = operandConverter(newContext());
+const converter = operandConverter(createOurContext());
 
 Deno.test("Symbolic is only used for Check Count", () => {
     assertThrows(

@@ -1,16 +1,16 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
-import type { ContextHandler } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 import type { Tokens } from "../load-tokenise/mod.ts";
 import { operandConverter } from "../operands/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
 export type GeneratorFunction = (tokens: Tokens) => GeneratedCode;
 
-export const newGenerator = (context: ContextHandler): GeneratorFunction => {
-    const converter = operandConverter(context);
+export const newGenerator = (ourContext: OurContext): GeneratorFunction => {
+    const converter = operandConverter(ourContext);
 
     return (tokens: Tokens): GeneratedCode => {
-        context.label(tokens[0]!);
+        ourContext.label(tokens[0]!);
         const mnemonic = tokens[1]!.toUpperCase();
         if (mnemonic == "") {
             return [];
@@ -22,7 +22,7 @@ export const newGenerator = (context: ContextHandler): GeneratorFunction => {
                 converter
             );
             if (generatedCode != null) {
-                context.flashStep(generatedCode);
+                ourContext.flashStep(generatedCode);
                 return generatedCode;
             }
         }
