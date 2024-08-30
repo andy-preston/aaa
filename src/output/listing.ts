@@ -44,3 +44,7 @@ export const newListing = (topFileName: string) => {
 
     return { "line": line, "close": theFile.close };
 };
+
+export type Listing = ReturnType<typeof newListing>;
+
+export type ListingLine = Listing["line"];
