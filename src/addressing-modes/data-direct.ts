@@ -1,5 +1,4 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { Mnemonic } from "../load-tokenise/mod.ts";
 import type {
     NumericOperand,
     OperandConverter,
@@ -7,6 +6,7 @@ import type {
     SymbolicOperands,
     TypeName
 } from "../operands/mod.ts";
+import type { Mnemonic } from "../tokens/mod.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["LDS", ["0", 0, 1]],
@@ -54,11 +54,15 @@ export const encode = (
         ]
     ]);
 
+    ////////////////////////////////////////////////////////////////////////////
+    //
     // I'm not completely sure at this point how these instructions work
     // there appear to be two versions, and I'm assuming that one operates on
     // low SRAM devices and the other operates on devices with more SRAM
     // in avrlass, he refers to the "big one" as LDS
     // and the "little one" as LDS.RC
+    //
+    ////////////////////////////////////////////////////////////////////////////
 
     const [registerType, addressType, register, prefix, suffix] =
         bigMode.get(true)!;

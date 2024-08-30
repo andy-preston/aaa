@@ -1,10 +1,10 @@
 import { assertEquals } from "assert";
 import { createOurContext } from "../context/mod.ts";
-import { newGenerator } from "../generate/mod.ts";
+import { createGenerator } from "../generate/mod.ts";
 
 Deno.test("As code is generated, the flashOrg is incremented", () => {
     const context = createOurContext();
-    const generate = newGenerator(context);
+    const generate = createGenerator(context);
     assertEquals(context.flashPos(), 0);
     generate(["", "INC", ["R5"]]);
     assertEquals(context.flashPos(), 1);
@@ -14,7 +14,7 @@ Deno.test("As code is generated, the flashOrg is incremented", () => {
 
 Deno.test("Labels are saved at the current flashOrg", () => {
     const context = createOurContext();
-    const generate = newGenerator(context);
+    const generate = createGenerator(context);
     generate(["label1", "INC", ["R5"]]);
     assertEquals(context.theirs.label1, 0);
     generate(["label2", "", []]);
@@ -27,7 +27,7 @@ Deno.test("Labels are saved at the current flashOrg", () => {
 
 Deno.test("flashOrg can be set from the context i.e. by embedded JS", () => {
     const context = createOurContext();
-    const generate = newGenerator(context);
+    const generate = createGenerator(context);
     assertEquals(context.flashPos(), 0);
     generate(["", "INC", ["R5"]]);
     assertEquals(context.flashPos(), 1);

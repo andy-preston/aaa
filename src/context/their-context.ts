@@ -7,7 +7,7 @@ interface TheirContext {
     "high": (n: number) => number;
     "flashOrg": number;
     "ramOrg": number;
-    [x: string]: number | SimpleFunction | DirectiveHandler
+    [x: string]: number | SimpleFunction | DirectiveHandler;
 }
 
 const registers = (theirContext: TheirContext) => {

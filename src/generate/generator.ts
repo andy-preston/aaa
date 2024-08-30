@@ -1,12 +1,10 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { OurContext } from "../context/mod.ts";
-import type { Tokens } from "../load-tokenise/mod.ts";
 import { operandConverter } from "../operands/mod.ts";
+import type { Tokens } from "../tokens/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
-export type GeneratorFunction = (tokens: Tokens) => GeneratedCode;
-
-export const newGenerator = (ourContext: OurContext): GeneratorFunction => {
+export const createGenerator = (ourContext: OurContext) => {
     const converter = operandConverter(ourContext);
 
     return (tokens: Tokens): GeneratedCode => {
@@ -29,3 +27,5 @@ export const newGenerator = (ourContext: OurContext): GeneratorFunction => {
         throw SyntaxError(`unknown instruction ${mnemonic}`);
     };
 };
+
+export type Generate = ReturnType<typeof createGenerator>;

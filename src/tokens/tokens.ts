@@ -64,3 +64,5 @@ export const lineTokens = (theLine: string): Tokens => {
     expandIndexOffsetOperands(operandsList);
     return [label, mnemonic, operandsList as SymbolicOperands];
 };
+
+export type LineTokens = typeof lineTokens;

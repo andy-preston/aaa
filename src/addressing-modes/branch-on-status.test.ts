@@ -1,5 +1,5 @@
 import { createOurContext } from "../context/mod.ts";
-import { newGenerator } from "../generate/mod.ts";
+import { createGenerator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 
 const context = createOurContext();
@@ -92,4 +92,4 @@ const tests: Tests = [
     ]
 ];
 
-testing(tests, newGenerator(context));
+testing(tests, createGenerator(context));

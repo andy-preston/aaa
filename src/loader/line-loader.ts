@@ -7,7 +7,7 @@ const buffer = {
 
 type State = keyof typeof buffer;
 
-export const newLineLoader = (ourContext: OurContext) => {
+export const createLineLoader = (ourContext: OurContext) => {
     let state: State = "assembler";
 
     const change = (token: string) => {
@@ -31,9 +31,7 @@ export const newLineLoader = (ourContext: OurContext) => {
         if (part == "}}") {
             change(part);
             buffer.assembler.push(
-                ourContext.execute(
-                    buffer.javascript.join("\n")
-                )
+                ourContext.execute(buffer.javascript.join("\n"))
             );
             return;
         }
@@ -48,3 +46,5 @@ export const newLineLoader = (ourContext: OurContext) => {
         return assembler;
     };
 };
+
+export type LoadLine = ReturnType<typeof createLineLoader>;

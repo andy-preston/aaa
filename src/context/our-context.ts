@@ -1,7 +1,4 @@
-import type {
-    DirectiveConstructor,
-    StringDirective
-} from "../directives/mod.ts";
+import type { DirectiveHandler } from "../directives/mod.ts";
 import type { GeneratedCode } from "../generate/mod.ts";
 import { createTheirContext } from "./their-context.ts";
 
@@ -31,18 +28,8 @@ export const createOurContext = () => {
         return result == undefined ? "" : `${result}`;
     };
 
-    const addDirective = (
-        name: string,
-        directive: DirectiveConstructor
-    ): void => {
-        theirContext[name] = directive(ourContext);
-    };
-
-    const load = (fileName: string) => {
-        if (typeof theirContext.include != "function") {
-            throw new Error("Internal error - include directive not installed");
-        }
-        (theirContext.include as StringDirective)(fileName);
+    const addDirective = (name: string, directive: DirectiveHandler) => {
+        theirContext[name] = directive;
     };
 
     const label = (name: string): void => {
@@ -58,12 +45,11 @@ export const createOurContext = () => {
             (theirContext.flashOrg as number) + code.length / 2;
     };
 
-    const flashPos = (): number => theirContext.flashOrg as number
+    const flashPos = (): number => theirContext.flashOrg as number;
 
     const ourContext = {
         "execute": execute,
         "addDirective": addDirective,
-        "load": load,
         "label": label,
         "flashStep": flashStep,
         "flashPos": flashPos,

@@ -1,1 +1,1 @@
-export type { ListingLine } from "./listing.ts";
+export { type ListingLine, createListing } from "./listing.ts";

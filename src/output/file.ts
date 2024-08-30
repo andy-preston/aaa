@@ -1,4 +1,4 @@
-export const newFile = (fileName: string, extension: string) => {
+export const aFile = (fileName: string, extension: string) => {
     const encoder = new TextEncoder();
 
     const theFile = Deno.openSync(
