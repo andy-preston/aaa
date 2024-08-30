@@ -1,12 +1,18 @@
-//import { GeneratedCode } from "../generate/mod.ts";
+import type { DirectiveHandler } from "../directives/mod.ts";
 
-type ContextFunction = (n: number) => number;
+type SimpleFunction = (_: number) => number;
 
-type Context = Record<string, number | ContextFunction>;
+interface TheirContext {
+    "low": (n: number) => number;
+    "high": (n: number) => number;
+    "flashOrg": number;
+    "ramOrg": number;
+    [x: string]: number | SimpleFunction | DirectiveHandler
+}
 
-const registers = (context: Context) => {
+const registers = (theirContext: TheirContext) => {
     const define = (name: string, value: number) =>
-        Object.defineProperty(context, name, {
+        Object.defineProperty(theirContext, name, {
             "configurable": false,
             "enumerable": true,
             "value": value,
@@ -32,13 +38,13 @@ const registers = (context: Context) => {
     }
 };
 
-export const defaults = (): Context => {
-    const context: Context = {
+export const createTheirContext = (): TheirContext => {
+    const theirContext: TheirContext = {
         "low": (n) => n & 0xff,
         "high": (n) => (n >> 8) & 0xff,
         "flashOrg": 0,
         "ramOrg": 0
     };
-    registers(context);
-    return context;
+    registers(theirContext);
+    return theirContext;
 };
