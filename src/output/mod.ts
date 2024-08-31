@@ -2,7 +2,7 @@ import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../input/mod.ts";
 import { createListing } from "./listing.ts";
 
-export const createOutput = (fileName: FileName) => {
+export const outputter = (fileName: FileName) => {
     const listing = createListing(fileName);
 
     const output = (
@@ -34,4 +34,4 @@ export const createOutput = (fileName: FileName) => {
     };
 };
 
-export type Output = ReturnType<typeof createOutput>["output"];
+export type Output = ReturnType<typeof outputter>["output"];

@@ -50,6 +50,7 @@
         "MULS",
         "MULSU",
         "nybble",
+        "outputter",
         "PROGMEM",
         "RCALL",
         "RETI",
