@@ -299,3 +299,30 @@ Deno.test("A relative 12 bit address is 0 - 4K and is adjusted based on PC", () 
         "Relative jump 4368 out of range - should be between -2047 and 2048"
     );
 });
+
+Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
+    const context = createOurContext();
+    const converter = operandConverter(context);
+    context.theirs.flashOrg = 0;
+    assertEquals(converter.numeric("relativeBranch", "60"), 60);
+    context.theirs.flashOrg = 110;
+    assertEquals(converter.numeric("relativeBranch", "100"), 127 - 10);
+    context.theirs.flashOrg = 0;
+    assertThrows(
+        () => converter.numeric("relativeBranch", "-1"),
+        RangeError,
+        "Operand out of range: -1 should be a memory address not -1"
+    );
+    context.theirs.flashOrg = 0;
+    assertThrows(
+        () => converter.numeric("relativeBranch", "0x10000"),
+        RangeError,
+        "Operand out of range: 0x10000 should be a memory address not 65536"
+    );
+    context.theirs.flashOrg = 0;
+    assertThrows(
+        () => converter.numeric("relativeBranch", "0x1111"),
+        RangeError,
+        "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x1111"
+    );
+});

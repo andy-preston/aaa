@@ -1,4 +1,5 @@
 import type { OurContext } from "../context/mod.ts";
+import { operandMessage } from "./message.ts";
 import { twosComplement } from "./twos-complement.ts";
 import type { NumericOperand, SymbolicOperand } from "./types.ts";
 
@@ -20,25 +21,33 @@ export const operandTypes = (ourContext: OurContext) => {
         return intResult;
     };
 
+    const relative = (
+        highValue: number,
+        operand: SymbolicOperand
+    ): NumericOperand => {
+        const target = numeric(operand);
+        // TODO: we currently only support 64K of program memory
+        if (target < 0 || target > 0xffff) {
+            throw new RangeError(
+                operandMessage(operand, "a memory address", `${target}`)
+            );
+        }
+        const distance = target - ourContext.flashPos();
+        return distance < 0 ? highValue + distance : distance;
+    };
+
     const pairs = [24, 26, 28, 30];
 
     const allPairs = [...Array(16).keys()].map((i) => i * 2);
 
     const between = (min: number, operand: SymbolicOperand, max: number) => {
         const value = numeric(operand);
-        return Number.isInteger(value) ? value >= min && value <= max : false;
+        return value >= min && value <= max;
     };
 
-    const relativeJump = (
-        operand: SymbolicOperand,
-        bits: number
-    ): NumericOperand => {
-        const target = numeric(operand) - 1 - ourContext.flashPos();
-        try {
-            return twosComplement(target, bits, true);
-        } catch (error) {
-            throw new RangeError(`Relative jump ${error.message}`);
-        }
+    const relativeRange = (highValue: number, operand: SymbolicOperand) => {
+        const value = relative(highValue, operand);
+        return value >= 0 && value <= highValue;
     };
 
     const symbolicIsOnlyForCheckCount = (_operand: SymbolicOperand) => {
@@ -118,10 +127,10 @@ export const operandTypes = (ourContext: OurContext) => {
             (operand: SymbolicOperand) => between(0, operand, 0x1000),
             (operand: SymbolicOperand) => relativeJump(operand, 12)
         ],
-        "relative7bit": [
-            "branch to 12 bit address (0 - 0x7F) (127 bytes)",
-            (operand: SymbolicOperand) => between(0, operand, 0x7f),
-            (operand: SymbolicOperand) => relativeJump(operand, 7)
+        "relativeBranch": [
+            "relative branch to 7 bit range (-64 - 63)",
+            (operand: SymbolicOperand) => relativeRange(0x7f, operand),
+            (operand: SymbolicOperand) => relative(0x7f, operand)
         ],
         "16bitAddress": [
             "16 bit RAM address (0 - 0xFFFF) (64 K)",

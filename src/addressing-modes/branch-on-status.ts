@@ -37,16 +37,16 @@ export const encode = (
     convert.checkCount(
         operands,
         impliedOperand == undefined
-            ? ["bitIndex", "relative7bit"]
-            : ["relative7bit"]
+            ? ["bitIndex", "relativeBranch"]
+            : ["relativeBranch"]
     );
     const bit =
         impliedOperand == undefined
             ? convert.numeric("bitIndex", operands[0]!)
             : impliedOperand;
-    const jumpIndex = impliedOperand == undefined ? 1 : 0;
+    const branchTarget = operands[impliedOperand == undefined ? 1 : 0]!;
     return template(`1111_0${operationBit}kk kkkk_ksss`, [
         ["s", bit],
-        ["k", convert.numeric("relative7bit", operands[jumpIndex]!)]
+        ["k", convert.numeric("relativeBranch", branchTarget)]
     ]);
 };
