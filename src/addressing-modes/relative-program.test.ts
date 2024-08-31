@@ -30,7 +30,7 @@ Deno.test("Absolute address too high on RJMP instruction", () => {
     assertThrows(
         () => generate(["", "RJMP", ["0x1111"]]),
         RangeError,
-        "Operand out of range - expecting branch to 12 bit address (0 - 0x1000) (4 K) not 0x1111"
+        "Operand out of range - expecting branch to 12 bit range (0 - 0x1000) (4 K) not 0x1111"
     );
 });
 
@@ -38,6 +38,6 @@ Deno.test("Absolute address too low on RCALL instruction", () => {
     assertThrows(
         () => generate(["", "RCALL", ["-10"]]),
         RangeError,
-        "Operand out of range - expecting branch to 12 bit address (0 - 0x1000) (4 K) not -10"
+        "Operand out of range - expecting branch to 12 bit range (0 - 0x1000) (4 K) not -10"
     );
 });

@@ -114,7 +114,7 @@ export const operandTypes = (ourContext: OurContext) => {
             numeric
         ],
         "relative12bits": [
-            "branch to 12 bit address (0 - 0x1000) (4 K)",
+            "branch to 12 bit range (0 - 0x1000) (4 K)",
             (operand: SymbolicOperand) => between(0, operand, 0x1000),
             (operand: SymbolicOperand) => relativeJump(operand, 12)
         ],

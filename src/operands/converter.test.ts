@@ -282,14 +282,14 @@ Deno.test("A relative 12 bit address is 0 - 4K and is adjusted based on PC", () 
     assertThrows(
         () => converter.numeric("relative12bits", "-1"),
         RangeError,
-        "Operand out of range - expecting branch to 12 bit address (0 - 0x1000) (4 K) not -1"
+        "Operand out of range - expecting branch to 12 bit range (0 - 0x1000) (4 K) not -1"
     );
     context.theirs.flashOrg = 0;
     assertThrows(
         // Rational error message that users can understand
         () => converter.check("relative12bits", "0x1111"),
         RangeError,
-        "Operand out of range - expecting branch to 12 bit address (0 - 0x1000) (4 K) not 0x1111"
+        "Operand out of range - expecting branch to 12 bit range (0 - 0x1000) (4 K) not 0x1111"
     );
     context.theirs.flashOrg = 0;
     assertThrows(
