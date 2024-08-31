@@ -1,6 +1,6 @@
 import type { OurContext } from "../context/mod.ts";
 import type { Generate, GeneratedCode } from "../generate/mod.ts";
-import type { ListingLine } from "../output/mod.ts";
+import type { Output } from "../output/mod.ts";
 import type { LineTokens } from "../tokens/mod.ts";
 import { fileStack } from "./file-stack.ts";
 import type { LoadLine } from "./line-loader.ts";
@@ -13,7 +13,7 @@ export const createLoader = (
     loadLine: LoadLine,
     lineTokens: LineTokens,
     generate: Generate,
-    listingLine: ListingLine
+    output: Output
 ) => {
     const files = fileStack();
 
@@ -45,7 +45,7 @@ export const createLoader = (
                 errorMessage = `${error.name}: ${error.message}`;
                 code = [];
             }
-            listingLine(
+            output(
                 fileName,
                 lineNumber,
                 flashAddress,
@@ -53,9 +53,6 @@ export const createLoader = (
                 rawLine,
                 errorMessage
             );
-            if (!errorMessage) {
-                //hexFile(flashAddress, code);
-            }
         }
     };
 
