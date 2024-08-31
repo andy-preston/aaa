@@ -16,6 +16,6 @@ export const fileStack = () => {
             theStack.pop();
         },
         "file": (): StackEntry | undefined =>
-           theStack.length == 0 ? undefined : theStack[theStack.length - 1]
+            theStack.length == 0 ? undefined : theStack[theStack.length - 1]
     };
 };

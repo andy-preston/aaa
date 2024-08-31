@@ -8,7 +8,7 @@ import type { FileName } from "./types.ts";
 
 type Line = [FileName, number, string];
 
-export const createLoader = (
+export const fileLoader = (
     ourContext: OurContext,
     loadLine: LoadLine,
     lineTokens: LineTokens,
