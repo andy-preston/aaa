@@ -4,7 +4,7 @@ import { operandConverter } from "../operands/mod.ts";
 import type { Tokens } from "../tokens/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
-export const createGenerator = (ourContext: OurContext) => {
+export const generator = (ourContext: OurContext) => {
     const converter = operandConverter(ourContext);
 
     return (tokens: Tokens): GeneratedCode => {
@@ -28,4 +28,4 @@ export const createGenerator = (ourContext: OurContext) => {
     };
 };
 
-export type Generate = ReturnType<typeof createGenerator>;
+export type Generate = ReturnType<typeof generator>;

@@ -1,5 +1,5 @@
 import { createOurContext } from "../context/mod.ts";
-import { createGenerator } from "../generate/mod.ts";
+import { generator } from "../generate/mod.ts";
 import { createOutput } from "../output/mod.ts";
 import { lineTokens } from "../tokens/mod.ts";
 import { createLineLoader } from "./line-loader.ts";
@@ -13,7 +13,7 @@ const loader = createLoader(
     ourContext,
     createLineLoader(ourContext),
     lineTokens,
-    createGenerator(ourContext),
+    generator(ourContext),
     output.output
 );
 ourContext.addDirective("include", loader.include);
