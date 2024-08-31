@@ -15,11 +15,10 @@ export const encode = (
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    convert.checkCount(operands, ["relative12bits"]);
+    convert.checkCount(operands, ["relativeJump"]);
     const absoluteAddress = operands[0]!;
-    convert.check("relative12bits", absoluteAddress);
     const operationBit = mapping.get(mnemonic)!;
     return template(`110${operationBit}_kkkk kkkk_kkkk`, [
-        ["k", convert.numeric("relative12bits", absoluteAddress)]
+        ["k", convert.numeric("relativeJump", absoluteAddress)]
     ]);
 };

@@ -14,9 +14,7 @@ export const operandTypes = (ourContext: OurContext) => {
         const result = ourContext.execute(operand).trim();
         const intResult = Number.parseInt(result);
         if (`${intResult}` != result) {
-            throw new TypeError(
-                `${operand} evaluates to ${result} not an integer`
-            );
+            throw new TypeError(operandMessage(operand, "an integer", result));
         }
         return intResult;
     };
@@ -118,7 +116,7 @@ export const operandTypes = (ourContext: OurContext) => {
             numeric
         ],
         "address": [
-            "branch to 22 bit address (0 - 0x3FFFFF) (4 Meg)",
+            "22 bit address (0 - 0x3FFFFF) (4 Meg)",
             (operand: SymbolicOperand) => between(0, operand, 0x3fffff),
             numeric
         ],

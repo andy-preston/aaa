@@ -1,4 +1,5 @@
 import type { OurContext } from "../context/mod.ts";
+import { operandMessage } from "./message.ts";
 import {
     type OperandType,
     type TypeName,
@@ -9,9 +10,6 @@ import type {
     SymbolicOperand,
     SymbolicOperands
 } from "./types.ts";
-
-export const operandMessage = (expectation: string, actual: string) =>
-    `Operand out of range - expecting ${expectation} not ${actual}`;
 
 export const operandConverter = (ourContext: OurContext) => {
     const operands = operandTypes(ourContext);
@@ -35,7 +33,7 @@ export const operandConverter = (ourContext: OurContext) => {
         if (theType[1](symbolic)) {
             return;
         }
-        throw new RangeError(operandMessage(theType[0], symbolic));
+        throw new RangeError(operandMessage("", theType[0], symbolic));
     };
 
     const standaloneCheck = (typeName: TypeName, raw: SymbolicOperand) =>

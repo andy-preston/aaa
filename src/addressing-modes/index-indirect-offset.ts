@@ -40,7 +40,9 @@ export const encode = (
     const offset = convert.numeric("sixBits", operands[offsetIndex]!);
     const index = operands[indexIndex]!;
     if (!indexMapping.has(index)) {
-        throw new SyntaxError(operandMessage(indexDesc, index));
+        throw new SyntaxError(
+            operandMessage("index register", indexDesc, index)
+        );
     }
     const secondOperationBit = indexMapping.get(index)!;
     // In the official documentation, the store operations have

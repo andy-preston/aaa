@@ -7,8 +7,6 @@ export type {
 
 export type { TypeName } from "./operand-types.ts";
 
-export {
-    type OperandConverter,
-    operandConverter,
-    operandMessage
-} from "./converter.ts";
+export { type OperandConverter, operandConverter } from "./converter.ts";
+
+export { operandMessage } from "./message.ts";

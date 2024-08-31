@@ -89,7 +89,7 @@ Deno.test("Bad symbolic operand for LD", () => {
     assertThrows(
         () => generate(["", "LD", ["R15", "-Q"]]),
         SyntaxError,
-        "Operand out of range - expecting Z, Z+, -Z, Y, Y+, -Y, X, X+, -X not -Q"
+        "Operand out of range: index register should be Z, Z+, -Z, Y, Y+, -Y, X, X+, -X not -Q"
     );
 });
 
@@ -97,6 +97,6 @@ Deno.test("Bad symbolic operand for ST", () => {
     assertThrows(
         () => generate(["", "ST", ["plop", "R16"]]),
         SyntaxError,
-        "Operand out of range - expecting Z, Z+, -Z, Y, Y+, -Y, X, X+, -X not plop"
+        "Operand out of range: index register should be Z, Z+, -Z, Y, Y+, -Y, X, X+, -X not plop"
     );
 });

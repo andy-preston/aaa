@@ -28,12 +28,12 @@ Deno.test("A register should be between zero and 31", () => {
     assertThrows(
         () => converter.numeric("register", "-10"),
         RangeError,
-        "Operand out of range - expecting register (R0 - R31) not -10"
+        "Operand out of range: should be register (R0 - R31) not -10"
     );
     assertThrows(
         () => converter.numeric("register", "42"),
         RangeError,
-        "Operand out of range - expecting register (R0 - R31) not 42"
+        "Operand out of range: should be register (R0 - R31) not 42"
     );
 });
 
@@ -45,12 +45,12 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
     assertThrows(
         () => converter.numeric("immediateRegister", "R0"),
         RangeError,
-        "Operand out of range - expecting immediate register (R16 - R31) not R0"
+        "Operand out of range: should be immediate register (R16 - R31) not R0"
     );
     assertThrows(
         () => converter.numeric("immediateRegister", "42"),
         RangeError,
-        "Operand out of range - expecting immediate register (R16 - R31) not 42"
+        "Operand out of range: should be immediate register (R16 - R31) not 42"
     );
 });
 
@@ -61,12 +61,12 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
     assertThrows(
         () => converter.numeric("multiplyRegister", "R24"),
         RangeError,
-        "Operand out of range - expecting multiply register (R16 - R23) not R24"
+        "Operand out of range: should be multiply register (R16 - R23) not R24"
     );
     assertThrows(
         () => converter.numeric("multiplyRegister", "15"),
         RangeError,
-        "Operand out of range - expecting multiply register (R16 - R23) not 15"
+        "Operand out of range: should be multiply register (R16 - R23) not 15"
     );
 });
 
@@ -79,12 +79,12 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
     assertThrows(
         () => converter.numeric("registerPair", "R20"),
         RangeError,
-        "Operand out of range - expecting register pair (R24:R25, R26:R27, R28:29, R30:R31) not R20"
+        "Operand out of range: should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not R20"
     );
     assertThrows(
         () => converter.numeric("registerPair", "200"),
         RangeError,
-        "Operand out of range - expecting register pair (R24:R25, R26:R27, R28:29, R30:R31) not 200"
+        "Operand out of range: should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not 200"
     );
 });
 
@@ -99,12 +99,12 @@ Deno.test("Any register pair is any even numbered register", () => {
     assertThrows(
         () => converter.numeric("anyRegisterPair", "R31"),
         RangeError,
-        "Operand out of range - expecting any register pair (R0:R1 - R30:R31) not R31"
+        "Operand out of range: should be any register pair (R0:R1 - R30:R31) not R31"
     );
     assertThrows(
         () => converter.numeric("anyRegisterPair", "32"),
         RangeError,
-        "Operand out of range - expecting any register pair (R0:R1 - R30:R31) not 32"
+        "Operand out of range: should be any register pair (R0:R1 - R30:R31) not 32"
     );
 });
 
@@ -116,17 +116,17 @@ Deno.test("Some instructions require Z and no other register", () => {
     assertThrows(
         () => converter.numeric("z", "R31"),
         RangeError,
-        "Operand out of range - expecting Z Register only (R30:R31) not R31"
+        "Operand out of range: should be Z Register only (R30:R31) not R31"
     );
     assertThrows(
         () => converter.numeric("z", "ZH"),
         RangeError,
-        "Operand out of range - expecting Z Register only (R30:R31) not ZH"
+        "Operand out of range: should be Z Register only (R30:R31) not ZH"
     );
     assertThrows(
         () => converter.numeric("z", "X"),
         RangeError,
-        "Operand out of range - expecting Z Register only (R30:R31) not X"
+        "Operand out of range: should be Z Register only (R30:R31) not X"
     );
 });
 
@@ -137,12 +137,12 @@ Deno.test("A port is between 0 and 0x3F", () => {
     assertThrows(
         () => converter.numeric("port", "-47"),
         RangeError,
-        "Operand out of range - expecting GPIO port (0 - 0x3F) not -47"
+        "Operand out of range: should be GPIO port (0 - 0x3F) not -47"
     );
     assertThrows(
         () => converter.numeric("port", "64"),
         RangeError,
-        "Operand out of range - expecting GPIO port (0 - 0x3F) not 64"
+        "Operand out of range: should be GPIO port (0 - 0x3F) not 64"
     );
 });
 
@@ -153,12 +153,12 @@ Deno.test("6 bits is between 0 and 0x3F", () => {
     assertThrows(
         () => converter.numeric("sixBits", "0b1111111"),
         RangeError,
-        "Operand out of range - expecting six bit number (0 - 0x3F) not 0b1111111"
+        "Operand out of range: should be six bit number (0 - 0x3F) not 0b1111111"
     );
     assertThrows(
         () => converter.numeric("sixBits", "0x40"),
         RangeError,
-        "Operand out of range - expecting six bit number (0 - 0x3F) not 0x40"
+        "Operand out of range: should be six bit number (0 - 0x3F) not 0x40"
     );
 });
 
@@ -170,7 +170,7 @@ Deno.test("A bit index is 0 - 7", () => {
     assertThrows(
         () => converter.numeric("bitIndex", "8"),
         RangeError,
-        "Operand out of range - expecting bit index (0 - 7) not 8"
+        "Operand out of range: should be bit index (0 - 7) not 8"
     );
 });
 
@@ -211,12 +211,12 @@ Deno.test("A nybble should be between 0 and 0x0f", () => {
     assertThrows(
         () => converter.numeric("nybble", "17"),
         RangeError,
-        "Operand out of range - expecting nybble (0 - 0x0F) not 17"
+        "Operand out of range: should be nybble (0 - 0x0F) not 17"
     );
     assertThrows(
         () => converter.numeric("nybble", "-1"),
         RangeError,
-        "Operand out of range - expecting nybble (0 - 0x0F) not -1"
+        "Operand out of range: should be nybble (0 - 0x0F) not -1"
     );
 });
 
@@ -227,12 +227,12 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
     assertThrows(
         () => converter.numeric("address", "-1"),
         RangeError,
-        "Operand out of range - expecting branch to 22 bit address (0 - 0x3FFFFF) (4 Meg) not -1"
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not -1"
     );
     assertThrows(
         () => converter.numeric("address", "0x400000"),
         RangeError,
-        "Operand out of range - expecting branch to 22 bit address (0 - 0x3FFFFF) (4 Meg) not 0x400000"
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not 0x400000"
     );
 });
 
@@ -243,12 +243,12 @@ Deno.test("A RAM address is 0 - 0xFFFF", () => {
     assertThrows(
         () => converter.numeric("16bitAddress", "-1"),
         RangeError,
-        "Operand out of range - expecting 16 bit RAM address (0 - 0xFFFF) (64 K) not -1"
+        "Operand out of range: should be 16 bit RAM address (0 - 0xFFFF) (64 K) not -1"
     );
     assertThrows(
         () => converter.numeric("16bitAddress", "0x10000"),
         RangeError,
-        "Operand out of range - expecting 16 bit RAM address (0 - 0xFFFF) (64 K) not 0x10000"
+        "Operand out of range: should be 16 bit RAM address (0 - 0xFFFF) (64 K) not 0x10000"
     );
 });
 
@@ -259,12 +259,12 @@ Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
     assertThrows(
         () => converter.numeric("7bitAddress", "-1"),
         RangeError,
-        "Operand out of range - expecting 7 bit RAM address (0 - 0x7F) (127 Bytes) not -1"
+        "Operand out of range: should be 7 bit RAM address (0 - 0x7F) (127 Bytes) not -1"
     );
     assertThrows(
         () => converter.numeric("7bitAddress", "0x80"),
         RangeError,
-        "Operand out of range - expecting 7 bit RAM address (0 - 0x7F) (127 Bytes) not 0x80"
+        "Operand out of range: should be 7 bit RAM address (0 - 0x7F) (127 Bytes) not 0x80"
     );
 });
 

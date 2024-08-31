@@ -43,7 +43,9 @@ export const encode = (
     const register = convert.numeric("register", operands[registerIndex]!);
     const index = operands[indexIndex]!;
     if (!indexMapping.has(index)) {
-        throw new SyntaxError(operandMessage(indexDesc, index));
+        throw new SyntaxError(
+            operandMessage("index register", indexDesc, index)
+        );
     }
     const [firstOperationBit, suffix] = indexMapping.get(index)!;
     // In the official documentation, the store operations have
