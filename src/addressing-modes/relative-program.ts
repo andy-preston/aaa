@@ -16,8 +16,10 @@ export const encode = (
         return undefined;
     }
     convert.checkCount(operands, ["relative12bits"]);
+    const absoluteAddress = operands[0]!;
+    convert.check("relative12bits", absoluteAddress);
     const operationBit = mapping.get(mnemonic)!;
     return template(`110${operationBit}_kkkk kkkk_kkkk`, [
-        ["k", convert.numeric("relative12bits", operands[0]!)]
+        ["k", convert.numeric("relative12bits", absoluteAddress)]
     ]);
 };
