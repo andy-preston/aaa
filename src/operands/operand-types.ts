@@ -120,10 +120,10 @@ export const operandTypes = (ourContext: OurContext) => {
             (operand: SymbolicOperand) => between(0, operand, 0x3fffff),
             numeric
         ],
-        "relative12bits": [
-            "branch to 12 bit range (0 - 0x1000) (4 K)",
-            (operand: SymbolicOperand) => between(0, operand, 0x1000),
-            (operand: SymbolicOperand) => relativeJump(operand, 12)
+        "relativeJump": [
+            "relative jump to 12 bit range (-2048 - 2047)",
+            (operand: SymbolicOperand) => relativeRange(0xfff, operand),
+            (operand: SymbolicOperand) => relative(0xfff, operand)
         ],
         "relativeBranch": [
             "relative branch to 7 bit range (-64 - 63)",

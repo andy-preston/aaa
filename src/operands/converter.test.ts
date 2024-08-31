@@ -1,7 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { createOurContext } from "../context/mod.ts";
 import { operandConverter } from "./converter.ts";
-import { twosComplement } from "./twos-complement.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
     const converter = operandConverter(createOurContext());
@@ -268,35 +267,24 @@ Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
     );
 });
 
-Deno.test("A relative 12 bit address is 0 - 4K and is adjusted based on PC", () => {
+Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     const context = createOurContext();
     const converter = operandConverter(context);
     context.theirs.flashOrg = 0;
-    assertEquals(converter.numeric("relative12bits", "500"), 499);
+    assertEquals(converter.numeric("relativeJump", "500"), 500);
     context.theirs.flashOrg = 1010;
-    assertEquals(
-        converter.numeric("relative12bits", "1000"),
-        twosComplement(-11, 12, false)
+    assertEquals(converter.numeric("relativeJump", "1000"), 0xfff - 10);
+    context.theirs.flashOrg = 0;
+    assertThrows(
+        () => converter.numeric("relativeJump", "-1"),
+        RangeError,
+        "Operand out of range: -1 should be a memory address not -1"
     );
     context.theirs.flashOrg = 0;
     assertThrows(
-        () => converter.numeric("relative12bits", "-1"),
+        () => converter.numeric("relativeJump", "0x1111"),
         RangeError,
-        "Operand out of range - expecting branch to 12 bit range (0 - 0x1000) (4 K) not -1"
-    );
-    context.theirs.flashOrg = 0;
-    assertThrows(
-        // Rational error message that users can understand
-        () => converter.check("relative12bits", "0x1111"),
-        RangeError,
-        "Operand out of range - expecting branch to 12 bit range (0 - 0x1000) (4 K) not 0x1111"
-    );
-    context.theirs.flashOrg = 0;
-    assertThrows(
-        // Peculiar internal error we never want users to see
-        () => converter.numeric("relative12bits", "0x1111"),
-        RangeError,
-        "Relative jump 4368 out of range - should be between -2047 and 2048"
+        "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x1111"
     );
 });
 

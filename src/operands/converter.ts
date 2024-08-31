@@ -39,10 +39,9 @@ export const operandConverter = (ourContext: OurContext) => {
     const standaloneCheck = (typeName: TypeName, raw: SymbolicOperand) =>
         check(operands[typeName], raw);
 
-    const symbolic = (operand: SymbolicOperand): SymbolicOperand =>
-        (operand.indexOf(" ") == -1
-            ? operand.toUpperCase()
-            : operand) as SymbolicOperand;
+    const symbolic = (operand: SymbolicOperand): SymbolicOperand => (
+        operand.indexOf(" ") == -1 ? operand.toUpperCase() : operand
+    ) as SymbolicOperand;
 
     const numeric = (
         typeName: TypeName,
