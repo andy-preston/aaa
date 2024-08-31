@@ -1,7 +1,7 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import { aFile } from "./file.ts";
 
-export const createListing = (topFileName: string) => {
+export const lister = (topFileName: string) => {
     let currentFileName = "";
 
     const theFile = aFile(topFileName, ".lst");
@@ -44,7 +44,3 @@ export const createListing = (topFileName: string) => {
 
     return { "line": line, "close": theFile.close };
 };
-
-export type Listing = ReturnType<typeof createListing>;
-
-export type ListingLine = Listing["line"];

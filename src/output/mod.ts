@@ -1,9 +1,9 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../input/mod.ts";
-import { createListing } from "./listing.ts";
+import { lister } from "./lister.ts";
 
 export const outputter = (fileName: FileName) => {
-    const listing = createListing(fileName);
+    const listing = lister(fileName);
 
     const output = (
         sourceFile: string,
