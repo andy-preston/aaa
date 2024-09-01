@@ -1,6 +1,5 @@
 import type { OurContext } from "../context/mod.ts";
 import { operandMessage } from "./message.ts";
-import { twosComplement } from "./twos-complement.ts";
 import type { NumericOperand, SymbolicOperand } from "./types.ts";
 
 export type OperandType = [
@@ -107,8 +106,10 @@ export const operandTypes = (ourContext: OurContext) => {
         "byte": [
             "byte (-127 - 128) or (0 - 0xFF)",
             (operand: SymbolicOperand) => between(-128, operand, 0xff),
-            (operand: SymbolicOperand) =>
-                twosComplement(numeric(operand), 8, false)
+            (operand: SymbolicOperand) => {
+                const value = numeric(operand);
+                return value < 0 ? 0x0100 + value : value;
+            }
         ],
         "nybble": [
             "nybble (0 - 0x0F)",

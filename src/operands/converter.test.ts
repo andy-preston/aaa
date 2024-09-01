@@ -177,28 +177,18 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
     const converter = operandConverter(createOurContext());
     assertEquals(converter.numeric("byte", "-1"), 0xff);
     assertEquals(converter.numeric("byte", "255"), 0xff);
-    assertEquals(converter.numeric("byte", "-127"), 129);
+    assertEquals(converter.numeric("byte", "-128"), 128);
     assertEquals(converter.numeric("byte", "128"), 128);
     assertEquals(converter.numeric("byte", "0"), 0);
     assertThrows(
-        () => converter.numeric("byte", "-128"),
+        () => converter.numeric("byte", "-129"),
         RangeError,
-        ////////////////////////////////////////////////////////////////////////
-        //
-        // Notice that two's Complement is throwing this - not operand converter
-        //
-        ////////////////////////////////////////////////////////////////////////
-        "-128 out of range - should be between -127 and 128"
+        "Operand out of range: should be byte (-127 - 128) or (0 - 0xFF) not -129"
     );
     assertThrows(
         () => converter.numeric("byte", "256"),
         RangeError,
-        ////////////////////////////////////////////////////////////////////////
-        //
-        // Notice that two's Complement is throwing this - not operand converter
-        //
-        ////////////////////////////////////////////////////////////////////////
-        "256 out of range - should be between -127 and 128 or 0 and 255"
+        "Operand out of range: should be byte (-127 - 128) or (0 - 0xFF) not 256"
     );
 });
 
