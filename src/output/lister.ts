@@ -1,13 +1,13 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../input/mod.ts";
-import type { OutputFile } from "./file.ts";
+import type { OutputWriteLine } from "./file.ts";
 
-export const lister = (theFile: OutputFile) => {
+export const lister = (writeLine: OutputWriteLine) => {
     let currentFileName = "";
 
     const listFileName = (name: FileName) => {
         if (name != currentFileName) {
-            theFile.writeLine(`\n${name}\n${"=".repeat(name.length)}\n`);
+            writeLine(`\n${name}\n${"=".repeat(name.length)}\n`);
             currentFileName = name;
         }
     };
@@ -31,13 +31,9 @@ export const lister = (theFile: OutputFile) => {
             .join(" ")
             .padEnd(11, " ")
             .toUpperCase();
-        theFile.writeLine(
-            `${addressString} ${object} ${lineNumberString} ${source}`
-        );
+        writeLine(`${addressString} ${object} ${lineNumberString} ${source}`);
         if (errorMessage != "") {
-            theFile.writeLine(
-                `${">".repeat(17)} ${lineNumberString} ${errorMessage}`
-            );
+            writeLine(`${">".repeat(17)} ${lineNumberString} ${errorMessage}`);
         }
     };
 };

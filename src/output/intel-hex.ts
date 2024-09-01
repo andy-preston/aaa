@@ -1,9 +1,9 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 // twosComplement shouldn't be in operands if it's finding use out here
 import { twosComplement } from "../operands/twos-complement.ts";
-import { outputFile } from "./file.ts";
+import type { OutputWriteLine } from "./file.ts";
 
-export const newHex = () => {
+export const intelHex = () => {
     const recordStash: Array<string> = [];
 
     const codeStash: Array<number> = [];
@@ -56,16 +56,16 @@ export const newHex = () => {
         }
     };
 
-    const save = (fileName: string) => {
-        const theFile = outputFile(fileName, ".hex");
+    const save = (writeLine: OutputWriteLine) => {
         // extended segment address always zero unless something has more
         // than 64K of flash - bear in mind this applies to the ATMega 1284
         // which I do want to support
-        theFile.writeLine(":020000020000FC");
-        recordStash.forEach(theFile.writeLine);
-        theFile.writeLine(":00000001FF");
-        theFile.close();
+        writeLine(":020000020000FC");
+        recordStash.forEach(writeLine);
+        writeLine(":00000001FF");
     };
 
     return { "add": add, "save": save };
 };
+
+export type IntelHex = ReturnType<typeof intelHex>;

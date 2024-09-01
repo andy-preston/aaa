@@ -13,4 +13,6 @@ export const outputFile = (fileName: string, extension: string) => {
     };
 };
 
-export type OutputFile = ReturnType<typeof outputFile>;
+type OutputFile = ReturnType<typeof outputFile>;
+
+export type OutputWriteLine = OutputFile["writeLine"];
