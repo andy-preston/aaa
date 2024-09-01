@@ -22,10 +22,15 @@ export const createOurContext = () => {
         if (trimmed == "") {
             return "";
         }
-        const result = new Function(
-            `with (this) { ${returnIfExpression(trimmed)}; }`
-        ).call(theirContext);
-        return result == undefined ? "" : `${result}`;
+        try {
+            const result = new Function(
+                `with (this) { ${returnIfExpression(trimmed)}; }`
+            ).call(theirContext);
+            return result == undefined ? "" : `${result}`;
+        } catch (error) {
+            error.message = `Javascript error: ${error.message}`;
+            throw error;
+        }
     };
 
     const addDirective = (name: string, directive: DirectiveHandler) => {

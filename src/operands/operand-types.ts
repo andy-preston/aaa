@@ -13,7 +13,7 @@ export const operandTypes = (ourContext: OurContext) => {
         const result = ourContext.execute(operand).trim();
         const intResult = Number.parseInt(result);
         if (`${intResult}` != result) {
-            throw new TypeError(operandMessage(operand, "an integer", result));
+            throw new TypeError(`Operand type: ${operand} is not an integer`);
         }
         return intResult;
     };

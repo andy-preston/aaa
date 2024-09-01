@@ -17,6 +17,28 @@ Deno.test("Symbolic is only used for Check Count", () => {
     converter.checkCount(["A", "B"], ["symbolic", "symbolic"]);
 });
 
+Deno.test("Numeric operands must be integers", () => {
+    const converter = operandConverter(createOurContext());
+    assertEquals(converter.numeric("byte", "R10"), 10);
+    assertEquals(converter.numeric("byte", "42"), 42);
+    assertThrows(
+        () => converter.numeric("byte", '"notANumber"'),
+        TypeError,
+        'Operand type: "notANumber" is not an integer'
+    );
+    assertThrows(
+        () => converter.numeric("byte", "notANumber"),
+        ReferenceError,
+        "Javascript error: notANumber is not defined"
+    );
+    assertThrows(
+        () => converter.numeric("byte", "23.5"),
+        TypeError,
+        "Operand type: 23.5 is not an integer"
+    );
+
+})
+
 Deno.test("A register should be between zero and 31", () => {
     const converter = operandConverter(createOurContext());
     assertEquals(converter.numeric("register", "R0"), 0);
