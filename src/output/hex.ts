@@ -1,8 +1,8 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import { byteBuffer } from "./byte-buffer.ts";
-import { checksum } from "./checksum.ts";
 import type { OutputWriteLine } from "./file.ts";
-import { record } from "./record.ts";
+import { byteBuffer } from "./hex-buffer.ts";
+import { checksum } from "./hex-checksum.ts";
+import { record } from "./hex-record.ts";
 
 export const intelHex = () => {
     const dataRecords: Array<string> = [];

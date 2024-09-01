@@ -1,7 +1,7 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../input/mod.ts";
 import { outputFile } from "./file.ts";
-import { intelHex } from "./intel-hex.ts";
+import { intelHex } from "./hex.ts";
 import { lister } from "./lister.ts";
 
 export const outputter = (fileName: FileName) => {

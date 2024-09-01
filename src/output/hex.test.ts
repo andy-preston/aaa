@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "assert";
 import type { GeneratedCode } from "../generate/mod.ts";
-import { intelHex } from "./intel-hex.ts";
+import { intelHex } from "./hex.ts";
 
 const recordLength = (dataBytes: number): number => {
     // specification from https://en.wikipedia.org/wiki/Intel_HEX
@@ -10,6 +10,7 @@ const recordLength = (dataBytes: number): number => {
     const recordTypeLength = 2;
     const dataLength = dataBytes * 2;
     const checksumLength = 2;
+    // biome-ignore format:
     return startCodeLength + byteCountLength + addressLength +
         recordTypeLength + dataLength + checksumLength;
 };
@@ -100,4 +101,8 @@ Deno.test("The remainder of the bytes form the last record", () => {
     const lastRecord = file.lines[2]!;
     assertEquals("06", lastRecord.substring(1, 3));
     assertEquals(recordLength(6), lastRecord.length);
+});
+
+Deno.test("If the address jumps out of sequence, a new record starts", () => {
+    // TODO:
 });
