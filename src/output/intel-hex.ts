@@ -1,67 +1,68 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-// twosComplement shouldn't be in operands if it's finding use out here
-import { twosComplement } from "../operands/twos-complement.ts";
+import { checkSum } from "./checkSum.ts";
 import type { OutputWriteLine } from "./file.ts";
 
 export const intelHex = () => {
-    const recordStash: Array<string> = [];
+    const records: Array<string> = [];
 
-    const codeStash: Array<number> = [];
+    const byteBuffer: Array<number> = [];
 
-    let stashedAddress = 0;
+    let address = 0;
 
     const hex = (value: number, digits: number) =>
         value.toString(16).toUpperCase().padStart(digits, "0");
 
-    const aRecord = (address: number, bytes: number) => {
-        const byteBuffer: Array<string> = [];
-        let sum = 0;
+
+    const aRecord = (bytes: number) => {
+        const check = checkSum(address, bytes);
+        const recordBytes: Array<string> = [];
         for (let index = 0; index < bytes; index += 2) {
-            const first = codeStash.shift()!;
-            const second = codeStash.shift()!;
+            const first = byteBuffer.shift()!;
+            check.byte(first);
+            const second = byteBuffer.shift()!;
+            check.byte(second);
             // Flip 'em over to make 'em big endian!
-            byteBuffer.push(hex(second, 2));
-            byteBuffer.push(hex(first, 2));
-            sum += (first + second);
+            recordBytes.push(hex(second, 2));
+            recordBytes.push(hex(first, 2));
         }
-        const checksum = twosComplement(sum & 0x0f, 8, true);
         return [
             ":",
             hex(bytes, 2), // it's usually 8, 16 or 32 some warez don't like 32
-            hex(address, 4), // for more than 64K use extended segment address
-            "00", // Data
-            byteBuffer.join(""),
-            hex(checksum, 2)
+            hex(address, 4), // for > 64K use extended segment address
+            "00", // Data record type
+            recordBytes.join(""),
+            hex(check.sum(), 2)
         ].join("");
     };
 
     const saveRecords = (limit: number) => {
-        let address = stashedAddress;
-        while (codeStash.length > limit) {
-            const bytes = Math.min(16, codeStash.length);
-            recordStash.push(aRecord(address, bytes));
-            address += bytes / 2;
+        while (byteBuffer.length > limit) {
+            const bytes = Math.min(16, byteBuffer.length);
+            records.push(aRecord(bytes));
+            address += bytes;
         }
     };
 
-    const add = (address: number, code: GeneratedCode) => {
-        const expectedAddress = stashedAddress + codeStash.length / 2;
-        if (address != expectedAddress) {
+    const add = (wordAddress: number, code: GeneratedCode) => {
+        const newByteAddress = wordAddress * 2;
+        const expectedAddress = address + byteBuffer.length;
+        if (newByteAddress != expectedAddress) {
             saveRecords(0);
-            stashedAddress = address;
+            address = newByteAddress;
         }
-        code.forEach((byte) => codeStash.push(byte));
-        if (codeStash.length >= 16) {
+        code.forEach((byte) => byteBuffer.push(byte));
+        if (byteBuffer.length >= 16) {
             saveRecords(16);
         }
     };
 
     const save = (writeLine: OutputWriteLine) => {
+        saveRecords(0);
         // extended segment address always zero unless something has more
         // than 64K of flash - bear in mind this applies to the ATMega 1284
         // which I do want to support
         writeLine(":020000020000FC");
-        recordStash.forEach(writeLine);
+        records.forEach(writeLine);
         writeLine(":00000001FF");
     };
 
