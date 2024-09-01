@@ -6,10 +6,7 @@ import { type Tests, testing } from "./testing.ts";
 // that I could get hold of.
 
 const tests: Tests = [
-    [
-        ["", "MOVW", ["R0", "R30"]],
-        [0x0f, 0x01]
-    ]
+    [["", "MOVW", ["R0", "R30"]], [0x01, 0x0f]]
 ];
 
 testing(tests, generator(createOurContext()));

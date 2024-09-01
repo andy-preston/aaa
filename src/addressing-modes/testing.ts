@@ -1,9 +1,5 @@
 import { assertEquals } from "assert";
-import {
-    type Generate,
-    type GeneratedCode,
-    littleEndian
-} from "../generate/mod.ts";
+import type { Generate, GeneratedCode } from "../generate/mod.ts";
 import type { Tokens } from "../tokens/mod.ts";
 
 export type Tests = Array<[Tokens, GeneratedCode]>;
@@ -18,7 +14,7 @@ export const testing = (tests: Tests, generate: Generate) => {
     for (const test of tests) {
         const source = test[0] as Tokens;
         Deno.test(`Basic code generation: ${testDescription(source)}`, () => {
-            assertEquals(littleEndian(generate(source)), test[1]);
+            assertEquals(generate(source), test[1]);
         });
     }
 };

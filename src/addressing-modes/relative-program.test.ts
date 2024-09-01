@@ -14,14 +14,8 @@ context.theirs.flashOrg = 3;
 // Need a better test for all of this stuff but especially anything relative
 
 const tests: Tests = [
-    [
-        ["", "RCALL", ["branch"]],
-        [0xfc, 0xdf]
-    ],
-    [
-        ["", "RJMP", ["branch"]],
-        [0xfb, 0xcf]
-    ]
+    [["", "RCALL", ["branch"]], [0xdf, 0xfc]],
+    [["", "RJMP",  ["branch"]], [0xcf, 0xfb]]
 ];
 
 testing(tests, generate);
