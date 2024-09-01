@@ -7,12 +7,12 @@ Deno.test("Symbolic is only used for Check Count", () => {
     assertThrows(
         () => converter.numeric("symbolic", "anything"),
         Error,
-        "Internal error - symbolic is only for checkCount"
+        "Internal error: symbolic is only for checkCount"
     );
     assertThrows(
         () => converter.check("symbolic", "anything"),
         Error,
-        "Internal error - symbolic is only for checkCount"
+        "Internal error: symbolic is only for checkCount"
     );
     converter.checkCount(["A", "B"], ["symbolic", "symbolic"]);
 });

@@ -48,7 +48,7 @@ export const operandTypes = (ourContext: OurContext) => {
     };
 
     const symbolicIsOnlyForCheckCount = (_operand: SymbolicOperand) => {
-        throw Error("Internal error - symbolic is only for checkCount");
+        throw Error("Internal error: symbolic is only for checkCount");
     };
 
     return {
