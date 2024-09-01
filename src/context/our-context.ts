@@ -1,9 +1,9 @@
 import type { DirectiveHandler } from "../directives/mod.ts";
 import type { GeneratedCode } from "../generate/mod.ts";
-import { createTheirContext } from "./their-context.ts";
+import { theirContext } from "./their-context.ts";
 
 export const createOurContext = () => {
-    const theirContext = createTheirContext();
+    const theirs = theirContext();
 
     const returnIfExpression = (trimmedJs: string): string => {
         // This is both "magic" and "clever", so it could well turn out to
@@ -25,7 +25,7 @@ export const createOurContext = () => {
         try {
             const result = new Function(
                 `with (this) { ${returnIfExpression(trimmed)}; }`
-            ).call(theirContext);
+            ).call(theirs);
             return result == undefined ? "" : `${result}`;
         } catch (error) {
             error.message = `Javascript error: ${error.message}`;
@@ -34,23 +34,22 @@ export const createOurContext = () => {
     };
 
     const addDirective = (name: string, directive: DirectiveHandler) => {
-        theirContext[name] = directive;
+        theirs[name] = directive;
     };
 
     const label = (name: string): void => {
-        if ("name" in theirContext) {
+        if ("name" in theirs) {
             throw Error(`label ${name} already exists`);
         }
-        theirContext[name] = theirContext.flashOrg as number;
+        theirs[name] = theirs.flashOrg as number;
     };
 
     const flashStep = (code: GeneratedCode): void => {
         // Flash addresses are in 16-bit words, not bytes
-        theirContext.flashOrg =
-            (theirContext.flashOrg as number) + code.length / 2;
+        theirs.flashOrg = (theirs.flashOrg as number) + code.length / 2;
     };
 
-    const flashPos = (): number => theirContext.flashOrg as number;
+    const flashPos = (): number => theirs.flashOrg as number;
 
     const ourContext = {
         "execute": execute,
@@ -58,7 +57,7 @@ export const createOurContext = () => {
         "label": label,
         "flashStep": flashStep,
         "flashPos": flashPos,
-        "theirs": theirContext
+        "theirs": theirs
     };
 
     return ourContext;

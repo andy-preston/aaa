@@ -10,9 +10,9 @@ interface TheirContext {
     [x: string]: number | SimpleFunction | DirectiveHandler;
 }
 
-const registers = (theirContext: TheirContext) => {
+const registers = (theirs: TheirContext) => {
     const define = (name: string, value: number) =>
-        Object.defineProperty(theirContext, name, {
+        Object.defineProperty(theirs, name, {
             "configurable": false,
             "enumerable": true,
             "value": value,
@@ -38,13 +38,13 @@ const registers = (theirContext: TheirContext) => {
     }
 };
 
-export const createTheirContext = (): TheirContext => {
-    const theirContext: TheirContext = {
+export const theirContext = (): TheirContext => {
+    const theirs: TheirContext = {
         "low": (n) => n & 0xff,
         "high": (n) => (n >> 8) & 0xff,
         "flashOrg": 0,
         "ramOrg": 0
     };
-    registers(theirContext);
-    return theirContext;
+    registers(theirs);
+    return theirs;
 };
