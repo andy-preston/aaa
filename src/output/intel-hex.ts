@@ -1,7 +1,7 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 // twosComplement shouldn't be in operands if it's finding use out here
 import { twosComplement } from "../operands/twos-complement.ts";
-import { aFile } from "./file.ts";
+import { outputFile } from "./file.ts";
 
 export const newHex = () => {
     const recordStash: Array<string> = [];
@@ -57,7 +57,7 @@ export const newHex = () => {
     };
 
     const save = (fileName: string) => {
-        const theFile = aFile(fileName, ".hex");
+        const theFile = outputFile(fileName, ".hex");
         // extended segment address always zero unless something has more
         // than 64K of flash - bear in mind this applies to the ATMega 1284
         // which I do want to support

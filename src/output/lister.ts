@@ -1,20 +1,19 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import { aFile } from "./file.ts";
+import type { FileName } from "../input/mod.ts";
+import type { OutputFile } from "./file.ts";
 
-export const lister = (topFileName: string) => {
+export const lister = (theFile: OutputFile) => {
     let currentFileName = "";
 
-    const theFile = aFile(topFileName, ".lst");
-
-    const listFileName = (name: string) => {
+    const listFileName = (name: FileName) => {
         if (name != currentFileName) {
             theFile.writeLine(`\n${name}\n${"=".repeat(name.length)}\n`);
             currentFileName = name;
         }
     };
 
-    const line = (
-        sourceFile: string,
+    return (
+        sourceFile: FileName,
         lineNumber: number,
         address: number,
         generatedCode: GeneratedCode,
@@ -41,6 +40,4 @@ export const lister = (topFileName: string) => {
             );
         }
     };
-
-    return { "line": line, "close": theFile.close };
 };

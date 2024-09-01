@@ -1,19 +1,21 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../input/mod.ts";
+import { outputFile } from "./file.ts";
 import { lister } from "./lister.ts";
 
 export const outputter = (fileName: FileName) => {
-    const listing = lister(fileName);
+    const listFile = outputFile(fileName, ".lst");
+    const listing = lister(listFile);
 
     const output = (
-        sourceFile: string,
+        sourceFile: FileName,
         lineNumber: number,
         address: number,
         generatedCode: GeneratedCode,
         source: string,
         errorMessage: string
     ) => {
-        listing.line(
+        listing(
             sourceFile,
             lineNumber,
             address,
@@ -29,7 +31,7 @@ export const outputter = (fileName: FileName) => {
     return {
         "output": output,
         "close": () => {
-            listing.close();
+            listFile.close();
         }
     };
 };
