@@ -12,7 +12,6 @@ export const intelHex = () => {
     const hex = (value: number, digits: number) =>
         value.toString(16).toUpperCase().padStart(digits, "0");
 
-
     const aRecord = (bytes: number) => {
         const check = checkSum(address, bytes);
         const recordBytes: Array<string> = [];

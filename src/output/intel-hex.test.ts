@@ -85,7 +85,7 @@ Deno.test("Each record contains a maximum of 0x10 bytes", () => {
         hex.add(address, code);
     }
     hex.save(file.writeLine);
-    const firstRecord = file.lines[1]!
+    const firstRecord = file.lines[1]!;
     assertEquals("10", firstRecord.substring(1, 3));
     assertEquals(recordLength(16), firstRecord.length);
 });
@@ -97,7 +97,7 @@ Deno.test("The remainder of the bytes form the last record", () => {
         hex.add(address, code);
     }
     hex.save(file.writeLine);
-    const lastRecord = file.lines[2]!
+    const lastRecord = file.lines[2]!;
     assertEquals("06", lastRecord.substring(1, 3));
     assertEquals(recordLength(6), lastRecord.length);
 });
