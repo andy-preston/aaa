@@ -9,7 +9,8 @@
     "formatter": {
         "enabled": true,
         "indentStyle": "space",
-        "indentWidth": 4
+        "indentWidth": 4,
+        "ignore": ["src/addressing-modes/*.test.ts"]
     },
     "json": {
         "formatter": {
