@@ -26,8 +26,10 @@ export const outputter = (fileName: FileName) => {
             source,
             errorMessage
         );
-        if (!errorMessage) {
+        if (errorMessage) {
             anyErrors = true;
+        }
+        if (!anyErrors) {
             hex.add(address, generatedCode);
         }
     };
