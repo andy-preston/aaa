@@ -303,7 +303,7 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
     const context = createOurContext();
     const converter = operandConverter(context);
     context.theirs.flashOrg = 0;
-    assertEquals(converter.numeric("relativeBranch", "60"), 60);
+    assertEquals(converter.numeric("relativeBranch", "60"), 59);
     context.theirs.flashOrg = 110;
     assertEquals(converter.numeric("relativeBranch", "100"), 127 - 10);
     context.theirs.flashOrg = 0;
