@@ -30,7 +30,7 @@ export const operandTypes = (ourContext: OurContext) => {
             );
         }
         const distance = target - ourContext.flashPos();
-        return distance < 0 ? highValue + distance : distance;
+        return distance < 0 ? highValue + distance : distance - 1;
     };
 
     const pairs = [24, 26, 28, 30];
@@ -123,8 +123,8 @@ export const operandTypes = (ourContext: OurContext) => {
         ],
         "relativeJump": [
             "relative jump to 12 bit range (-2048 - 2047)",
-            (operand: SymbolicOperand) => relativeRange(0xfff, operand),
-            (operand: SymbolicOperand) => relative(0xfff, operand)
+            (operand: SymbolicOperand) => relativeRange(0x0fff, operand),
+            (operand: SymbolicOperand) => relative(0x0fff, operand)
         ],
         "relativeBranch": [
             "relative branch to 7 bit range (-64 - 63)",

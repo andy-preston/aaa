@@ -36,8 +36,7 @@ Deno.test("Numeric operands must be integers", () => {
         TypeError,
         "Operand type: 23.5 is not an integer"
     );
-
-})
+});
 
 Deno.test("A register should be between zero and 31", () => {
     const converter = operandConverter(createOurContext());
@@ -283,9 +282,9 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     const context = createOurContext();
     const converter = operandConverter(context);
     context.theirs.flashOrg = 0;
-    assertEquals(converter.numeric("relativeJump", "500"), 500);
+    assertEquals(converter.numeric("relativeJump", "500"), 499);
     context.theirs.flashOrg = 1010;
-    assertEquals(converter.numeric("relativeJump", "1000"), 0xfff - 10);
+    assertEquals(converter.numeric("relativeJump", "1000"), 0x0fff - 10);
     context.theirs.flashOrg = 0;
     assertThrows(
         () => converter.numeric("relativeJump", "-1"),
