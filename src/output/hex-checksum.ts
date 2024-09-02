@@ -1,7 +1,7 @@
-export const checksum = (address: number, bytes: number) => {
+export const checksum = (address: number, recordSize: number) => {
     // https://en.wikipedia.org/wiki/Intel_HEX
 
-    let total = bytes + (address & 0xff) + ((address & 0xff00) >> 8);
+    let total = recordSize + (address & 0xff) + ((address & 0xff00) >> 8);
 
     return {
         "byte": (byte: number) => {
