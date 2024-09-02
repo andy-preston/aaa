@@ -1,7 +1,4 @@
-export const record = (
-    address: number,
-    numBytes: number
-) => {
+export const record = (address: number, recordSize: number) => {
     const bytes: Array<string> = [];
 
     const hex = (value: number, digits: number) =>
@@ -13,14 +10,15 @@ export const record = (
         bytes.push(hex(first, 2));
     };
 
-    const asString = (checksum: number) => [
-        ":",
-        hex(numBytes, 2), // it's usually 8, 16 or 32 some warez don't like 32
-        hex(address, 4), // for > 64K use extended segment address
-        "00", // Data record type
-        bytes.join(""),
-        hex(checksum, 2)
-    ].join("");
+    const asString = (checksum: number) =>
+        [
+            ":",
+            hex(recordSize, 2), // usually 8, 16 or 32 some warez don't like 32
+            hex(address, 4), // for > 64K use extended segment address
+            "00", // Data record type
+            bytes.join(""),
+            hex(checksum, 2)
+        ].join("");
 
     return {
         "addTwo": addTwo,

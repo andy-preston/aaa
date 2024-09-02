@@ -1,7 +1,9 @@
-export const byteBuffer = () => {
+export const byteBuffer = (startAddress: number) => {
     let buffer: Array<number> = [];
 
-    let address = 0;
+    let address = startAddress;
+
+    const recordSize = () => Math.min(16, buffer.length);
 
     const getTwo = (): [number, number] => {
         address += 2;
@@ -14,23 +16,25 @@ export const byteBuffer = () => {
         buffer = buffer.concat(bytes);
     };
 
-    const setAddress = (to: number) => {
-        address = to;
-    };
-
     const baseAddress = () => address;
 
-    const endAddress = () => address + buffer.length;
+    const isContinuous = (newAddress: number) =>
+        newAddress == address + buffer.length;
 
-    const recordSize = () => Math.min(16, buffer.length);
+    const restartAt = (newAddress: number) => {
+        if (buffer.length != 0) {
+            throw new Error("Restarting HEX buffer without it being empty");
+        }
+        address = newAddress;
+    };
 
     return {
+        "recordSize": recordSize,
         "getTwo": getTwo,
-        "add": add,
         "has": has,
-        "setAddress": setAddress,
+        "add": add,
+        "isContinuous": isContinuous,
         "baseAddress": baseAddress,
-        "endAddress": endAddress,
-        "recordSize": recordSize
+        "restartAt": restartAt
     };
-}
+};

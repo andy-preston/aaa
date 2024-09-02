@@ -7,7 +7,7 @@ import { record } from "./hex-record.ts";
 export const intelHex = () => {
     const dataRecords: Array<string> = [];
 
-    const bytes = byteBuffer();
+    const bytes = byteBuffer(0);
 
     const saveRecords = (limit: number) => {
         while (bytes.has(limit)) {
@@ -27,9 +27,9 @@ export const intelHex = () => {
 
     const add = (wordAddress: number, code: GeneratedCode) => {
         const newAddress = wordAddress * 2;
-        if (newAddress != bytes.endAddress()) {
+        if (!bytes.isContinuous(newAddress)) {
             saveRecords(1);
-            bytes.setAddress(newAddress);
+            bytes.restartAt(newAddress);
         }
         bytes.add(code);
         if (bytes.has(16)) {
