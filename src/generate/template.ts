@@ -40,13 +40,14 @@ export const template = (
     operands: Array<[TemplateOperandKey, number]>
 ): GeneratedCode => {
     const substitutions = substitutionMap(operands);
-    const digits = templateString
+    const instructionBytes = templateString
+        .replaceAll("_", "")
         .split("")
         .reverse()
-        .map((digit) => substitutions(digit));
-    const bytes = digits.reverse().join("").split(" ");
-    return bytes.map(
-        // biome-ignore lint/security/noGlobalEval:
-        (byte: string) => eval(`0b${byte}`)
-    ) as GeneratedCode;
+        .map((digit) => substitutions(digit))
+        .reverse()
+        .join("")
+        .split(" ")
+        .map((byte) => Number.parseInt(byte, 2));
+    return instructionBytes as GeneratedCode;
 };
