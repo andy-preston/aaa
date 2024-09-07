@@ -4,7 +4,6 @@
 
 export DENO_DIR="$(pwd)/_deno"
 mkdir -p "${DENO_DIR}"
-
 TASK="${1:-run}"
 case $TASK in
 run)
@@ -19,8 +18,11 @@ check)
 biome)
     deno run -A npm:@biomejs/biome check
     ;;
+build)
+    deno run -A ./build/def.ts
+    ;;
 *)
-    echo "./run [check|biome|run]"
+    echo "./run [check|biome|run|build]"
     exit 1
     ;;
 esac
