@@ -4,6 +4,7 @@
 
 export DENO_DIR="$(pwd)/_deno"
 mkdir -p "${DENO_DIR}"
+
 TASK="${1:-run}"
 case $TASK in
 run)
