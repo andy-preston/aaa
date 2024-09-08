@@ -1,7 +1,7 @@
 {
     "imports": {
-        "assert": "https://deno.land/std@0.224.0/assert/mod.ts",
-        "xml": "https://deno.land/x/xml@5.4.16/parse.ts"
+        "@libs/xml": "jsr:@libs/xml@^5.4.16",
+        "assert": "https://deno.land/std@0.224.0/assert/mod.ts"
     },
     "compilerOptions": {
         "noUncheckedIndexedAccess": true,

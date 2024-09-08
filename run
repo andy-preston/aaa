@@ -20,7 +20,7 @@ biome)
     deno run -A npm:@biomejs/biome check
     ;;
 build)
-    deno run -A ./build/def.ts
+    deno run -A ./build/definitions.ts
     ;;
 *)
     echo "./run [check|biome|run|build]"

@@ -1,6 +1,6 @@
-import { type xml_node, parse } from "xml";
+import { type xml_node, parse } from "@libs/xml";
 
-export const spec = (fileName: string) => {
+export const deviceAndModulesXml = (fileName: string) => {
     using file = Deno.openSync(fileName);
     const parsed = parse(file, {
         "clean": {
@@ -9,10 +9,10 @@ export const spec = (fileName: string) => {
             "instructions": true
         }
     });
-    const spec = parsed["avr-tools-device-file"] as xml_node;
+    const completeXml = parsed["avr-tools-device-file"] as xml_node;
     let device: undefined | xml_node = undefined;
     let modules: undefined | xml_node = undefined;
-    for (const section of spec["~children"]) {
+    for (const section of completeXml["~children"]) {
         if (section["~name"] == "modules") {
             modules = section as xml_node;
         }

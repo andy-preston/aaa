@@ -1,16 +1,18 @@
-import { type xml_node } from "xml";
+import type { xml_node } from "@libs/xml";
 import { attribute } from "./xml.ts";
 
 type SpaceAttributes = "start" | "size";
 
 type AddressSpace = Record<SpaceAttributes, string>;
 
-type DataSpaceName = "registers" | "mappedIO" | "internalRam";
+type DataSpaceName = "mappedIO" | "internalRam";
 
 const dataSpaceNames: Record <string, DataSpaceName> = {
-    "registers": "registers",
     "mapped_io": "mappedIO",
-    "iram": "internalRam"
+    "io": "mappedIO",
+    "iram": "internalRam",
+    "internal_sram": "internalRam",
+    "sram": "internalRam"
 };
 
 type DataSpaces = Record<DataSpaceName, AddressSpace>;
@@ -19,7 +21,7 @@ type TemporaryDataSpaces = Record<DataSpaceName, AddressSpace | undefined>;
 
 type AllSpaceName = DataSpaceName | "programMemory" | "io";
 
-type AllSpaces = Record<AllSpaceName, AddressSpace>;
+export type AllSpaces = Record<AllSpaceName, AddressSpace>;
 
 type TemporarySpaces = Record<AllSpaceName, AddressSpace | undefined>;
 
@@ -28,26 +30,26 @@ const addressSpace = (memorySegment: xml_node): AddressSpace => {
         "start": attribute(memorySegment, "start"),
         "size": attribute(memorySegment, "size")
     };
-}
+};
 
-const prog = (progSpec: xml_node): AddressSpace => {
-    for (const memorySegment of progSpec["~children"]) {
-        if (memorySegment["~name"] == "memory-segment") {
-            if (attribute(memorySegment, "name") == "flash") {
-                return addressSpace(memorySegment as xml_node);
+const programMemory = (programMemoryXml: xml_node): AddressSpace => {
+    for (const segment of programMemoryXml["~children"]) {
+        if (segment["~name"] == "memory-segment") {
+            const name = attribute(segment as xml_node, "name");
+            if (["flash", "progmem"].includes(name)) {
+                return addressSpace(segment as xml_node);
             }
         }
     }
     throw new Error("didn't find program memory");
-}
+};
 
-const data = (dataSpec: xml_node): DataSpaces => {
+const dataMemory = (dataMemoryXml: xml_node, noRam: boolean): DataSpaces => {
     const result: TemporaryDataSpaces = {
-        "registers": undefined,
         "mappedIO": undefined,
         "internalRam": undefined
     };
-    for (const memorySegment of dataSpec["~children"]) {
+    for (const memorySegment of dataMemoryXml["~children"]) {
         if (memorySegment["~name"] == "memory-segment") {
             const dataSpaceName = dataSpaceNames[
                 attribute(memorySegment, "name")
@@ -57,18 +59,23 @@ const data = (dataSpec: xml_node): DataSpaces => {
             }
         }
     }
+    if (noRam) {
+        result["internalRam"] = {"start": "0", "size": "0"};
+    }
     for (const space in result) {
         if (result[space as DataSpaceName] == undefined) {
             throw new Error(`didn't find ${space} in data address space`);
         }
     }
     return result as DataSpaces;
-}
+};
 
-export const addressSpaces = (addressSpaces: xml_node): AllSpaces => {
+export const memory = (
+    addressSpaces: xml_node,
+    noRam: boolean
+): AllSpaces => {
     const spaces: TemporarySpaces = {
         "programMemory": undefined,
-        "registers": undefined,
         "mappedIO": undefined,
         "internalRam": undefined,
         "io": undefined
@@ -77,10 +84,10 @@ export const addressSpaces = (addressSpaces: xml_node): AllSpaces => {
         if (space["~name"] == "address-space") {
             switch (attribute(space, "name")) {
                 case "prog":
-                    spaces.programMemory = prog(space as xml_node);
+                    spaces.programMemory = programMemory(space as xml_node);
                     break;
                 case "data":
-                    Object.assign(spaces, data(space as xml_node));
+                    Object.assign(spaces, dataMemory(space as xml_node, noRam));
                     break;
                 case "io":
                     spaces.io = addressSpace(space as xml_node);
@@ -88,9 +95,16 @@ export const addressSpaces = (addressSpaces: xml_node): AllSpaces => {
             }
         }
     }
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // Some of the ATDFs don't include an IO space. I'm not sure if this is
+    // important or not. I'm leaving it until later in my exploration to decide
+    // and, for now, I'm just letting this "error" pass.
+    //
+    ////////////////////////////////////////////////////////////////////////////
     for (const space in spaces) {
-        if (spaces[space as AllSpaceName] == undefined) {
-            throw new Error(`didn't find ${space}`);
+        if (space != "io" && spaces[space as AllSpaceName] == undefined) {
+            throw new Error(`didn't find ${space} in memory spaces`);
         }
     }
     return spaces as AllSpaces;
