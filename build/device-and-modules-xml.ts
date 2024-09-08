@@ -26,10 +26,10 @@ export const deviceAndModulesXml = (fileName: string) => {
         }
     }
     if (device == undefined) {
-        throw new Error("didn't find a device");
+        throw new Error("didn't find a device in ATDF");
     }
     if (modules == undefined) {
-        throw new Error("didn't find modules")
+        throw new Error("didn't find modules in ATDF")
     }
     return [device as xml_node, modules as xml_node]
 };

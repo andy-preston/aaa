@@ -1,5 +1,5 @@
 import { xml_node } from "@libs/xml";
-import { attribute } from "./xml.ts";
+import { lowerCaseAttribute } from "./xml.ts";
 import { type AllSpaces, memory } from "./memory.ts";
 
 export type DeviceSpecification = {
@@ -17,8 +17,8 @@ export type DeviceSpecification = {
 const interrupts = (interruptsXml: xml_node) => {
     const result: Array<string> = [];
     for (const interrupt of interruptsXml["~children"]) {
-        const index = parseInt(attribute(interrupt, "index"));
-        result[index] = attribute(interrupt, "name")
+        const index = parseInt(lowerCaseAttribute(interrupt, "index"));
+        result[index] = lowerCaseAttribute(interrupt, "name")
     }
     return result;
 };
@@ -28,7 +28,7 @@ export const device = (
     noRam: boolean
 ): DeviceSpecification => {
     return {
-        "architecture": attribute(deviceXml, "architecture"),
+        "architecture": lowerCaseAttribute(deviceXml, "architecture"),
         "memory": memory(deviceXml["address-spaces"] as xml_node, noRam),
         "interrupts": interrupts(deviceXml["interrupts"] as xml_node)
     };

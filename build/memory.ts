@@ -1,5 +1,5 @@
 import type { xml_node } from "@libs/xml";
-import { attribute } from "./xml.ts";
+import { lowerCaseAttribute } from "./xml.ts";
 
 type SpaceAttributes = "start" | "size";
 
@@ -27,15 +27,15 @@ type TemporarySpaces = Record<AllSpaceName, AddressSpace | undefined>;
 
 const addressSpace = (memorySegment: xml_node): AddressSpace => {
     return {
-        "start": attribute(memorySegment, "start"),
-        "size": attribute(memorySegment, "size")
+        "start": lowerCaseAttribute(memorySegment, "start"),
+        "size": lowerCaseAttribute(memorySegment, "size")
     };
 };
 
 const programMemory = (programMemoryXml: xml_node): AddressSpace => {
     for (const segment of programMemoryXml["~children"]) {
         if (segment["~name"] == "memory-segment") {
-            const name = attribute(segment as xml_node, "name");
+            const name = lowerCaseAttribute(segment as xml_node, "name");
             if (["flash", "progmem"].includes(name)) {
                 return addressSpace(segment as xml_node);
             }
@@ -52,7 +52,7 @@ const dataMemory = (dataMemoryXml: xml_node, noRam: boolean): DataSpaces => {
     for (const memorySegment of dataMemoryXml["~children"]) {
         if (memorySegment["~name"] == "memory-segment") {
             const dataSpaceName = dataSpaceNames[
-                attribute(memorySegment, "name")
+                lowerCaseAttribute(memorySegment, "name")
             ];
             if (dataSpaceName != undefined) {
                 result[dataSpaceName] = addressSpace(memorySegment as xml_node);
@@ -82,7 +82,7 @@ export const memory = (
     };
     for (const space of addressSpaces["~children"]) {
         if (space["~name"] == "address-space") {
-            switch (attribute(space, "name")) {
+            switch (lowerCaseAttribute(space, "name")) {
                 case "prog":
                     spaces.programMemory = programMemory(space as xml_node);
                     break;
