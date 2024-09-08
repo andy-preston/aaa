@@ -1,9 +1,9 @@
 import { deviceAndModulesXml } from "./device-and-modules-xml.ts";
-import { type DeviceSpecification, device } from "./device.ts";
+import { type Device, device } from "./device.ts";
 import { type Module, modules } from "./modules.ts";
 
 type Definition = {
-    "device": DeviceSpecification | undefined,
+    "device": Device | undefined,
     "modules": Array<Module> | undefined
 };
 

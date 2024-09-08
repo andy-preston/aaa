@@ -2,7 +2,7 @@ import { xml_node } from "@libs/xml";
 import { lowerCaseAttribute } from "./xml.ts";
 import { type AllSpaces, memory } from "./memory.ts";
 
-export type DeviceSpecification = {
+export type Device = {
     "architecture": string,
     "memory": AllSpaces,
     "interrupts": Array<string>
@@ -26,7 +26,7 @@ const interrupts = (interruptsXml: xml_node) => {
 export const device = (
     deviceXml: xml_node,
     noRam: boolean
-): DeviceSpecification => {
+): Device => {
     return {
         "architecture": lowerCaseAttribute(deviceXml, "architecture"),
         "memory": memory(deviceXml["address-spaces"] as xml_node, noRam),
