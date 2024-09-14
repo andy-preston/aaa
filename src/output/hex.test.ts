@@ -104,5 +104,13 @@ Deno.test("The remainder of the bytes form the last record", () => {
 });
 
 Deno.test("If the address jumps out of sequence, a new record starts", () => {
-    // TODO:
+    const file = mockFile();
+    const hex = intelHex();
+    hex.add(0x000000, [0x02, 0x01]);
+    hex.add(0x000001, [0x04, 0x03]);
+    hex.add(0x000010, [0x06, 0x05]);
+    hex.add(0x000011, [0x08, 0x07]);
+    hex.save(file.writeLine);
+    assertEquals(file.lines[1], ":04" + "0000" + "00" + "01020304" + "F2");
+    assertEquals(file.lines[2], ":04" + "0020" + "00" + "05060708" + "C2");
 });
