@@ -45,6 +45,7 @@ const unavailableMap: Map<string, string> = new Map([
 
 export const instructionCheck = () => {
     let instructionSet = "";
+    let firstUse = true;
 
     const choose = (chosen: InstructionSet): void => {
         if (!instructionSets.includes(chosen)) {
@@ -55,6 +56,12 @@ export const instructionCheck = () => {
         instructionSet = chosen.slice(-1).toLowerCase();
     };
 
+    const notChosen = (): boolean => {
+        const result = firstUse && instructionSet == "";
+        firstUse = false;
+        return result;
+    };
+
     const notAvailable = (mnemonic: string): boolean =>
         unavailableMap.has(mnemonic) &&
         unavailableMap.get(mnemonic)!.includes(instructionSet);
@@ -62,5 +69,5 @@ export const instructionCheck = () => {
     const available = (mnemonic: string): boolean =>
         instructionSet == "" || !notAvailable(mnemonic);
 
-    return { "choose": choose, "available": available };
+    return { "notChosen": notChosen, "choose": choose, "available": available };
 };

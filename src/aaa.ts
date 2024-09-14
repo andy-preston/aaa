@@ -29,6 +29,9 @@ for (const [fileName, lineNumber, rawLine] of loader.lines()) {
         errorMessage = `${error.name}: ${error.message}`;
         code = [];
     }
+    if (errorMessage == "" && ourContext.instructionSet.notChosen()) {
+        errorMessage = "device not selected, some instructions may not be available";
+    }
     output.output(
         fileName,
         lineNumber,

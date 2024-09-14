@@ -52,6 +52,7 @@ export const createOurContext = () => {
     const flashPos = (): number => theirs.flashOrg as number;
 
     const ourContext = {
+        "instructionSet": instructionCheck(),
         "execute": execute,
         "addDirective": addDirective,
         "label": label,
