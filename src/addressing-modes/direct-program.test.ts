@@ -10,8 +10,8 @@ context.theirs.flashOrg = 3;
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "CALL", ["branch"]], [0x94, 0x0e, 0x00, 0x00]],
-    [["", "JMP",  ["branch"]], [0x94, 0x0c, 0x00, 0x00]]
+    [["CALL", ["branch"]], [0x94, 0x0e, 0x00, 0x00]],
+    [["JMP",  ["branch"]], [0x94, 0x0c, 0x00, 0x00]]
 ];
 
 testing(tests, generator(context));

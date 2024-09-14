@@ -4,7 +4,7 @@ export type Mnemonic = string;
 
 type Label = string;
 
-export type Tokens = [Label, Mnemonic, SymbolicOperands];
+type Tokens = [Label, Mnemonic, SymbolicOperands];
 
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");

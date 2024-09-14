@@ -1,22 +1,21 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { OurContext } from "../context/mod.ts";
 import { operandConverter } from "../operands/mod.ts";
-import type { Tokens } from "../tokens/mod.ts";
+import type { Instruction } from "../source-line/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
 export const generator = (ourContext: OurContext) => {
     const converter = operandConverter(ourContext);
 
-    return (tokens: Tokens): GeneratedCode => {
-        ourContext.label(tokens[0]!);
-        const mnemonic = tokens[1]!.toUpperCase();
+    return (instruction: Instruction): GeneratedCode => {
+        const mnemonic = instruction[0]!.toUpperCase();
         if (mnemonic == "") {
             return [];
         }
         for (const addressingMode of addressingModes) {
             const generatedCode = addressingMode(
                 mnemonic,
-                tokens[2],
+                instruction[1],
                 converter
             );
             if (generatedCode != null) {
@@ -24,7 +23,7 @@ export const generator = (ourContext: OurContext) => {
                 return generatedCode;
             }
         }
-        throw SyntaxError(`unknown instruction ${mnemonic}`);
+        throw new SyntaxError(`unknown instruction ${mnemonic}`);
     };
 };
 

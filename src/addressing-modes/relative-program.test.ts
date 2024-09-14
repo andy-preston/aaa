@@ -13,10 +13,10 @@ context.theirs.flashOrg = 0x03;
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "RCALL", ["back"   ]], [0xdf, 0xfc]],
-    [["", "RJMP",  ["back"   ]], [0xcf, 0xfb]],
-    [["", "RCALL", ["forward"]], [0xd0, 0x04]],
-    [["", "RJMP",  ["forward"]], [0xc0, 0x03]]
+    [["RCALL", ["back"   ]], [0xdf, 0xfc]],
+    [["RJMP",  ["back"   ]], [0xcf, 0xfb]],
+    [["RCALL", ["forward"]], [0xd0, 0x04]],
+    [["RJMP",  ["forward"]], [0xc0, 0x03]]
 ];
 
 testing(tests, generate);
@@ -24,7 +24,7 @@ testing(tests, generate);
 Deno.test("Absolute address too high on RJMP instruction", () => {
     context.theirs.flashOrg = 0;
     assertThrows(
-        () => generate(["", "RJMP", ["0x1111"]]),
+        () => generate(["RJMP", ["0x1111"]]),
         RangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x1111"
     );
@@ -33,7 +33,7 @@ Deno.test("Absolute address too high on RJMP instruction", () => {
 Deno.test("Absolute address too low on RCALL instruction", () => {
     context.theirs.flashOrg = 0x2000;
     assertThrows(
-        () => generate(["", "RCALL", ["0x500"]]),
+        () => generate(["RCALL", ["0x500"]]),
         RangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x500"
     );

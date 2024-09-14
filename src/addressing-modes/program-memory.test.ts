@@ -1,7 +1,7 @@
 import { assertThrows } from "assert";
 import { createOurContext } from "../context/mod.ts";
 import { generator } from "../generate/mod.ts";
-import type { Tokens } from "../source-line/mod.ts";
+import type { Instruction } from "../source-line/mod.ts";
 import { type Tests, testDescription, testing } from "./testing.ts";
 
 const generate = generator(createOurContext());
@@ -10,22 +10,22 @@ const generate = generator(createOurContext());
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "SPM",  [           ]], [0x95, 0xe8]],
-    [["", "SPM",  ["Z+"       ]], [0x95, 0xf8]],
-    [["", "ELPM", [           ]], [0x95, 0xd8]],
-    [["", "ELPM", ["R12", "Z" ]], [0x90, 0xc6]],
-    [["", "ELPM", ["R12", "Z" ]], [0x90, 0xc6]],
-    [["", "ELPM", ["R13", "Z+"]], [0x90, 0xd7]],
-    [["", "LPM",  [           ]], [0x95, 0xc8]],
-    [["", "LPM",  ["R25", "Z" ]], [0x91, 0x94]],
-    [["", "LPM",  ["R26", "Z+"]], [0x91, 0xa5]]
+    [["SPM",  [           ]], [0x95, 0xe8]],
+    [["SPM",  ["Z+"       ]], [0x95, 0xf8]],
+    [["ELPM", [           ]], [0x95, 0xd8]],
+    [["ELPM", ["R12", "Z" ]], [0x90, 0xc6]],
+    [["ELPM", ["R12", "Z" ]], [0x90, 0xc6]],
+    [["ELPM", ["R13", "Z+"]], [0x90, 0xd7]],
+    [["LPM",  [           ]], [0x95, 0xc8]],
+    [["LPM",  ["R25", "Z" ]], [0x91, 0x94]],
+    [["LPM",  ["R26", "Z+"]], [0x91, 0xa5]]
 ];
 
 testing(tests, generate);
 
-const failingTests: Array<Tokens> = [
-    ["", "SPM", ["-X"]],
-    ["", "SPM", ["6"]]
+const failingTests: Array<Instruction> = [
+    ["SPM", ["-X"]],
+    ["SPM", ["6"]]
 ];
 
 for (const test of failingTests) {

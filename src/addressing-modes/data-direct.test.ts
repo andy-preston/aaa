@@ -6,8 +6,8 @@ import { type Tests, testing } from "./testing.ts";
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "LDS", ["R30",  "1024"]], [0x91, 0xe0, 0x04, 0x00]],
-    [["", "STS", ["4096", "R8"  ]], [0x92, 0x80, 0x10, 0x00]],
+    [["LDS", ["R30",  "1024"]], [0x91, 0xe0, 0x04, 0x00]],
+    [["STS", ["4096", "R8"  ]], [0x92, 0x80, 0x10, 0x00]],
 ];
 
 testing(tests, generator(createOurContext()));

@@ -8,10 +8,10 @@ const generate = generator(createOurContext());
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "BLD",  ["R11", "1"]], [0xf8, 0xb1]],
-    [["", "BST",  ["R12", "3"]], [0xfa, 0xc3]],
-    [["", "SBRC", ["R20", "3"]], [0xfd, 0x43]],
-    [["", "SBRS", ["R21", "6"]], [0xff, 0x56]]
+    [["BLD",  ["R11", "1"]], [0xf8, 0xb1]],
+    [["BST",  ["R12", "3"]], [0xfa, 0xc3]],
+    [["SBRC", ["R20", "3"]], [0xfd, 0x43]],
+    [["SBRS", ["R21", "6"]], [0xff, 0x56]]
 ];
 
 testing(tests, generate);

@@ -6,11 +6,11 @@ import { type Tests, testing } from "./testing.ts";
 // that I could get hold of.
 
 const tests: Tests = [
-    [["", "FMUL",   ["R16", "R23"]], [0x03, 0x0f]],
-    [["", "FMULS",  ["R17", "R20"]], [0x03, 0x94]],
-    [["", "FMULSU", ["R18", "R21"]], [0x03, 0xad]],
-    [["", "MULS",   ["R16", "R31"]], [0x02, 0x0f]],
-    [["", "MULSU",  ["R16", "R18"]], [0x03, 0x02]]
+    [["FMUL",   ["R16", "R23"]], [0x03, 0x0f]],
+    [["FMULS",  ["R17", "R20"]], [0x03, 0x94]],
+    [["FMULSU", ["R18", "R21"]], [0x03, 0xad]],
+    [["MULS",   ["R16", "R31"]], [0x02, 0x0f]],
+    [["MULSU",  ["R16", "R18"]], [0x03, 0x02]]
 ];
 
 testing(tests, generator(createOurContext()));
