@@ -12,6 +12,12 @@ export const sourceLine = (ourContext: OurContext) => {
         if (label != "") {
             ourContext.label(label);
         }
+        if (!ourContext.instructionSet.available(mnemonic)) {
+            const set = ourContext.instructionSet.name();
+            throw new Error(
+                `${mnemonic} is not available on the ${set} instruction set.`
+            );
+        }
         return [mnemonic, operands];
     }
 };
