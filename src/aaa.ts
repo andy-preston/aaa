@@ -1,9 +1,9 @@
-import { createOurContext } from "../context/mod.ts";
-import { directives } from "../directives/list.ts";
-import { GeneratedCode, generator } from "../generate/mod.ts";
-import { outputter } from "../output/mod.ts";
-import { fileLoader } from "./file-loader.ts";
-import { sourceLine } from "../source-line/mod.ts";
+import { createOurContext } from "./context/mod.ts";
+import { directives } from "./directives/list.ts";
+import { GeneratedCode, generator } from "./generate/mod.ts";
+import { outputter } from "./output/mod.ts";
+import { fileLoader } from "./input/file-loader.ts";
+import { sourceLine } from "./source-line/mod.ts";
 
 const topFile = "./file1.txt";
 
