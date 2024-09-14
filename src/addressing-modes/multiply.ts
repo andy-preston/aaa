@@ -4,7 +4,7 @@ import type {
     SymbolicOperands,
     TypeName
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../tokens/mod.ts";
+import type { Mnemonic } from "../source-line/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["FMUL", ["1 0", "1"]],

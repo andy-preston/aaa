@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
-import type { Mnemonic } from "../tokens/mod.ts";
+import type { Mnemonic } from "../source-line/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["POP", ["00", "1111"]],

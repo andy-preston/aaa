@@ -5,7 +5,7 @@ import {
     type SymbolicOperands,
     operandMessage
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../tokens/mod.ts";
+import type { Mnemonic } from "../source-line/mod.ts";
 
 const mapping: Map<string, [OperandIndex, OperandIndex, string]> = new Map([
     ["LD", [0, 1, "0"]],

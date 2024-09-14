@@ -4,7 +4,7 @@ import type {
     SymbolicOperand,
     SymbolicOperands
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../tokens/mod.ts";
+import type { Mnemonic } from "../source-line/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["CPI", "0011"],
