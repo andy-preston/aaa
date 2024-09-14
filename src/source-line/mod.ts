@@ -1,3 +1,3 @@
-export type { Mnemonic, Tokens } from "./tokens.ts";
+export type { Mnemonic } from "./tokens.ts";
 
-export { sourceTokens } from "./source-line.ts";
+export { sourceLine } from "./source-line.ts";
