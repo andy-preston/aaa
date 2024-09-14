@@ -39,7 +39,7 @@ export const lineLoader = (ourContext: OurContext) => {
         buffer[state].push(part);
     };
 
-    return (line: string) => {
+    return (line: string): string => {
         line.split(/({{|}})/).forEach(usePart);
         const assembler = buffer.assembler.join("");
         buffer.assembler = [];

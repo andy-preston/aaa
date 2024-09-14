@@ -1,5 +1,10 @@
 import type { SymbolicOperands } from "../operands/mod.ts";
-import type { Tokens } from "./types.ts";
+
+export type Mnemonic = string;
+
+type Label = string;
+
+export type Tokens = [Label, Mnemonic, SymbolicOperands];
 
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
@@ -65,4 +70,3 @@ export const lineTokens = (theLine: string): Tokens => {
     return [label, mnemonic, operandsList as SymbolicOperands];
 };
 
-export type LineTokens = typeof lineTokens;
