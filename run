@@ -8,7 +8,7 @@ mkdir -p "${DENO_DIR}"
 TASK="${1:-run}"
 case $TASK in
 run)
-    deno run -A ./src/input/cli.ts
+    deno run -A ./src/aaa.ts
     ;;
 check)
     deno test --allow-read
