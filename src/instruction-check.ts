@@ -9,10 +9,7 @@ const instructionSets = [
 
 type InstructionSet = (typeof instructionSets)[number];
 
-const short = (instructionSet: InstructionSet): string =>
-    instructionSet.slice(-1).toLowerCase();
-
-const missing: Map<string, string> = new Map([
+const unavailableMap: Map<string, string> = new Map([
     ["ADIW", "c"],
     ["BREAK", "r"],
     ["DES", "rc"],
@@ -46,8 +43,24 @@ const missing: Map<string, string> = new Map([
     //"SPM.Z+": "re+xc"
 ]);
 
-export const isMissing = (
-    opCode: string,
-    instructionSet: InstructionSet
-): boolean =>
-    missing.has(opCode) && missing.get(opCode)!.includes(short(instructionSet));
+export const instructionCheck = () => {
+    let instructionSet = "";
+
+    const choose = (chosen: InstructionSet): void => {
+        if (!instructionSets.includes(chosen)) {
+            throw new RangeError(
+                `${chosen} is not a supported instruction Set`
+            );
+        }
+        instructionSet = chosen.slice(-1).toLowerCase();
+    };
+
+    const notAvailable = (mnemonic: string): boolean =>
+        unavailableMap.has(mnemonic) &&
+        unavailableMap.get(mnemonic)!.includes(instructionSet);
+
+    const available = (mnemonic: string): boolean =>
+        instructionSet == "" || !notAvailable(mnemonic);
+
+    return { "choose": choose, "available": available };
+};
