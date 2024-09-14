@@ -48,7 +48,7 @@ Deno.test("Any directives that are added can be called as functions", () => {
         directiveParameter = parameter;
     };
     const ourContext = createOurContext();
-    ourContext.addDirective(["testDirective", testDirective]);
+    ourContext.addDirective("testDirective", testDirective);
     ourContext.execute("testDirective('says hello')");
     assertEquals(directiveParameter, "says hello");
 });

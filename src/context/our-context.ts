@@ -1,5 +1,6 @@
-import type { NamedDirective } from "../directives/mod.ts";
+import type { Directive } from "../directives/mod.ts";
 import type { GeneratedCode } from "../generate/mod.ts";
+import { instructionCheck } from "./instruction-check.ts";
 import { theirContext } from "./their-context.ts";
 
 export const createOurContext = () => {
@@ -33,8 +34,8 @@ export const createOurContext = () => {
         }
     };
 
-    const addDirective = (namedDirective: NamedDirective) => {
-        theirs[namedDirective[0]] = namedDirective[1];
+    const addDirective = (name: string, directive: Directive) => {
+        theirs[name] = directive;
     };
 
     const label = (name: string): void => {

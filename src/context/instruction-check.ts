@@ -7,7 +7,7 @@ const instructionSets = [
     "AVRxt"
 ] as const;
 
-type InstructionSet = (typeof instructionSets)[number];
+export type InstructionSet = (typeof instructionSets)[number];
 
 const unavailableMap: Map<string, string> = new Map([
     ["ADIW", "c"],

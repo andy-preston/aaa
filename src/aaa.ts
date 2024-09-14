@@ -1,6 +1,6 @@
 import { createOurContext } from "./context/mod.ts";
-import { directives } from "./directives/list.ts";
-import { GeneratedCode, generator } from "./generate/mod.ts";
+import { addDirectives } from "./directives/mod.ts";
+import { type GeneratedCode, generator } from "./generate/mod.ts";
 import { outputter } from "./output/mod.ts";
 import { fileLoader } from "./input/file-loader.ts";
 import { sourceLine } from "./source-line/mod.ts";
@@ -13,10 +13,8 @@ const tokensFromLine = sourceLine(ourContext);
 const generate = generator(ourContext);
 const loader = fileLoader(topFile);
 
-ourContext.addDirective(["include", loader.include]);
-for (const directive of directives) {
-    ourContext.addDirective(directive);
-}
+ourContext.addDirective("include", loader.include);
+addDirectives(ourContext);
 
 let errorMessage: string;
 let code: GeneratedCode;
