@@ -1,6 +1,6 @@
 import { assertEquals } from "assert";
 import type { Generate, GeneratedCode } from "../generate/mod.ts";
-import type { Tokens } from "../tokens/mod.ts";
+import type { Tokens } from "../source-line/mod.ts";
 
 export type Tests = Array<[Tokens, GeneratedCode]>;
 
