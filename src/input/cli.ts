@@ -1,4 +1,5 @@
 import { createOurContext } from "../context/mod.ts";
+import { directives } from "../directives/list.ts";
 import { generator } from "../generate/mod.ts";
 import { outputter } from "../output/mod.ts";
 import { lineTokens } from "../tokens/mod.ts";
@@ -16,6 +17,9 @@ const loader = fileLoader(
     generator(ourContext),
     output.output
 );
-ourContext.addDirective("include", loader.include);
+ourContext.addDirective(["include", loader.include]);
+for (const directive of directives) {
+    ourContext.addDirective(directive);
+}
 loader.load(topFile);
 output.close();

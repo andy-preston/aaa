@@ -1,5 +1,8 @@
 export type {
     ArrayDirective,
-    DirectiveHandler,
+    Directive,
+    NamedDirective,
     StringDirective
 } from "./types.ts";
+
+export { directives } from "./list.ts";

@@ -1,4 +1,4 @@
-import type { DirectiveHandler } from "../directives/mod.ts";
+import type { Directive } from "../directives/mod.ts";
 
 type SimpleFunction = (_: number) => number;
 
@@ -7,7 +7,7 @@ interface TheirContext {
     "high": (n: number) => number;
     "flashOrg": number;
     "ramOrg": number;
-    [x: string]: number | SimpleFunction | DirectiveHandler;
+    [x: string]: number | SimpleFunction | Directive;
 }
 
 const registers = (theirs: TheirContext) => {

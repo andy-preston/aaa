@@ -2,4 +2,6 @@ export type StringDirective = (s: string) => void;
 
 export type ArrayDirective = (a: Array<number>) => void;
 
-export type DirectiveHandler = StringDirective | ArrayDirective;
+export type Directive = StringDirective | ArrayDirective;
+
+export type NamedDirective = [string, Directive];
