@@ -44,7 +44,8 @@ const unavailableMap: Map<string, string> = new Map([
 ]);
 
 export const instructionCheck = () => {
-    let instructionSet = "";
+    let shortCode = "";
+    let name = "default";
     let firstUse = true;
     let foundOne = false;
 
@@ -54,11 +55,12 @@ export const instructionCheck = () => {
                 `${chosen} is not a supported instruction Set`
             );
         }
-        instructionSet = chosen.slice(-1).toLowerCase();
+        name = chosen;
+        shortCode = chosen.slice(-1).toLowerCase();
     };
 
     const notChosen = (): boolean => {
-        const result = foundOne && firstUse && instructionSet == "";
+        const result = foundOne && firstUse && shortCode == "";
         if (result) {
             firstUse = false;
         }
@@ -70,16 +72,16 @@ export const instructionCheck = () => {
             return true;
         }
         foundOne = true;
-        if (instructionSet == "") {
+        if (shortCode == "") {
             return true;
         }
-        return !unavailableMap.get(mnemonic)!.includes(instructionSet);
+        return !unavailableMap.get(mnemonic)!.includes(shortCode);
     };
 
     return {
         "notChosen": notChosen,
         "choose": choose,
         "available": available,
-        "name": () => instructionSet == "" ? "default" : instructionSet
+        "name": () => name
     };
 };
