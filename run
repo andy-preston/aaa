@@ -8,6 +8,7 @@ mkdir -p "${DENO_DIR}"
 TASK="${1:-run}"
 case $TASK in
 specs)
+    deno run -A ./build/instruction-sets/get-gavrasm-specs.ts
     deno run -A ./build/instruction-sets/get-gnu-specs.ts
     ;;
 run)
@@ -26,7 +27,7 @@ build)
     deno run -A ./build/definitions.ts
     ;;
 *)
-    echo "./run [check|biome|run|build]"
+    echo "./run [check|biome|run|build|specs]"
     exit 1
     ;;
 esac

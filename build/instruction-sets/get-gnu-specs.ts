@@ -1,8 +1,11 @@
-// cSpell:words mcus
+// cSpell:words mcu mmcu avrxmega
 
 import { allInstructions } from "./all-instructions.ts";
+import { list } from "./list.ts";
 
-const allMcus = () => {
+const theList = list();
+
+const allChips = () => {
     const command = new Deno.Command("avr-as", {
         "args": [ "--help" ],
         "stdin": "null",
@@ -31,9 +34,9 @@ const allMcus = () => {
     return list;
 }
 
-const gnuAssembler = (mcu: string) => {
+const gnuAssembler = (chip: string) => {
     const command = new Deno.Command("avr-as", {
-        "args": [ `-mmcu=${mcu}` ],
+        "args": [ `-mmcu=${chip}` ],
         "stdin": "piped",
         "stdout": "null",
         "stderr": "piped"
@@ -68,17 +71,7 @@ const errorMessages = async (
     return new TextDecoder().decode(stderr).split("\n");
 };
 
-const missingMnemonics: Map<string, Array<string>> = new Map();
-
-const list = (mcu: string, mnemonic: string) => {
-    if (missingMnemonics.has(mcu)) {
-        missingMnemonics.get(mcu)!.push(mnemonic);
-    } else {
-        missingMnemonics.set(mcu, [mnemonic]);
-    }
-};
-
-const doSomethingAbout = (mcu: string, instruction: string, error: string) => {
+const doSomethingAbout = (chip: string, instruction: string, error: string) => {
     if (error.includes("register name or number from 16 to 31 required")) {
         // Some chips (e.g. atTiny10) only have 16 registers.
         // This is covered by the ATDF files, and we don't need to care here.
@@ -86,49 +79,49 @@ const doSomethingAbout = (mcu: string, instruction: string, error: string) => {
     }
     const mnemonic = instruction.split(" ")[0]!;
     if (error.includes("illegal opcode")) {
-        list(mcu, mnemonic);
+        theList.add(chip, mnemonic);
         return;
     }
     if (error.includes("addressing mode not supported")) {
         if (!["LD", "ST"].includes(mnemonic)) {
             throw new Error(
-                `Addressing mode but not LD or ST ${mcu}, ${instruction}`
+                `Addressing mode but not LD or ST ${chip}, ${instruction}`
             );
         }
-        list(mcu, mnemonic);
+        theList.add(chip, mnemonic);
         return;
     }
     if (error.includes("postincrement not supported")) {
         if (!["LPM", "ELPM"].includes(mnemonic)) {
             throw new Error(
-                `Postincrement but not LPM or ELPM ${mcu}, ${instruction}`
+                `Postincrement but not LPM or ELPM ${chip}, ${instruction}`
             );
         }
         if (!instruction.endsWith("Z+")) {
             throw new Error(
-                `Postincrement but not Rx,Z+ ${mcu}, ${instruction}`
+                `Postincrement but not Rx,Z+ ${chip}, ${instruction}`
             );
         }
-        list(mcu, `${mnemonic}.Z+`);
+        theList.add(chip, `${mnemonic}.Z+`);
         return;
     }
-    throw new Error(`Unhandled error: ${mcu} ${instruction} ${error}`);
+    throw new Error(`Unhandled error: ${chip} ${instruction} ${error}`);
 };
 
-for (const mcu of allMcus()) {
-    console.log(mcu);
+for (const chip of allChips()) {
+    console.log(chip);
     for (const instruction of allInstructions) {
-        const assembler = gnuAssembler(mcu);
+        const assembler = gnuAssembler(chip);
         await tryInstruction(assembler, instruction);
         const messages = await errorMessages(assembler);
         for (const message of messages) {
             if (message.includes("Error:")) {
-                doSomethingAbout(mcu, instruction, message);
+                doSomethingAbout(chip, instruction, message);
             }
         }
     }
 }
 Deno.writeTextFileSync(
     "./build/instruction-sets/gnu-specs.json",
-    JSON.stringify(Object.fromEntries(missingMnemonics))
+    theList.json()
 );
