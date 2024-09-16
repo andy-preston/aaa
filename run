@@ -7,6 +7,9 @@ mkdir -p "${DENO_DIR}"
 
 TASK="${1:-run}"
 case $TASK in
+specs)
+    deno run -A ./build/instruction-sets/get-gnu-specs.ts
+    ;;
 run)
     deno run -A ./src/aaa.ts
     ;;
