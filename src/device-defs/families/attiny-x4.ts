@@ -1,0 +1,355 @@
+import {
+    unsupportedInstructionsFromGroups
+} from "./unsupported-instruction-groups.ts";
+
+export const unsupportedInstructions = unsupportedInstructionsFromGroups([
+    "multiply",
+    "readModifyWrite",
+    "DES",
+    "FlashMore128",
+    "FlashMore8",
+    "ELPM",
+    "SPM.Z"
+]);
+
+export const vectors = [
+    "RESET", // External Pin, Power-on Reset, Brown-out Reset, Watchdog Reset
+    "EXT_INT0", // External Interrupt Request 0
+    "PCINT0", // Pin Change Interrupt Request 0
+    "PCINT1", // Pin Change Interrupt Request 1
+    "WDT", // Watchdog Time-out
+    "TIM1_CAPT", // Timer/Counter1 Capture Event
+    "TIM1_COMPA", // Timer/Counter1 Compare Match A
+    "TIM1_COMPB", // Timer/Counter1 Compare Match B
+    "TIM1_OVF", // Timer/Counter1 Overflow
+    "TIM0_COMPA", // Timer/Counter0 Compare Match A
+    "TIM0_COMPB", // Timer/Counter0 Compare Match B
+    "TIM0_OVF", // Timer/Counter0 Overflow
+    "ANA_COMP", // Analog Comparator
+    "ADC", // ADC Conversion Complete
+    "EE_RDY", // EEPROM Ready
+    "USI_STR", // USI Start
+    "USI_OVF" // USI Overflow
+];
+
+export const PRR = 0x20; // Power Reduction Register ------------- IO Address 00
+export const PRTIM1 = 3; // Power Reduction Timer/Counter1
+export const PRTIM0 = 2; // Power Reduction Timer/Counter0
+export const PRUSI = 1; // Power Reduction USI
+export const PRADC = 0; // Power Reduction ADC
+export const DIDR0 = 0x21; // Digital Input Disable 0 ------------ IO Address 01
+export const ADC7D = 7;
+export const ADC6D = 6;
+export const ADC5D = 5;
+export const ADC4D = 4;
+export const ADC3D = 3;
+export const ADC2D = 2;
+export const ADC1D = 1;
+export const ADC0D = 0;
+export const ADCSRB = 0x23; // ADC Control and Status B ---------- IO Address 03
+export const BIN = 7; // Bipolar Input Mode
+export const ACME = 6; // Analog Comparator Multiplexer Enable
+export const ADLAR = 4; // ADC Left Adjust Result
+export const ADTS2 = 2;
+export const ADTS1 = 1;
+export const ADTS0 = 0;
+export const ADTS_FREE_RUNNING_MODE = 0x00; // ADC Auto Trigger Source
+export const ADTS_ANALOG_COMPARATOR = 0x01;
+export const ADTS_EXTERNAL_INTERRUPT_REQUEST_0 = 0x02;
+export const ADTS_TIMER_COUNTER0_COMPARE_MATCH_A = 0x03;
+export const ADTS_TIMER_COUNTER0_OVERFLOW = 0x04;
+export const ADTS_TIMER_COUNTER1_COMPARE_MATCH_B = 0x05;
+export const ADTS_TIMER_COUNTER1_OVERFLOW = 0x06;
+export const ADTS_TIMER_COUNTER1_CAPTURE_EVENT = 0x07;
+export const ADCL = 0x24; // ADC Data ---------------------------- IO Address 04
+export const ADCH = 0x25; // ADC Data ---------------------------- IO Address 05
+export const ADCSRA = 0x26; // ADC Control and Status A ---------- IO Address 06
+export const ADEN = 7; // ADC Enable
+export const ADSC = 6; // ADC Start Conversion
+export const ADATE = 5; // ADC Auto Trigger Enable
+export const ADIF = 4; // ADC Interrupt Flag
+export const ADIE = 3; // ADC Interrupt Enable
+export const ADPS2 = 2; // ADC Prescaler Select Bits
+export const ADPS1 = 1;
+export const ADPS0 = 0;
+export const ADPS_ADC_PRESCALER_1 = 0x00;
+export const ADPS_ADC_PRESCALER_2 = 0x01;
+export const ADPS_ADC_PRESCALER_4 = 0x02;
+export const ADPS_ADC_PRESCALER_8 = 0x03;
+export const ADPS_ADC_PRESCALER_16 = 0x04;
+export const ADPS_ADC_PRESCALER_32 = 0x05;
+export const ADPS_ADC_PRESCALER_64 = 0x06;
+export const ADPS_ADC_PRESCALER_128 = 0x07;
+export const ADMUX = 0x27; // ADC Multiplexer Selection ---------- IO Address 07
+export const REFS1 = 7;
+export const REFS0 = 6;
+export const MUX5 = 5;
+export const MUX4 = 4;
+export const MUX3 = 3;
+export const MUX2 = 2;
+export const MUX1 = 1;
+export const MUX0 = 0;
+export const ACSR = 0x28; // Analog Comparator Control/Status ---- IO Address 08
+export const ACD = 7; // Analog Comparator Disable
+export const ACBG = 6; // Analog Comparator Bandgap Select
+export const ACO = 5; // Analog Compare Output
+export const ACI = 4; // Analog Comparator Interrupt Flag
+export const ACIE = 3; // Analog Comparator Interrupt Enable
+export const ACIC = 2; // Analog Comparator Input Capture Enable
+export const ACIS1 = 1; // Analog Comparator Interrupt Mode Select bits
+export const ACIS0 = 0;
+export const ANALOG_COMP_INTERRUPT_ON_TOGGLE = 0x00;
+export const ANALOG_COMP_INTERRUPT_FALLING_EDGE = 0x02;
+export const ANALOG_COMP_INTERRUPT_RISING_EDGE = 0x03;
+export const TIFR1 = 0x2b; // Timer/Counter Interrupt Flag ------- IO Address 0B
+export const ICF1 = 5; // TC1 Input Capture Flag
+export const OCF1B = 2; // TC1 Output Compare B Match Flag
+export const OCF1A = 1; // TC1 Output Compare A Match Flag
+export const TOV1 = 0; // TC1 Overflow Flag
+export const TIMSK1 = 0x2c; // Timer/Counter1 Interrupt Mask ----- IO Address 0C
+export const ICIE1 = 5; // TC1 Input Capture Interrupt Enable
+export const OCIE1B = 2; // TC1 Output Compare B Match Interrupt Enable
+export const OCIE1A = 1; // TC1 Output Compare A Match Interrupt Enable
+export const TOIE1 = 0; // TC1 Overflow Interrupt Enable
+export const USICR = 0x2d; // USI Control ------------------------ IO Address 0D
+export const USISIE = 7; // Start Condition Interrupt Enable
+export const USIOIE = 6; // Counter Overflow Interrupt Enable
+export const USIWM1 = 5; // USI Wire Mode Bits
+export const USIWM0 = 4; //
+export const USIWM_NORMAL_OPERATION = 0;
+export const USIWM_THREE_WIRE_MODE = 1 << USIWM0;
+export const USIWM_TWO_WIRE_MODE = 1 << USIWM1;
+export const USIWM_TWO_WIRE_MODE_HELD_LOW = 1 << USIWM0 | 1 << USIWM1;
+export const USICS1 = 3; // USI Clock Source Select Bits
+export const USICS0 = 2;
+export const USICLK = 1; // Clock Strobe
+export const USITC = 0; // Toggle Clock Port Pin
+export const USISR = 0x2e; // USI Status ------------------------- IO Address 0E
+export const USISIF = 7; // Start Condition Interrupt Flag
+export const USIOIF = 6; // Counter Overflow Interrupt Flag
+export const USIPF = 5; // Stop Condition Flag
+export const USIDC = 4; // Data Output Collision
+export const USICNT3 = 3; // USI Counter Value Bits
+export const USICNT2 = 2;
+export const USICNT1 = 1;
+export const USICNT0 = 0;
+export const USIDR = 0x2f; // USI Data --------------------------- IO Address 0F
+export const USIBR = 0x30; // USI Buffer ------------------------- IO Address 10
+export const PCMSK0 = 0x32; // Pin Change Enable Mask 0 ---------- IO Address 12
+export const PCINT7 = 7;
+export const PCINT6 = 6;
+export const PCINT5 = 5;
+export const PCINT4 = 4;
+export const PCINT3 = 3;
+export const PCINT2 = 2;
+export const PCINT1 = 1;
+export const PCINT0 = 0;
+export const GPIOR0 = 0x33; // General Purpose I/O Register 0 ---- IO Address 13
+export const GPIOR1 = 0x34; // General Purpose I/O Register 1 ---- IO Address 14
+export const GPIOR2 = 0x35; // General Purpose I/O Register 2 ---- IO Address 15
+export const PINB = 0x36; // ------------------------------------- IO Address 16
+export const PINB3 = 3;
+export const PINB2 = 2;
+export const PINB1 = 1;
+export const PINB0 = 0;
+export const DDRB = 0x37; // ------------------------------------- IO Address 17
+export const DDB3 = 3;
+export const DDB2 = 2;
+export const DDB1 = 1;
+export const DDB0 = 0;
+export const PORTB = 0x38; // ------------------------------------ IO Address 18
+export const PB3 = 3;
+export const PB2 = 2;
+export const PB1 = 1;
+export const PB0 = 0;
+export const PINA = 0x39; // ------------------------------------- IO Address 19
+export const PINA7 = 7;
+export const PINA6 = 6;
+export const PINA5 = 5;
+export const PINA4 = 4;
+export const PINA3 = 3;
+export const PINA2 = 2;
+export const PINA1 = 1;
+export const PINA0 = 0;
+export const DDRA = 0x3a; // ------------------------------------- IO Address 1A
+export const DDA7 = 7;
+export const DDA6 = 6;
+export const DDA5 = 5;
+export const DDA4 = 4;
+export const DDA3 = 3;
+export const DDA2 = 2;
+export const DDA1 = 1;
+export const DDA0 = 0;
+export const PORTA = 0x3b; // ------------------------------------ IO Address 1B
+export const PA7 = 7;
+export const PA6 = 6;
+export const PA5 = 5;
+export const PA4 = 4;
+export const PA3 = 3;
+export const PA2 = 2;
+export const PA1 = 1;
+export const PA0 = 0;
+export const EECR = 0x3c; // EEPROM Control ---------------------- IO Address 1C
+export const EEPM1 = 5; // EEPROM Programming Mode Bits
+export const EEPM0 = 4;
+export const EEP_MODE_ERASE_AND_WRITE_IN_ONE_OPERATION = 0;
+export const EEP_MODE_ERASE_ONLY = 1 << EEPM0;
+export const EEP_MODE_WRITE_ONLY = 1 << EEPM1;
+export const EERIE = 3; // EEPROM Ready Interrupt Enable
+export const EEMPE = 2; // EEPROM Master Write Enable
+export const EEPE = 1; // EEPROM Write Enable
+export const EERE = 0; // EEPROM Read Enable
+export const EEDR = 0x3d; // EEPROM Data ------------------------- IO Address 1D
+export const EEARL = 0x3e; // EEPROM Address --------------------- IO Address 1E
+export const EEARH = 0x3f; // EEPROM Address --------------------- IO Address 1F
+export const PCMSK1 = 0x40; // Pin Change Enable Mask 1 ---------- IO Address 20
+export const PCINT11 = 3;
+export const PCINT10 = 2;
+export const PCINT9 = 1;
+export const PCINT8 = 0;
+export const WDTCSR = 0x41; // Watchdog Timer Control ------------ IO Address 21
+export const WDIF = 7; // Watchdog Timeout Interrupt Flag
+export const WDIE = 6; // Watchdog Timeout Interrupt Enable
+export const WDP3 = 5; // Watchdog Timer Prescaler Bits
+export const WDCE = 4; // Watchdog Change Enable
+export const WDE = 3; // Watch Dog Enable
+export const WDP2 = 2; // Watchdog Timer Prescaler Bits
+export const WDP1 = 1; // Watchdog Timer Prescaler Bits
+export const WDP0 = 0; // Watchdog Timer Prescaler Bits
+export const WDOG_TIMER_PRESCALE_2K = 0;
+export const WDOG_TIMER_PRESCALE_4K = 1 << WDP0;
+export const WDOG_TIMER_PRESCALE_8K = 1 << WDP1;
+export const WDOG_TIMER_PRESCALE_16K = 1 << WDP1 | 1 << WDP0;
+export const WDOG_TIMER_PRESCALE_32K = 1 << WDP2;
+export const WDOG_TIMER_PRESCALE_64K = 1 << WDP2 | 1 << WDP0;
+export const WDOG_TIMER_PRESCALE_128K = 1 << WDP2 | 1 << WDP1;
+export const WDOG_TIMER_PRESCALE_256K = 1 << WDP2 | 1 << WDP1 | 1 << WDP0;
+export const WDOG_TIMER_PRESCALE_512K = 1 << WDP3;
+export const WDOG_TIMER_PRESCALE_1024K = 1 << WDP3 | 1 << WDP0;
+export const TCCR1C = 0x42; // TC1 Control C --------------------- IO Address 22
+export const FOC1A = 7; // Force Output Compare for Channel A
+export const FOC1B = 6; // Force Output Compare for Channel B
+export const GTCCR = 0x43; // General Timer/Counter Control ------ IO Address 23
+export const TSM = 7; // Timer/Counter Synchronization Mode
+export const PSR10 = 0; // Prescaler Reset Timer/CounterN
+export const ICR1L = 0x44; // TC1 Input Capture ------------------ IO Address 24
+export const ICR1H = 0x45; // TC1 Input Capture ------------------ IO Address 25
+export const CLKPR = 0x46; // Clock Prescale --------------------- IO Address 26
+export const CLKPCE = 7; // Clock Prescaler Change Enable
+export const CLKPS3 = 3;
+export const CLKPS2 = 2;
+export const CLKPS1 = 1;
+export const CLKPS0 = 0;
+export const CPU_CLK_PRESCALE_1 = 0;
+export const CPU_CLK_PRESCALE_2 = 1 << CLKPS0;
+export const CPU_CLK_PRESCALE_4 = 1 << CLKPS1;
+export const CPU_CLK_PRESCALE_8 = 1 << CLKPS1 | 1 << CLKPS0;
+export const CPU_CLK_PRESCALE_16 = 1 << CLKPS2;
+export const CPU_CLK_PRESCALE_32 = 1 << CLKPS2 | 1 << CLKPS0;
+export const CPU_CLK_PRESCALE_64 = 1 << CLKPS2 | 1 << CLKPS1;
+export const CPU_CLK_PRESCALE_128 = 1 << CLKPS2 | 1 << CLKPS1 | 1 << CLKPS0;
+export const CPU_CLK_PRESCALE_256 = 1 << CLKPS3;
+export const DWDR = 0x47; // DebugWire Data Register (?) --------- IO Address 27
+export const OCR1BL = 0x48; // TC1 Output Compare B -------------- IO Address 28
+export const OCR1BH = 0x49; // TC1 Output Compare B -------------- IO Address 29
+export const OCR1AL = 0x4a; // TC1 Output Compare A -------------- IO Address 2A
+export const OCR1AH = 0x4b; // TC1 Output Compare A -------------- IO Address 2B
+export const TCNT1L = 0x4c; // TC1 Bytes ------------------------- IO Address 2C
+export const TCNT1H = 0x4d; // TC1 Bytes ------------------------- IO Address 2D
+export const TCCR1B = 0x4e; // TC1 Control B --------------------- IO Address 2E
+export const ICNC1 = 7; // Input Capture 1 Noise Canceller
+export const ICES1 = 6; // Input Capture 1 Edge Select
+export const WGM13 = 4; // Waveform Generation Mode Bits
+export const WGM12 = 3; // (AKA CTC1) Waveform Generation Mode Bits
+export const CS12 = 2; // Clock Select1 bits
+export const CS11 = 1;
+export const CS10 = 0;
+export const TC1_STOPPED_NO_CLOCK = 0;
+export const TC1_RUNNING_NO_PRESCALING = 1 << CS10;
+export const TC1_RUNNING_CLK_8 = 1 << CS11;
+export const TC1_RUNNING_CLK_64 = 1 << CS11 | 1 << CS10;
+export const TC1_RUNNING_CLK_256 = 1 << CS12;
+export const TC1_RUNNING_CLK_1024 = 1 << CS12 | 1 << CS10;
+export const TC1_RUNNING_EXTCLK_FALLING_EDGE = 1 << CS12 | 1 << CS11;
+export const TC1_RUNNING_EXTCLK_RISING_EDGE = 1 << CS12 | 1 << CS11 | 1 << CS10;
+export const TCCR1A = 0x4f; // TC1 Control ----------------------- IO Address 2F
+export const COM1A1 = 7; // Compare Output Mode 1A
+export const COM1A0 = 6;
+export const COM1B1 = 5; // Compare Output Mode 1B
+export const COM1B0 = 4;
+export const WGM11 = 1; // Waveform Generation Mode Bits
+export const WGM10 = 0;
+export const TCCR0A = 0x50; // Timer/Counter Control A ----------- IO Address 30
+export const COM0A1 = 7; // Compare Match Output A Mode
+export const COM0A0 = 6;
+export const COM0B1 = 5; // Compare Match Output B Mode
+export const COM0B0 = 4;
+export const WGM01 = 1; // Waveform Generation Mode Bits
+export const WGM00 = 0;
+export const OSCCAL = 0x51; // Oscillator Calibration Value ------ IO Address 31
+export const TCNT0 = 0x52; // Timer/Counter0 --------------------- IO Address 32
+export const TCCR0B = 0x53; // Timer/Counter Control ------------- IO Address 33
+export const FOC0A = 7; // Force Output Compare A
+export const FOC0B = 6; // Force Output Compare B
+export const WGM02 = 3; // Waveform Generation Mode bit 2
+export const CS02 = 2; // Clock Select bits
+export const CS01 = 1;
+export const CS00 = 0;
+export const TC0_STOPPED_NO_CLOCK = 0;
+export const TC0_RUNNING_NO_PRESCALING = 1 << CS00;
+export const TC0_RUNNING_CLK_8 = 1 << CS01;
+export const TC0_RUNNING_CLK_64 = 1 << CS01 | 1 << CS00;
+export const TC0_RUNNING_CLK_256 = 1 << CS02;
+export const TC0_RUNNING_CLK_1024 = 1 << CS02 | 1 << CS00;
+export const TC0_RUNNING_EXTCLK_FALLING_EDGE = 1 << CS02 | 1 << CS01;
+export const TC0_RUNNING_EXTCLK_RISING_EDGE = 1 << CS02 | 1 << CS01 | 1 << CS00;
+export const MCUSR = 0x54; // MCU Status ------------------------- IO Address 34
+export const WDRF = 3; // Watchdog Reset
+export const BORF = 2; // Brown-out Reset
+export const EXTRF = 1; // External Reset
+export const PORF = 0; // Power-on reset
+export const MCUCR = 0x55; // MCU Control ------------------------ IO Address 35
+export const BODS = 7; // BOD Sleep
+export const PUD = 6; // Pull-up disable (?)
+export const SE = 5; // Sleep enable
+export const SM1 = 4; // Sleep Mode Select Bits
+export const SM0 = 3;
+export const BODSE = 2; // BOD Sleep Enable
+export const ISC01 = 1; // Interrupt Sense Control 0 Bit 1
+export const ISC00 = 0; // Interrupt Sense Control 0 Bit 1
+export const SM_IDLE = 0;
+export const SM_ADC_NOISE_REDUCTION = 1 << SM0;
+export const SM_POWER_DOWN = 1 << SM1;
+export const SM_STANDBY = 1 << SM1 | 1 << SM0;
+export const ISC0_LOW_LEVEL_OF_INTX = 0;
+export const ISC0_ANY_LOGICAL_CHANGE_OF_INTX = 1 << ISC00;
+export const ISC0_FALLING_EDGE_OF_INTX = 1 << ISC01;
+export const ISC0_RISING_EDGE_OF_INTX = 1 << ISC01 | 1 << ISC00;
+export const OCR0A = 0x56; // TC0 Output Compare A --------------- IO Address 36
+export const SPMCSR = 0x57; // Store Program Memory Control ------ IO Address 37
+export const RSIG = 5; // ???????
+export const CTPB = 4; // Clear temporary page buffer
+export const RFLB = 3; // Read fuse and lock bits
+export const PGWRT = 2; // Page Write
+export const PGERS = 1; // Page Erase
+export const SPMEN = 0; // Store Program Memory Enable
+export const TIFR0 = 0x58; // TC0 Interrupt Flag Register -------- IO Address 38
+export const OCF0B = 2; // Output Compare Flag B
+export const OCF0A = 1; // Output Compare Flag A
+export const TOV0 = 0; // Overflow Flag
+export const TIMSK0 = 0x59; // TC0 Interrupt Mask ---------------- IO Address 39
+export const OCIE0B = 2; // Output Compare Match B Interrupt Enable
+export const OCIE0A = 1; // Output Compare Match A Interrupt Enable
+export const TOIE0 = 0; // Overflow Interrupt Enable
+export const GIFR = 0x5a; // General Interrupt Flag register ----- IO ADDRESS 3A
+export const INTF0 = 6; // External Interrupt Flag 0
+export const PCIF1 = 5; // Pin Change Interrupt Flags
+export const PCIF0 = 4;
+export const GIMSK = 0x5b; // General Interrupt Mask Register ---- IO Address 3B
+export const INT0 = 6; // External Interrupt Request 0 Enable
+export const PCIE1 = 5; // Pin Change Interrupt Enables
+export const PCIE0 = 4;
+export const OCR0B = 0x5c; // TC0 Output Compare B --------------- IO Address 3C
+//           SP      0x5d     Stack Pointer ---------------------- IO Address 3D
+//           SP      0x5e     Stack Pointer ---------------------- IO Address 3E
+export const SREG = 0x5f; // Status Register --------------------- IO Address 3F
