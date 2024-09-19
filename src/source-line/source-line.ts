@@ -7,15 +7,19 @@ export type Instruction = [Mnemonic, SymbolicOperands]
 
 export const sourceLine = (ourContext: OurContext) => {
     const loadLine = lineLoader(ourContext);
+    let deviceErrorShown = false;
     return (rawLine: string): Instruction => {
         const [label, mnemonic, operands] = lineTokens(loadLine(rawLine));
         if (label != "") {
             ourContext.label(label);
         }
-        if (!ourContext.instructionSet.available(mnemonic)) {
-            const set = ourContext.instructionSet.name();
+        if (mnemonic && ourContext.device == "" && !deviceErrorShown) {
+            deviceErrorShown = true;
+            throw new Error("No device selected");
+        }
+        if (ourContext.unsupportedInstructions.includes(mnemonic)) {
             throw new Error(
-                `${mnemonic} is not available on the ${set} instruction set.`
+                `${mnemonic} is not available on ${ourContext.device}`
             );
         }
         return [mnemonic, operands];

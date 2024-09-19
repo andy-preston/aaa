@@ -5,6 +5,7 @@ import { generator } from "../generate/mod.ts";
 
 Deno.test("Labels are saved at the current flashOrg", () => {
     const context = createOurContext();
+    context.device = "Imaginary";
     const source = sourceLine(context);
     const generate = generator(context);
     generate(source("label1: INC R5"));
@@ -19,12 +20,35 @@ Deno.test("Labels are saved at the current flashOrg", () => {
 
 Deno.test("Throws if attempt to assemble unavailable instruction", () => {
     const context = createOurContext();
-    context.instructionSet.choose("AVRrc");
-    assertEquals(context.instructionSet.name(), "AVRrc");
+    context.device = "Imaginary";
+    context.unsupportedInstructions = ["ADIW"];
     const source = sourceLine(context);
     assertThrows(
         () => { source("ADIW"); },
         Error,
-        "ADIW is not available on the AVRrc instruction set."
+        "ADIW is not available on Imaginary"
     );
+});
+
+Deno.test("If no device is chosen, warn after the first assembly line", () => {
+    const context = createOurContext();
+    const source = sourceLine(context);
+    source("");
+    source("");
+    assertThrows(
+        () => { source("MOV R4, R5"); },
+        Error,
+        "No device selected"
+    );
+});
+
+Deno.test("The instruction set chosen check is only executed once", () => {
+    const context = createOurContext();
+    const source = sourceLine(context);
+    assertThrows(
+        () => { source("MOV R4, R5"); },
+        Error,
+        "No device selected"
+    );
+    source("MOV R4, R5");
 });

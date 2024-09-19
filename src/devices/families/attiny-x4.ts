@@ -12,26 +12,6 @@ export const unsupportedInstructions = unsupportedInstructionsFromGroups([
     "SPM.Z"
 ]);
 
-export const vectors = [
-    "RESET", // External Pin, Power-on Reset, Brown-out Reset, Watchdog Reset
-    "EXT_INT0", // External Interrupt Request 0
-    "PCINT0", // Pin Change Interrupt Request 0
-    "PCINT1", // Pin Change Interrupt Request 1
-    "WDT", // Watchdog Time-out
-    "TIM1_CAPT", // Timer/Counter1 Capture Event
-    "TIM1_COMPA", // Timer/Counter1 Compare Match A
-    "TIM1_COMPB", // Timer/Counter1 Compare Match B
-    "TIM1_OVF", // Timer/Counter1 Overflow
-    "TIM0_COMPA", // Timer/Counter0 Compare Match A
-    "TIM0_COMPB", // Timer/Counter0 Compare Match B
-    "TIM0_OVF", // Timer/Counter0 Overflow
-    "ANA_COMP", // Analog Comparator
-    "ADC", // ADC Conversion Complete
-    "EE_RDY", // EEPROM Ready
-    "USI_STR", // USI Start
-    "USI_OVF" // USI Overflow
-];
-
 export const PRR = 0x20; // Power Reduction Register ------------- IO Address 00
 export const PRTIM1 = 3; // Power Reduction Timer/Counter1
 export const PRTIM0 = 2; // Power Reduction Timer/Counter0

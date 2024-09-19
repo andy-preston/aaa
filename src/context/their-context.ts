@@ -10,17 +10,28 @@ interface TheirContext {
     [x: string]: number | SimpleFunction | Directive;
 }
 
-const registers = (theirs: TheirContext) => {
-    const define = (name: string, value: number) =>
-        Object.defineProperty(theirs, name, {
-            "configurable": false,
-            "enumerable": true,
-            "value": value,
-            "writable": false
-        });
+export const defineProperty = (
+    theirs: TheirContext,
+    name :string,
+    value: number
+) => {
+    Object.defineProperty(theirs, name, {
+        "configurable": false,
+        "enumerable": true,
+        "value": value,
+        "writable": false
+    });
+};
 
+export const theirContext = (): TheirContext => {
+    const theirs: TheirContext = {
+        "low": (n) => n & 0xff,
+        "high": (n) => (n >> 8) & 0xff,
+        "flashOrg": 0,
+        "ramOrg": 0
+    };
     for (let r = 0; r < 32; r++) {
-        define(`R${r}`, r);
+        defineProperty(theirs, `R${r}`, r);
     }
     const specials: Array<[string, number]> = [
         ["X", 26],
@@ -34,17 +45,7 @@ const registers = (theirs: TheirContext) => {
         ["ZH", 31]
     ];
     for (const [name, value] of specials) {
-        define(name, value);
+        defineProperty(theirs, name, value);
     }
-};
-
-export const theirContext = (): TheirContext => {
-    const theirs: TheirContext = {
-        "low": (n) => n & 0xff,
-        "high": (n) => (n >> 8) & 0xff,
-        "flashOrg": 0,
-        "ramOrg": 0
-    };
-    registers(theirs);
     return theirs;
 };

@@ -1,13 +1,19 @@
-import type { InstructionSet, OurContext } from "../context/mod.ts";
+import { type OurContext, defineProperty } from "../context/mod.ts";
 
-export const deviceDirective = (context: OurContext) =>
+export const deviceDirective = (ourContext: OurContext) =>
     (name: string): void => {
-        ////////////////////////////////////////////////////////////////////////
-        //
-        // As the device files haven't been imported yet. This is an interim
-        // implementation that accepts an instruction set name as a parameter
-        // rather than a device name
-        //
-        ////////////////////////////////////////////////////////////////////////
-        context.instructionSet.choose(name as InstructionSet);
+        if (ourContext.device != "") {
+            throw new Error(`Device ${ourContext.device} already chosen`);
+        }
+        ourContext.device = name;
+        (async () => {
+            const device = await import(`./devices/${name.toLowerCase()}.ts`);
+            for (const [key, value] of Object.entries(device)) {
+                if (key == "unsupportedInstructions") {
+                    ourContext.unsupportedInstructions = value as Array<string>;
+                } else {
+                    defineProperty(ourContext.theirs, key, value as number);
+                }
+            }
+        })();
     };

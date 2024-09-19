@@ -1,6 +1,5 @@
 import type { Directive } from "../directives/mod.ts";
 import type { GeneratedCode } from "../generate/mod.ts";
-import { instructionCheck } from "./instruction-check.ts";
 import { theirContext } from "./their-context.ts";
 
 export const createOurContext = () => {
@@ -53,7 +52,8 @@ export const createOurContext = () => {
     const flashPos = (): number => theirs.flashOrg as number;
 
     const ourContext = {
-        "instructionSet": instructionCheck(),
+        "device": "",
+        "unsupportedInstructions": [] as Array<string>,
         "execute": execute,
         "addDirective": addDirective,
         "label": label,
