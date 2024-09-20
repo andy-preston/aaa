@@ -13,7 +13,7 @@ const tokensFromLine = sourceLine(ourContext);
 const generate = generator(ourContext);
 const loader = fileLoader(topFile);
 
-addDirectives(ourContext, loader.include);
+addDirectives(ourContext, loader.include, output.output);
 
 let errorMessage: string;
 let code: GeneratedCode;

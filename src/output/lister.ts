@@ -50,6 +50,7 @@ export const lister = (writeLine: OutputWriteLine) => {
         if (errorMessage != "") {
             writeLine(`${arrow} ${numberedLine(lineNumber, errorMessage)}`);
         }
+        sourceLine = "";
     };
 
     return { "sourceFile": sourceFile, "aLine": aLine };
