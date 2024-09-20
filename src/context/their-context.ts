@@ -10,7 +10,7 @@ interface TheirContext {
     [x: string]: number | SimpleFunction | Directive;
 }
 
-export const defineProperty = (
+export const addProperty = (
     theirs: TheirContext,
     name :string,
     value: number
@@ -31,7 +31,7 @@ export const theirContext = (): TheirContext => {
         "dataMemoryPos": 0
     };
     for (let r = 0; r < 32; r++) {
-        defineProperty(theirs, `R${r}`, r);
+        addProperty(theirs, `R${r}`, r);
     }
     const specials: Array<[string, number]> = [
         ["X", 26],
@@ -45,7 +45,7 @@ export const theirContext = (): TheirContext => {
         ["ZH", 31]
     ];
     for (const [name, value] of specials) {
-        defineProperty(theirs, name, value);
+        addProperty(theirs, name, value);
     }
     return theirs;
 };

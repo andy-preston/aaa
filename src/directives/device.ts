@@ -1,4 +1,4 @@
-import { type OurContext, defineProperty } from "../context/mod.ts";
+import { type OurContext, addProperty } from "../context/mod.ts";
 
 export const deviceDirective = (ourContext: OurContext) =>
     (name: string): void => {
@@ -12,7 +12,7 @@ export const deviceDirective = (ourContext: OurContext) =>
                 if (key == "unsupportedInstructions") {
                     ourContext.unsupportedInstructions = value as Array<string>;
                 } else {
-                    defineProperty(ourContext.theirs, key, value as number);
+                    addProperty(ourContext.theirs, key, value as number);
                 }
             }
         })();
