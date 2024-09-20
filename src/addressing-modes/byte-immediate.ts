@@ -1,10 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type {
-    OperandConverter,
-    SymbolicOperand,
-    SymbolicOperands
-} from "../operands/mod.ts";
-import type { Mnemonic } from "../source-line/mod.ts";
+import type { OperandConverter, SymbolicOperand} from "../operands/mod.ts";
+import type { Instruction } from "../source-line/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["CPI", "0011"],
@@ -19,10 +15,10 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (
-    mnemonic: Mnemonic,
-    operands: SymbolicOperands,
+    instruction: Instruction,
     convert: OperandConverter
 ): GeneratedCode | undefined => {
+    const [ mnemonic, operands ] = instruction;
     const immediate = (operand: SymbolicOperand) => {
         const numeric =
             mnemonic != "SER" ? convert.numeric("byte", operand) : 0;

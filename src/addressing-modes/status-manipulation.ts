@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
-import type { Mnemonic } from "../source-line/mod.ts";
+import type { OperandConverter } from "../operands/mod.ts";
+import type { Instruction } from "../source-line/mod.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BCLR", ["1", undefined]],
@@ -24,10 +24,10 @@ const mapping: Map<string, [string, number?]> = new Map([
 ]);
 
 export const encode = (
-    mnemonic: Mnemonic,
-    operands: SymbolicOperands,
+    instruction: Instruction,
     convert: OperandConverter
 ): GeneratedCode | undefined => {
+    const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }

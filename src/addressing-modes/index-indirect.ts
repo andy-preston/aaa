@@ -2,10 +2,9 @@ import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
     type OperandConverter,
     type OperandIndex,
-    type SymbolicOperands,
     operandMessage
 } from "../operands/mod.ts";
-import type { Mnemonic } from "../source-line/mod.ts";
+import type { Instruction } from "../source-line/mod.ts";
 
 const mapping: Map<string, [OperandIndex, OperandIndex, string]> = new Map([
     ["LD", [0, 1, "0"]],
@@ -27,10 +26,10 @@ const indexMapping: Map<string, [string, string]> = new Map([
 const indexDesc = Array.from(indexMapping.keys()).join(", ");
 
 export const encode = (
-    mnemonic: Mnemonic,
-    operands: SymbolicOperands,
+    instruction: Instruction,
     convert: OperandConverter
 ): GeneratedCode | undefined => {
+    const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }

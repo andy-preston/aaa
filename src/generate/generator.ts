@@ -8,14 +8,12 @@ export const generator = (ourContext: OurContext) => {
     const converter = operandConverter(ourContext);
 
     return (instruction: Instruction): GeneratedCode => {
-        const mnemonic = instruction[0]!.toUpperCase();
-        if (mnemonic == "") {
+        if (instruction[0] == "") {
             return [];
         }
         for (const addressingMode of addressingModes) {
             const generatedCode = addressingMode(
-                mnemonic,
-                instruction[1],
+                instruction,
                 converter
             );
             if (generatedCode != null) {
@@ -23,7 +21,7 @@ export const generator = (ourContext: OurContext) => {
                 return generatedCode;
             }
         }
-        throw new SyntaxError(`unknown instruction ${mnemonic}`);
+        throw new SyntaxError(`unknown instruction ${instruction[0]}`);
     };
 };
 
