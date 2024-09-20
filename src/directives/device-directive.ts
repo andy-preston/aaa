@@ -1,7 +1,7 @@
-import { type OurContext, addProperty } from "../context/mod.ts";
+import { type OurContext } from "../context/mod.ts";
 
 export const deviceDirective = (ourContext: OurContext) =>
-    (name: string): void => {
+    (name: string) => {
         if (ourContext.device != "") {
             throw new Error(`Device ${ourContext.device} already chosen`);
         }
