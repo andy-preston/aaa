@@ -57,6 +57,7 @@ export const operandTypes = (ourContext: OurContext) => {
             symbolicIsOnlyForCheckCount,
             symbolicIsOnlyForCheckCount
         ],
+        // TODO: On reduced core ALL registers are immediateRegister
         "register": [
             "register (R0 - R31)",
             (operand: SymbolicOperand) => between(0, operand, 31),
