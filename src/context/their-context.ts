@@ -33,7 +33,7 @@ export const theirContext = (): TheirContext => {
     for (let r = 0; r < 32; r++) {
         addProperty(theirs, `R${r}`, r);
     }
-    const specials: Array<[string, number]> = [
+    const specialRegisters: Array<[string, number]> = [
         ["X", 26],
         ["XL", 26],
         ["XH", 27],
@@ -44,7 +44,7 @@ export const theirContext = (): TheirContext => {
         ["ZL", 30],
         ["ZH", 31]
     ];
-    for (const [name, value] of specials) {
+    for (const [name, value] of specialRegisters) {
         addProperty(theirs, name, value);
     }
     return theirs;
