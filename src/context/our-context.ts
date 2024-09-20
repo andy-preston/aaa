@@ -52,7 +52,7 @@ export const createOurContext = () => {
         if ("name" in theirs) {
             throw Error(`label ${name} already exists`);
         }
-        theirs[name] = ourContext.programMemoryPos;
+        addProperty(theirs, name, ourContext.programMemoryPos);
     };
 
     const programMemoryStep = (code: GeneratedCode): void => {
