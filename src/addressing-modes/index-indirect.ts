@@ -1,3 +1,4 @@
+import { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
     type OperandConverter,
@@ -27,7 +28,8 @@ const indexDesc = Array.from(indexMapping.keys()).join(", ");
 
 export const encode = (
     instruction: Instruction,
-    convert: OperandConverter
+    convert: OperandConverter,
+    _ourContext: OurContext
 ): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {

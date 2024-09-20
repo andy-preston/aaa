@@ -1,3 +1,4 @@
+import { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type {
     NumericOperand,
@@ -16,7 +17,8 @@ type Options = [TypeName, TypeName, () => NumericOperand, string, string];
 
 export const encode = (
     instruction: Instruction,
-    convert: OperandConverter
+    convert: OperandConverter,
+    _ourContext: OurContext
 ): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {

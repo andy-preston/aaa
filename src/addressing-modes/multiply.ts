@@ -1,3 +1,4 @@
+import { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, TypeName } from "../operands/mod.ts";
 import type { Instruction } from "../source-line/mod.ts";
@@ -12,7 +13,8 @@ const mapping: Map<string, [string, string]> = new Map([
 
 export const encode = (
     instruction: Instruction,
-    convert: OperandConverter
+    convert: OperandConverter,
+    _ourContext: OurContext
 ): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
