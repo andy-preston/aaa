@@ -67,6 +67,6 @@ export const lineTokens = (theLine: string): Tokens => {
         (operand: string) => operand != ""
     );
     expandIndexOffsetOperands(operandsList);
-    return [label, mnemonic, operandsList as SymbolicOperands];
+    return [label, mnemonic.toUpperCase(), operandsList as SymbolicOperands];
 };
 

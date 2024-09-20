@@ -11,9 +11,19 @@ Deno.test("Lines could be entirely blank", () => {
     assertEquals(tokens, ["", "", []]);
 });
 
-Deno.test("multiple spaces are reduced to one space", () => {
+Deno.test("Multiple spaces are reduced to one space", () => {
     const tokens = lineTokens("LDI     R16, \t 23");
     assertEquals(tokens, ["", "LDI", ["R16", "23"]]);
+});
+
+Deno.test("Mnemonics are automatically converted to upper case", () => {
+    const tokens = lineTokens("ldi R16, \t 23");
+    assertEquals(tokens, ["", "LDI", ["R16", "23"]]);
+});
+
+Deno.test("... but operands aren't", () => {
+    const tokens = lineTokens("ldi r16, \t 23");
+    assertEquals(tokens, ["", "LDI", ["r16", "23"]]);
 });
 
 Deno.test("Comments are stripped and discarded", () => {
