@@ -1,5 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { createOurContext } from "./our-context.ts";
+import { addDirective } from "./their-context.ts";
 
 Deno.test("Simple expressions do not require a `return`", () => {
     const ourContext = createOurContext();
@@ -48,7 +49,7 @@ Deno.test("Any directives that are added can be called as functions", () => {
         directiveParameter = parameter;
     };
     const ourContext = createOurContext();
-    ourContext.addDirective("testDirective", testDirective);
+    addDirective(ourContext.theirs, "testDirective", testDirective);
     ourContext.execute("testDirective('says hello')");
     assertEquals(directiveParameter, "says hello");
 });

@@ -1,2 +1,2 @@
-export { addProperty } from "./their-context.ts";
+export { addDirective } from "./their-context.ts";
 export { type OurContext, createOurContext } from "./our-context.ts";

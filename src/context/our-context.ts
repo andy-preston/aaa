@@ -1,6 +1,5 @@
-import type { Directive } from "../directives/mod.ts";
 import type { GeneratedCode } from "../generate/mod.ts";
-import { theirContext } from "./their-context.ts";
+import { addProperty, theirContext } from "./their-context.ts";
 
 export const createOurContext = () => {
     const theirs = theirContext();
@@ -33,9 +32,21 @@ export const createOurContext = () => {
         }
     };
 
-    const addDirective = (name: string, directive: Directive) => {
-        theirs[name] = directive;
-    };
+    const chooseDevice = (deviceSpec: object) => {
+        for (const [key, value] of Object.entries(deviceSpec)) {
+            switch (key) {
+                case "unsupportedInstructions":
+                    ourContext[key] = value as Array<string>;
+                    break;
+                case "programEnd":
+                    ourContext.theirs[key] = Math.floor(value as number / 2);
+                    break;
+                default:
+                    addProperty(theirs, key, value as number);
+                    break;
+            }
+        }
+    }
 
     const label = (name: string): void => {
         if ("name" in theirs) {
@@ -52,11 +63,11 @@ export const createOurContext = () => {
     const ourContext = {
         "device": "",
         "unsupportedInstructions": [] as Array<string>,
+        "chooseDevice": chooseDevice,
         // This, at the very least, effects how the LDS/STS instructions
         // are generated.
         "reducedCore": false,
         "execute": execute,
-        "addDirective": addDirective,
         "label": label,
         "programMemoryPos": 0,
         "programMemoryStep": programMemoryStep,

@@ -1,4 +1,4 @@
-import { createOurContext } from "./context/mod.ts";
+import { addDirective, createOurContext } from "./context/mod.ts";
 import { addDirectives } from "./directives/mod.ts";
 import { type GeneratedCode, generator } from "./generate/mod.ts";
 import { outputter } from "./output/mod.ts";
@@ -13,7 +13,7 @@ const tokensFromLine = sourceLine(ourContext);
 const generate = generator(ourContext);
 const loader = fileLoader(topFile);
 
-ourContext.addDirective("include", loader.include);
+addDirective(ourContext.theirs, "include", loader.include);
 addDirectives(ourContext);
 
 let errorMessage: string;

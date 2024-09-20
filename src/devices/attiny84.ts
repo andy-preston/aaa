@@ -5,7 +5,7 @@ export const SPH = 0x5e; // Stack Pointer ------------------------ IO Address 3E
 
 export const ioEnd = 0x3f;
 export const eepromEnd = 0x01ff;
-export const programEnd = Math.floor(0x1fff / 2);
+export const programEnd = 0x1fff;
 
 export const mappedIoStart = 0x0020;
 export const mappedIoEnd = 0x005f;
