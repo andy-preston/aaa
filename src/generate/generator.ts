@@ -14,7 +14,8 @@ export const generator = (ourContext: OurContext) => {
         for (const addressingMode of addressingModes) {
             const generatedCode = addressingMode(
                 instruction,
-                converter
+                converter,
+                ourContext
             );
             if (generatedCode != null) {
                 ourContext.flashStep(generatedCode);

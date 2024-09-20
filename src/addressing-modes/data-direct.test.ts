@@ -10,4 +10,13 @@ const tests: Tests = [
     [["STS", ["4096", "R8"  ]], [0x92, 0x80, 0x10, 0x00]],
 ];
 
+const reducedCoreTests: Tests = [
+    [["LDS", ["R30", "120"]], [0xa7, 0xe8]],
+    [["STS", ["126", "R18"]], [0xaf, 0x2e]]
+];
+
 testing(tests, generator(createOurContext()));
+
+const context = createOurContext();
+context.reducedCore = true;
+testing(reducedCoreTests, generator(context));

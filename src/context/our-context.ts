@@ -54,6 +54,9 @@ export const createOurContext = () => {
     const ourContext = {
         "device": "",
         "unsupportedInstructions": [] as Array<string>,
+        // This, at the very least, effects how the LDS/STS instructions
+        // are generated.
+        "reducedCore": false,
         "execute": execute,
         "addDirective": addDirective,
         "label": label,
