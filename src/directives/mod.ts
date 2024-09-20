@@ -11,7 +11,11 @@ export type ArrayDirective = (a: Array<number>) => void;
 
 export type Directive = StringDirective | NumberDirective | ArrayDirective;
 
-export const addDirectives = (context: OurContext) => {
+export const addDirectives = (
+    context: OurContext,
+    include: StringDirective
+) => {
+    addDirective(context.theirs, "include", include);
     addDirective(context.theirs, "device", deviceDirective(context));
     addDirective(context.theirs, "org", orgDirective(context));
 };
