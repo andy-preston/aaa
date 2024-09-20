@@ -150,19 +150,24 @@ Deno.test("Some instructions require Z and no other register", () => {
     );
 });
 
-Deno.test("A port is between 0 and 0x3F", () => {
+Deno.test("A port is between 0x20 - 0x5F and is remapped to 0x3f", () => {
     const converter = operandConverter(createOurContext());
-    assertEquals(converter.numeric("port", "0"), 0);
-    assertEquals(converter.numeric("port", "0x3F"), 63);
+    assertEquals(converter.numeric("port", "0x20"), 0);
+    assertEquals(converter.numeric("port", "0x5F"), 0x3f);
+    assertThrows(
+        () => converter.numeric("port", "10"),
+        RangeError,
+        "Operand out of range: should be Data memory mapped into IO space (0x20 - 0x5F) not 10"
+    );
     assertThrows(
         () => converter.numeric("port", "-47"),
         RangeError,
-        "Operand out of range: should be GPIO port (0 - 0x3F) not -47"
+        "Operand out of range: should be Data memory mapped into IO space (0x20 - 0x5F) not -47"
     );
     assertThrows(
-        () => converter.numeric("port", "64"),
+        () => converter.numeric("port", "96"),
         RangeError,
-        "Operand out of range: should be GPIO port (0 - 0x3F) not 64"
+        "Operand out of range: should be Data memory mapped into IO space (0x20 - 0x5F) not 96"
     );
 });
 

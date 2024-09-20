@@ -6,10 +6,10 @@ import { type Tests, testing } from "./testing.ts";
 // that I could get hold of.
 
 const tests: Tests = [
-    [["CBI",  ["30", "1"]], [0x98, 0xf1]],
-    [["SBI",  ["28", "5"]], [0x9a, 0xe5]],
-    [["SBIC", ["29", "4"]], [0x99, 0xec]],
-    [["SBIS", ["30", "3"]], [0x9b, 0xf3]]
+    [["CBI",  [(30 + 0x20).toString(), "1"]], [0x98, 0xf1]],
+    [["SBI",  [(28 + 0x20).toString(), "5"]], [0x9a, 0xe5]],
+    [["SBIC", [(29 + 0x20).toString(), "4"]], [0x99, 0xec]],
+    [["SBIS", [(30 + 0x20).toString(), "3"]], [0x9b, 0xf3]]
 ];
 
 testing(tests, generator(createOurContext()));

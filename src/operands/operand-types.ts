@@ -87,11 +87,10 @@ export const operandTypes = (ourContext: OurContext) => {
             (operand: SymbolicOperand) => numeric(operand) == 30,
             numeric
         ],
-        // These two have the same rule but their context is different
         "port": [
-            "GPIO port (0 - 0x3F)",
-            (operand: SymbolicOperand) => between(0, operand, 0x3f),
-            numeric
+            "Data memory mapped into IO space (0x20 - 0x5F)",
+            (operand: SymbolicOperand) => between(0x20, operand, 0x5f),
+            (operand: SymbolicOperand) => (numeric(operand) - 0x20)
         ],
         "sixBits": [
             "six bit number (0 - 0x3F)",
