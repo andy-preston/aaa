@@ -10,27 +10,17 @@ export const outputter = (fileName: FileName) => {
     const hex = intelHex();
     let anyErrors = false;
 
-    const output = (
-        sourceFile: FileName,
-        lineNumber: number,
-        address: number,
-        generatedCode: GeneratedCode,
-        source: string,
-        errorMessage: string
-    ) => {
-        listing(
-            sourceFile,
-            lineNumber,
-            address,
-            generatedCode,
-            source,
-            errorMessage
-        );
-        if (errorMessage) {
+    const source = (fileName: FileName, line: number, source: string) => {
+        listing.sourceFile(fileName, line, source);
+    };
+
+    const output = (address: number, code: GeneratedCode, error: string) => {
+        listing.aLine(address, code, error);
+        if (error) {
             anyErrors = true;
         }
         if (!anyErrors) {
-            hex.add(address, generatedCode);
+            hex.add(address, code);
         }
     };
 
@@ -43,7 +33,7 @@ export const outputter = (fileName: FileName) => {
         }
     };
 
-    return { "output": output, "close": close };
+    return { "source": source, "output": output, "close": close };
 };
 
 export type Output = ReturnType<typeof outputter>["output"];
