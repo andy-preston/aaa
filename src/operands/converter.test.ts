@@ -281,17 +281,17 @@ Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
 Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     const context = createOurContext();
     const converter = operandConverter(context);
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertEquals(converter.numeric("relativeJump", "500"), 499);
-    context.theirs.flashOrg = 1010;
+    context.programMemoryPos = 1010;
     assertEquals(converter.numeric("relativeJump", "1000"), 0x0fff - 10);
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertThrows(
         () => converter.numeric("relativeJump", "-1"),
         RangeError,
         "Operand out of range: -1 should be a memory address not -1"
     );
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertThrows(
         () => converter.numeric("relativeJump", "0x1111"),
         RangeError,
@@ -302,23 +302,23 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
 Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
     const context = createOurContext();
     const converter = operandConverter(context);
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertEquals(converter.numeric("relativeBranch", "60"), 59);
-    context.theirs.flashOrg = 110;
+    context.programMemoryPos = 110;
     assertEquals(converter.numeric("relativeBranch", "100"), 127 - 10);
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertThrows(
         () => converter.numeric("relativeBranch", "-1"),
         RangeError,
         "Operand out of range: -1 should be a memory address not -1"
     );
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertThrows(
         () => converter.numeric("relativeBranch", "0x10000"),
         RangeError,
         "Operand out of range: 0x10000 should be a memory address not 65536"
     );
-    context.theirs.flashOrg = 0;
+    context.programMemoryPos = 0;
     assertThrows(
         () => converter.numeric("relativeBranch", "0x1111"),
         RangeError,

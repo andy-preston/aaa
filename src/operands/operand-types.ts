@@ -29,7 +29,7 @@ export const operandTypes = (ourContext: OurContext) => {
                 operandMessage(operand, "a memory address", `${target}`)
             );
         }
-        const distance = target - ourContext.flashPos();
+        const distance = target - ourContext.programMemoryPos;
         return distance < 0 ? highValue + distance : distance - 1;
     };
 

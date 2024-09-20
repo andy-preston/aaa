@@ -19,7 +19,6 @@ addDirectives(ourContext);
 let errorMessage: string;
 let code: GeneratedCode;
 for (const [fileName, lineNumber, rawLine] of loader.lines()) {
-    const flashAddress = ourContext.flashPos();
     try {
         errorMessage = "";
         code = generate(tokensFromLine(rawLine));
@@ -34,7 +33,7 @@ for (const [fileName, lineNumber, rawLine] of loader.lines()) {
     output.output(
         fileName,
         lineNumber,
-        flashAddress,
+        ourContext.programMemoryPos,
         code,
         rawLine,
         errorMessage

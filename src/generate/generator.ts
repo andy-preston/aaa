@@ -18,7 +18,7 @@ export const generator = (ourContext: OurContext) => {
                 ourContext
             );
             if (generatedCode != null) {
-                ourContext.flashStep(generatedCode);
+                ourContext.programMemoryStep(generatedCode);
                 return generatedCode;
             }
         }

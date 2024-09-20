@@ -5,8 +5,8 @@ type SimpleFunction = (_: number) => number;
 interface TheirContext {
     "low": (n: number) => number;
     "high": (n: number) => number;
-    "flashOrg": number;
-    "ramOrg": number;
+    "programMemoryPos": number;
+    "dataMemoryPos": number;
     [x: string]: number | SimpleFunction | Directive;
 }
 
@@ -27,8 +27,8 @@ export const theirContext = (): TheirContext => {
     const theirs: TheirContext = {
         "low": (n) => n & 0xff,
         "high": (n) => (n >> 8) & 0xff,
-        "flashOrg": 0,
-        "ramOrg": 0
+        "programMemoryPos": 0,
+        "dataMemoryPos": 0
     };
     for (let r = 0; r < 32; r++) {
         defineProperty(theirs, `R${r}`, r);

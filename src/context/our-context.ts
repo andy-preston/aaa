@@ -41,15 +41,13 @@ export const createOurContext = () => {
         if ("name" in theirs) {
             throw Error(`label ${name} already exists`);
         }
-        theirs[name] = theirs.flashOrg as number;
+        theirs[name] = ourContext.programMemoryPos;
     };
 
-    const flashStep = (code: GeneratedCode): void => {
+    const programMemoryStep = (code: GeneratedCode): void => {
         // Flash addresses are in 16-bit words, not bytes
-        theirs.flashOrg = (theirs.flashOrg as number) + code.length / 2;
+        ourContext.programMemoryPos += code.length / 2;
     };
-
-    const flashPos = (): number => theirs.flashOrg as number;
 
     const ourContext = {
         "device": "",
@@ -60,8 +58,8 @@ export const createOurContext = () => {
         "execute": execute,
         "addDirective": addDirective,
         "label": label,
-        "flashStep": flashStep,
-        "flashPos": flashPos,
+        "programMemoryPos": 0,
+        "programMemoryStep": programMemoryStep,
         "theirs": theirs
     };
 

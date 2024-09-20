@@ -3,7 +3,7 @@ import { createOurContext } from "../context/mod.ts";
 import { sourceLine } from "./source-line.ts";
 import { generator } from "../generate/mod.ts";
 
-Deno.test("Labels are saved at the current flashOrg", () => {
+Deno.test("Labels are saved at the current programMemoryPos", () => {
     const context = createOurContext();
     context.device = "Imaginary";
     const source = sourceLine(context);
