@@ -8,7 +8,7 @@ export const deviceDirective = (ourContext: OurContext) =>
         ourContext.device = name;
         (async () => {
             ourContext.chooseDevice(
-                await import(`./devices/${name.toLowerCase()}.ts`)
+                await import(`../devices/${name.toLowerCase()}.ts`)
             );
         })();
     };
