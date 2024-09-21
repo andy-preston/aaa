@@ -6,6 +6,8 @@ type Label = string;
 
 type Tokens = [Label, Mnemonic, SymbolicOperands];
 
+export type Instruction = [Mnemonic, SymbolicOperands]
+
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
     return semicolon == -1 ? raw : raw.substring(0, semicolon);

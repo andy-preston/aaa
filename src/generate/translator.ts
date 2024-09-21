@@ -18,7 +18,6 @@ export const translator = (ourContext: OurContext) => {
                 ourContext
             );
             if (generatedCode != null) {
-                ourContext.programMemoryStep(generatedCode);
                 return generatedCode;
             }
         }
