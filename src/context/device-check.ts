@@ -1,5 +1,5 @@
-import { Mnemonic } from "../source-line/mod.ts";
-import { OurContext } from "./mod.ts";
+import type { Mnemonic } from "../source-line/mod.ts";
+import type { OurContext } from "./mod.ts";
 
 export const deviceChecker = (ourContext: OurContext) => {
     let deviceErrorShown = false;

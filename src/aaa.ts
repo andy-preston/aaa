@@ -1,9 +1,9 @@
 import { createOurContext } from "./context/mod.ts";
 import { addDirectives } from "./directives/mod.ts";
-import { outputter } from "./output/mod.ts";
-import { fileLoader } from "./input/file-loader.ts";
-import { processor } from "./generate/process.ts";
 import { pokeBuffer } from "./generate/mod.ts";
+import { processor } from "./generate/mod.ts";
+import { fileLoader } from "./input/mod.ts";
+import { outputter } from "./output/mod.ts";
 import { lineLoader } from "./source-line/mod.ts";
 
 const topFile = "./file1.txt";

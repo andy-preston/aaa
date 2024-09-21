@@ -1,5 +1,5 @@
 import { deviceChecker } from "../context/mod.ts";
-import { OurContext } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 import { type BufferPeek, type GeneratedCode, translator } from "./mod.ts";
 import { type Instruction, lineTokens } from "../source-line/mod.ts";
 

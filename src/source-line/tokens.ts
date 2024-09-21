@@ -52,7 +52,7 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
     }
     if (operands.length > second && found(second)) {
         if (second == 2) {
-            throw SyntaxError(
+            throw new SyntaxError(
                 "An instruction can only have 1 index offset (Z+qq) operand"
             );
         }

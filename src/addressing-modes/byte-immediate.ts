@@ -1,4 +1,4 @@
-import { OurContext } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, SymbolicOperand} from "../operands/mod.ts";
 import type { Instruction } from "../source-line/mod.ts";

@@ -1,4 +1,4 @@
-import { Mnemonic } from "../../source-line/tokens.ts";
+import type { Mnemonic } from "../../source-line/tokens.ts";
 
 const unsupportedInstructionGroups = {
     "multiply": ["MUL", "MULS", "MULSU", "FMUL", "FMULS", "FMULSU"],
@@ -19,7 +19,7 @@ export type UnsupportedInstructionGroup =
 export const unsupportedInstructionsFromGroups = (
     groups: Array<UnsupportedInstructionGroup>
 ): Array<string> =>
-    groups.map(
+    groups.flatMap(
         (group: UnsupportedInstructionGroup) =>
             unsupportedInstructionGroups[group]
-    ).flat();
+    );

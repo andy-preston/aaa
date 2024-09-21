@@ -1,7 +1,6 @@
-import { OurContext } from "../context/mod.ts";
+import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type {
-    NumericOperand,
     OperandConverter,
     OperandIndex,
     TypeName
@@ -12,8 +11,6 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["LDS", ["0", 0, 1]],
     ["STS", ["1", 1, 0]]
 ]);
-
-type Options = [TypeName, TypeName, () => NumericOperand, string, string];
 
 export const encode = (
     instruction: Instruction,

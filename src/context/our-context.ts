@@ -50,7 +50,7 @@ export const createOurContext = () => {
 
     const label = (name: string): void => {
         if ("name" in theirs) {
-            throw Error(`label ${name} already exists`);
+            throw new Error(`label ${name} already exists`);
         }
         addProperty(theirs, name, ourContext.programMemoryPos);
     };
