@@ -4,3 +4,6 @@ test.asm
 test.hex
 test.lst
 test.err
+file1.*
+file2.*
+file3.*
