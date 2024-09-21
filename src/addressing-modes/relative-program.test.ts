@@ -1,10 +1,10 @@
 import { assertThrows } from "assert";
 import { createOurContext } from "../context/mod.ts";
-import { generator } from "../generate/mod.ts";
+import { translator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 
 const context = createOurContext();
-const generate = generator(context);
+const translate = translator(context);
 context.theirs.back = 0x00;
 context.theirs.forward = 0x0a
 context.programMemoryPos = 0x03;
@@ -19,12 +19,12 @@ const tests: Tests = [
     [["RJMP",  ["forward"]], [0xc0, 0x03]]
 ];
 
-testing(tests, generate);
+testing(tests, translate);
 
 Deno.test("Absolute address too high on RJMP instruction", () => {
     context.programMemoryPos = 0;
     assertThrows(
-        () => generate(["RJMP", ["0x1111"]]),
+        () => translate(["RJMP", ["0x1111"]]),
         RangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x1111"
     );
@@ -33,7 +33,7 @@ Deno.test("Absolute address too high on RJMP instruction", () => {
 Deno.test("Absolute address too low on RCALL instruction", () => {
     context.programMemoryPos = 0x2000;
     assertThrows(
-        () => generate(["RCALL", ["0x500"]]),
+        () => translate(["RCALL", ["0x500"]]),
         RangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x500"
     );

@@ -1,5 +1,5 @@
 import { createOurContext } from "../context/mod.ts";
-import { generator } from "../generate/mod.ts";
+import { translator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 
 const context = createOurContext();
@@ -14,4 +14,4 @@ const tests: Tests = [
     [["JMP",  ["branch"]], [0x94, 0x0c, 0x00, 0x00]]
 ];
 
-testing(tests, generator(context));
+testing(tests, translator(context));

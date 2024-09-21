@@ -4,7 +4,7 @@ import { operandConverter } from "../operands/mod.ts";
 import type { Instruction } from "../source-line/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
-export const generator = (ourContext: OurContext) => {
+export const translator = (ourContext: OurContext) => {
     const converter = operandConverter(ourContext);
 
     return (instruction: Instruction): GeneratedCode => {
@@ -26,4 +26,4 @@ export const generator = (ourContext: OurContext) => {
     };
 };
 
-export type Generate = ReturnType<typeof generator>;
+export type Translate = ReturnType<typeof translator>;

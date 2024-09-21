@@ -1,6 +1,6 @@
 import type { OurContext } from "../context/mod.ts";
 import { addDirective } from "../context/mod.ts";
-import { Output } from "../output/mod.ts";
+import { Generate } from "../generate/mod.ts";
 import { deviceDirective } from "./device-directive.ts";
 import { orgDirective } from "./org-directive.ts";
 import { pokeDirective } from "./poke-directive.ts";

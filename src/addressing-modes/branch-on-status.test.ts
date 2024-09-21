@@ -1,10 +1,10 @@
 import { assertThrows } from "assert";
 import { createOurContext } from "../context/mod.ts";
-import { generator } from "../generate/mod.ts";
+import { translator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 
 const context = createOurContext();
-const generate = generator(context);
+const translate = translator(context);
 context.theirs.back = 0x0000;
 context.theirs.forward = 0x002e;
 context.programMemoryPos = 3;
@@ -55,12 +55,12 @@ const tests: Tests = [
     [["BRVS", [     "forward"]], [0xf0, 0x1b]]
 ];
 
-testing(tests, generate);
+testing(tests, translate);
 
 Deno.test("Absolute address too high on BRNE instruction", () => {
     context.programMemoryPos = 0;
     assertThrows(
-        () => generate(["BRNE", ["130"]]),
+        () => translate(["BRNE", ["130"]]),
         RangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 130"
     );
@@ -69,7 +69,7 @@ Deno.test("Absolute address too high on BRNE instruction", () => {
 Deno.test("Absolute address too low on BREQ instruction", () => {
     context.programMemoryPos = 500;
     assertThrows(
-        () => generate(["BREQ", ["100"]]),
+        () => translate(["BREQ", ["100"]]),
         RangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 100"
     );
