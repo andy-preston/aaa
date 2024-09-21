@@ -1,6 +1,7 @@
 import { assertEquals } from "assert";
-import type { GeneratedCode, Translate } from "../generate/mod.ts";
+import { translator, type GeneratedCode } from "../generate/mod.ts";
 import type { Instruction } from "../source-line/mod.ts";
+import { OurContext } from "../context/mod.ts";
 
 export type Tests = Array<[Instruction, GeneratedCode]>;
 
@@ -10,11 +11,14 @@ export const testDescription = (source: Instruction): string => {
     return `${source[0]} ${description}`;
 };
 
-export const testing = (tests: Tests, translate: Translate) => {
+export const testing = (tests: Tests, context: OurContext) => {
+    const translate = translator(context)
     for (const test of tests) {
         const source = test[0] as Instruction;
         Deno.test(`Basic code generation: ${testDescription(source)}`, () => {
-            assertEquals(translate(source), test[1]);
+            const code = translate(source);
+            assertEquals(code, test[1]);
+            context.programMemoryStep(code);
         });
     }
 };
