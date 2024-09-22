@@ -12,7 +12,25 @@ import type {
 } from "./types.ts";
 
 export const operandConverter = (ourContext: OurContext) => {
-    const operands = operandTypes(ourContext);
+    let firstPass = true;
+
+    const operandValue = (operand: SymbolicOperand): string => {
+        try {
+            return ourContext.execute(operand).trim();
+        }
+        catch (error) {
+            if (error.name == "ReferenceError" && firstPass) {
+                return "0";
+            }
+            throw error;
+        }
+    };
+
+    const secondPass = () => {
+        firstPass = false;
+    }
+
+    const operands = operandTypes(ourContext, operandValue);
 
     const description = (typeName: TypeName): string => operands[typeName][0];
 
@@ -57,7 +75,8 @@ export const operandConverter = (ourContext: OurContext) => {
         "numeric": numeric,
         "symbolic": symbolic,
         "check": standaloneCheck,
-        "checkCount": checkCount
+        "checkCount": checkCount,
+        "secondPass": secondPass
     };
 };
 

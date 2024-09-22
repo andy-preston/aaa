@@ -27,14 +27,20 @@ Deno.test("Numeric operands must be integers", () => {
         'Operand type: "notANumber" is not an integer'
     );
     assertThrows(
-        () => converter.numeric("byte", "notANumber"),
-        ReferenceError,
-        "Javascript error: notANumber is not defined"
-    );
-    assertThrows(
         () => converter.numeric("byte", "23.5"),
         TypeError,
         "Operand type: 23.5 is not an integer"
+    );
+});
+
+Deno.test("Operands must be defined, at least on the second pass", () => {
+    const converter = operandConverter(createOurContext());
+    assertEquals(0, converter.numeric("byte", "notDefined"));
+    converter.secondPass();
+    assertThrows(
+        () => converter.numeric("byte", "notDefined"),
+        ReferenceError,
+        "Javascript error: notDefined is not defined"
     );
 });
 

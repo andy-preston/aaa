@@ -8,9 +8,14 @@ export type OperandType = [
     (operand: SymbolicOperand) => NumericOperand
 ];
 
-export const operandTypes = (ourContext: OurContext) => {
+type OperandValue = (operand: SymbolicOperand) => string;
+
+export const operandTypes = (
+    ourContext: OurContext,
+    operandValue: OperandValue
+) => {
     const numeric = (operand: SymbolicOperand): NumericOperand => {
-        const result = ourContext.execute(operand).trim();
+        const result = operandValue(operand);
         const intResult = Number.parseInt(result);
         if (`${intResult}` != result) {
             throw new TypeError(`Operand type: ${operand} is not an integer`);
