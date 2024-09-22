@@ -21,11 +21,14 @@ export const processor = (ourContext: OurContext, peek: BufferPeek) => {
     }
 
     return function* (line: string): Generator<Processed, void, undefined> {
+        // This has to come before ANY yields to make sure labels are handled
+        // correctly for poke directives
+        const instruction = nextInstruction(line);
+
         for (const block of peek()) {
             yield [ourContext.programMemoryPos, block, ""];
             ourContext.programMemoryStep(block);
         }
-        const instruction = nextInstruction(line);
         let errorMessage = deviceCheck(instruction[0]);
         let code: GeneratedCode = [];
         if (errorMessage == "") {
