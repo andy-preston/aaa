@@ -1,6 +1,6 @@
 import { assertEquals } from "assert";
 import { createOurContext } from "../context/mod.ts";
-import { languageSplit } from "./line-loader.ts";
+import { languageSplit } from "./language-split.ts";
 
 Deno.test("JS can be delimited with moustaches on the same line", () => {
     const loader = languageSplit(createOurContext());
