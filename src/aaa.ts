@@ -13,7 +13,8 @@ const pokeBuf = pokeBuffer();
 const output = outputter(topFile);
 const loader = fileLoader(topFile);
 const split = languageSplit(ourContext);
-const process = processor(ourContext, pokeBuf.peek);
+const converter = operandConverter(ourContext);
+const process = processor(ourContext, converter, pokeBuf.peek);
 
 addDirectives(ourContext, loader.include, pokeBuf.poke);
 

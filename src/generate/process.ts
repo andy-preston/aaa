@@ -1,16 +1,23 @@
 import { deviceChecker } from "../context/mod.ts";
 import type { OurContext } from "../context/mod.ts";
-import { type BufferPeek, type GeneratedCode, translator } from "./mod.ts";
+import type { BufferPeek } from "./poke-buffer.ts";
+import { translator } from "./translator.ts";
+import type { GeneratedCode } from "./types.ts";
 import { type Instruction, lineTokens } from "../source-line/mod.ts";
+import type { OperandConverter } from "../operands/mod.ts";
 
 type Address = number;
 type ErrorMessage = string;
 type Poked = boolean;
 type Processed = [Address, GeneratedCode, ErrorMessage];
 
-export const processor = (ourContext: OurContext, peek: BufferPeek) => {
+export const processor = (
+    ourContext: OurContext,
+    operandConverter: OperandConverter,
+    peek: BufferPeek
+) => {
     const deviceCheck = deviceChecker(ourContext);
-    const translate = translator(ourContext);
+    const translate = translator(ourContext, operandConverter);
 
     const nextInstruction = (line: string): Instruction => {
         const [label, mnemonic, operands] = lineTokens(line);

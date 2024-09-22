@@ -2,10 +2,15 @@ import { assert, assertEquals } from "assert";
 import { type OurContext, createOurContext } from "../context/mod.ts";
 import { ProcessGenerator, processor } from "./process.ts";
 import { pokeBuffer } from "./poke-buffer.ts";
+import { operandConverter } from "../operands/mod.ts";
 
 const processing = (context: OurContext, line: string) => {
     context.device = "dummy";
-    const process = processor(context, pokeBuffer().peek);
+    const process = processor(
+        context,
+        operandConverter(context),
+        pokeBuffer().peek
+    );
     for (const _ of process(line)) {
         // pass
     }
@@ -56,13 +61,21 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
     const context = createOurContext();
     context.device = "dummy";
     context.unsupportedInstructions = ["ADIW"];
-    const process = processor(context, pokeBuffer().peek);
+    const process = processor(
+        context,
+        operandConverter(context),
+        pokeBuffer().peek
+    );
     assert(findError(process, "ADIW R26, 5", "ADIW is not available on dummy"));
 });
 
 Deno.test("If no device is chosen, warn after the first assembly line", () => {
     const context = createOurContext();
-    const process = processor(context, pokeBuffer().peek);
+    const process = processor(
+        context,
+        operandConverter(context),
+        pokeBuffer().peek
+    );
     assert(findError(process, "", ""));
     assert(findError(process, "", ""));
     assert(findError(process, "ADIW R26, 5", "No device selected"));
@@ -70,7 +83,11 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
 
 Deno.test("The instruction set chosen check is only executed once", () => {
     const context = createOurContext();
-    const process = processor(context, pokeBuffer().peek);
+    const process = processor(
+        context,
+        operandConverter(context),
+        pokeBuffer().peek
+    );
     assert(findError(process, "ADIW R26, 5", "No device selected"));
     assert(findError(process, "ADIW R26, 5", ""));
     assert(findError(process, "ADIW R26, 5", ""));
