@@ -10,14 +10,14 @@ export const lister = (writeLine: OutputWriteLine) => {
     let sourceLine = "";
     let newLine = false;
 
-    const sourceFile = (file: FileName, line: number, source: string) => {
+    const source = (file: FileName, line: number, text: string) => {
         if (file != currentFile) {
             const underline = "=".repeat(file.length);
             writeLine(`\n${file}\n${underline}\n`);
             currentFile = file;
         }
         currentLine = line;
-        sourceLine = source;
+        sourceLine = text;
         newLine = true;
     };
 
@@ -41,22 +41,21 @@ export const lister = (writeLine: OutputWriteLine) => {
 
     const arrow = ">".repeat(addressWidth + 1 + objectWidth);
 
-    const aLine = (
-        address: number,
-        code: GeneratedCode,
-        errorMessage: string
-    ) => {
-        if (newLine || code.length > 0) {
+    const error = (message: string) => {
+        writeLine(`${arrow} ${numberedLine(message)}`);
+    }
+
+    const code = (address: number, bytes: GeneratedCode) => {
+        if (newLine || bytes.length > 0) {
             writeLine(
-                `${object(address, code)} ${numberedLine(sourceLine)}`
+                `${object(address, bytes)} ${numberedLine(sourceLine)}`
             );
             sourceLine = "";
             newLine = false;
         }
-        if (errorMessage != "") {
-            writeLine(`${arrow} ${numberedLine(errorMessage)}`);
-        }
     };
 
-    return { "sourceFile": sourceFile, "aLine": aLine };
+    return { "source": source, "error": error, "code": code };
 };
+
+export type Lister = ReturnType<typeof lister>;

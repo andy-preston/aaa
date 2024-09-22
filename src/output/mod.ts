@@ -11,12 +11,17 @@ export const outputter = (fileName: FileName) => {
     let anyErrors = false;
 
     const source = (fileName: FileName, line: number, source: string) => {
-        listing.sourceFile(fileName, line, source);
+        listing.source(fileName, line, source);
     };
 
-    const output = (address: number, code: GeneratedCode, error: string) => {
-        listing.aLine(address, code, error);
-        if (error) {
+    const output = (
+        address: number,
+        code: GeneratedCode,
+        errors: Array<string>
+    ) => {
+        listing.code(address, code);
+        for (const message of errors) {
+            listing.error(message);
             anyErrors = true;
         }
         if (!anyErrors) {

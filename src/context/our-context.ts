@@ -27,7 +27,9 @@ export const createOurContext = () => {
             ).call(theirs);
             return result == undefined ? "" : `${result}`;
         } catch (error) {
-            error.message = `Javascript error: ${error.message}`;
+            if (error.name != "ReferenceError") {
+                error.message = `Javascript error: ${error.message}`;
+            }
             throw error;
         }
     };
@@ -49,10 +51,14 @@ export const createOurContext = () => {
     }
 
     const label = (name: string): void => {
-        if ("name" in theirs) {
-            throw new Error(`label ${name} already exists`);
+        if (!Object.hasOwn(theirs, name)) {
+            addProperty(theirs, name, ourContext.programMemoryPos);
         }
-        addProperty(theirs, name, ourContext.programMemoryPos);
+        else if (theirs[name] != ourContext.programMemoryPos) {
+            throw new ReferenceError(
+                `label ${name} already exists (${theirs[name]!.toString(16)})`
+            );
+        }
     };
 
     const programMemoryStep = (code: GeneratedCode): void => {
