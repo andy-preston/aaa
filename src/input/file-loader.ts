@@ -3,9 +3,8 @@ import type { FileName } from "./types.ts";
 
 type Line = [FileName, number, string];
 
-export const fileLoader = (topFileName: FileName) => {
+export const fileLoader = () => {
     const files = fileStack();
-    files.add(topFileName);
 
     const lines = function* (): Generator<Line, undefined, undefined> {
         let next: IteratorResult<[number, string]>;
