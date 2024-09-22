@@ -1,14 +1,16 @@
 import type { OurContext } from "../context/mod.ts";
 
-const buffer = {
-    "javascript": [] as Array<string>,
-    "assembler": [] as Array<string>
-};
+export const languageSplit = (ourContext: OurContext) => {
+    const buffer = {
+        "javascript": [] as Array<string>,
+        "assembler": [] as Array<string>
+    };
 
-type State = keyof typeof buffer;
+    type State = keyof typeof buffer;
 
-export const lineLoader = (ourContext: OurContext) => {
     let state: State = "assembler";
+
+    const scriptDelimiter = /({{|}})/;
 
     const change = (token: string) => {
         const newState: State = token == "{{" ? "javascript" : "assembler";
@@ -17,9 +19,6 @@ export const lineLoader = (ourContext: OurContext) => {
         }
         state = newState;
     };
-
-    buffer.javascript = [];
-    buffer.assembler = [];
 
     const usePart = (part: string) => {
         if (part == "{{") {
@@ -40,11 +39,11 @@ export const lineLoader = (ourContext: OurContext) => {
     };
 
     return (line: string): string => {
-        line.split(/({{|}})/).forEach(usePart);
+        line.split(scriptDelimiter).forEach(usePart);
         const assembler = buffer.assembler.join("");
         buffer.assembler = [];
         return assembler;
     };
 };
 
-export type LoadLine = ReturnType<typeof lineLoader>;
+export type SplitLine = ReturnType<typeof languageSplit>;
