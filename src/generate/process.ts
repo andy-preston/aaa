@@ -6,7 +6,7 @@ import { type Instruction, lineTokens } from "../source-line/mod.ts";
 type Address = number;
 type ErrorMessage = string;
 type Poked = boolean;
-type Processed = [Address, GeneratedCode, ErrorMessage, Poked];
+type Processed = [Address, GeneratedCode, ErrorMessage];
 
 export const processor = (ourContext: OurContext, peek: BufferPeek) => {
     const deviceCheck = deviceChecker(ourContext);
@@ -22,7 +22,7 @@ export const processor = (ourContext: OurContext, peek: BufferPeek) => {
 
     return function* (line: string): Generator<Processed, void, undefined> {
         for (const block of peek()) {
-            yield [ourContext.programMemoryPos, block, "", true];
+            yield [ourContext.programMemoryPos, block, ""];
             ourContext.programMemoryStep(block);
         }
         const instruction = nextInstruction(line);
@@ -35,7 +35,7 @@ export const processor = (ourContext: OurContext, peek: BufferPeek) => {
                 errorMessage = `${error.name}: ${error.message}`;
             }
         }
-        yield [ourContext.programMemoryPos, code, errorMessage, false]
+        yield [ourContext.programMemoryPos, code, errorMessage]
         ourContext.programMemoryStep(code);
     };
 };

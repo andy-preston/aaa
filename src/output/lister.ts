@@ -5,22 +5,24 @@ import type { OutputWriteLine } from "./file.ts";
 export const lister = (writeLine: OutputWriteLine) => {
     const addressWidth = 5;
     const objectWidth = 11;
-    let currentFileName = "";
-    let lineNumber = 0;
+    let currentFile = "";
+    let currentLine = 0;
     let sourceLine = "";
+    let newLine = false;
 
-    const sourceFile = (name: FileName, line: number, source: string) => {
-        if (name != currentFileName) {
-            const underline = "=".repeat(name.length);
-            writeLine(`\n${name}\n${underline}\n`);
-            currentFileName = name;
+    const sourceFile = (file: FileName, line: number, source: string) => {
+        if (file != currentFile) {
+            const underline = "=".repeat(file.length);
+            writeLine(`\n${file}\n${underline}\n`);
+            currentFile = file;
         }
-        lineNumber = line;
+        currentLine = line;
         sourceLine = source;
+        newLine = true;
     };
 
-    const numberedLine = (lineNumber: number, sourceLine: string) => {
-        const line = `${lineNumber + 1}`.padStart(4, " ");
+    const numberedLine = (sourceLine: string) => {
+        const line = `${currentLine + 1}`.padStart(4, " ");
         return `${line} ${sourceLine}`;
     };
 
@@ -44,13 +46,16 @@ export const lister = (writeLine: OutputWriteLine) => {
         code: GeneratedCode,
         errorMessage: string
     ) => {
-        writeLine(
-            `${object(address, code)} ${numberedLine(lineNumber, sourceLine)}`
-        );
-        if (errorMessage != "") {
-            writeLine(`${arrow} ${numberedLine(lineNumber, errorMessage)}`);
+        if (newLine || code.length > 0) {
+            writeLine(
+                `${object(address, code)} ${numberedLine(sourceLine)}`
+            );
+            sourceLine = "";
+            newLine = false;
         }
-        sourceLine = "";
+        if (errorMessage != "") {
+            writeLine(`${arrow} ${numberedLine(errorMessage)}`);
+        }
     };
 
     return { "sourceFile": sourceFile, "aLine": aLine };

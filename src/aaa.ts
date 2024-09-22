@@ -19,10 +19,8 @@ addDirectives(ourContext, loader.include, pokeBuf.poke);
 
 for (const [fileName, lineNumber, rawLine] of loader.lines()) {
     const line = split(rawLine);
-    for (const [address, code, errorMessage, poked] of process(line)) {
-        if (!poked) {
-            output.source(fileName, lineNumber, rawLine);
-        }
+    output.source(fileName, lineNumber, rawLine);
+    for (const [address, code, errorMessage] of process(line)) {
         output.output(address, code, errorMessage);
     }
 }
