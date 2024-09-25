@@ -1,5 +1,5 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import type { FileName } from "../input/mod.ts";
+import type { FileName } from "../input/file-loader.ts";
 import { outputFile } from "./file.ts";
 import { intelHex } from "./hex.ts";
 import { lister } from "./lister.ts";

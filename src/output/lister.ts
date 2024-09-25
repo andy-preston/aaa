@@ -1,5 +1,5 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import type { FileName } from "../input/mod.ts";
+import type { FileName } from "../input/file-loader.ts";
 import type { OutputWriteLine } from "./file.ts";
 
 export const lister = (writeLine: OutputWriteLine) => {
