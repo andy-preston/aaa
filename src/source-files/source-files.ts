@@ -1,6 +1,12 @@
 export type FileName = string;
-type Line = [FileName, number, string];
-type StackEntry = [FileName, IterableIterator<[number, string]>];
+
+type LineNumber = number;
+
+type RawSource = string;
+
+type Line = [FileName, LineNumber, RawSource];
+
+type StackEntry = [FileName, IterableIterator<[LineNumber, RawSource]>];
 
 let fileStack: Array<StackEntry> = [];
 
@@ -21,7 +27,7 @@ export const topFile = (fileName: FileName) => {
 }
 
 export const inputLines = function* (): Generator<Line, undefined, undefined> {
-    let next: IteratorResult<[number, string]>;
+    let next: IteratorResult<[LineNumber, RawSource]>;
     let file = currentFile();
     while (file != undefined) {
         next = file[1].next();
