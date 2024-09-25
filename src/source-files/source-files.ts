@@ -37,6 +37,8 @@ export const inputLines = function* (): Generator<Line, undefined, undefined> {
             const [lineNumber, rawLine] = next.value;
             yield [file[0], lineNumber, rawLine];
         }
+        // Bear in mind that another file could have been pushed on top
+        // by an include directive "whilst we weren't watching"
         file = currentFile();
     }
 };
