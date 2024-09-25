@@ -26,7 +26,7 @@ export const topFile = (fileName: FileName) => {
     fileStack = [stackEntry(fileName)];
 }
 
-export const inputLines = function* (): Generator<Line, undefined, undefined> {
+export const sourceLines = function* (): Generator<Line, undefined, undefined> {
     let next: IteratorResult<[LineNumber, RawSource]>;
     let file = currentFile();
     while (file != undefined) {

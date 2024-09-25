@@ -2,30 +2,33 @@ import { createOurContext } from "./context/mod.ts";
 import { addDirectives } from "./directives/mod.ts";
 import { pokeBuffer } from "./generate/mod.ts";
 import { processor } from "./generate/mod.ts";
-import { fileLoader } from "./input/mod.ts";
+import {
+    includeFile,
+    sourceLines,
+    topFile
+} from "./source-files/source-files.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { outputter } from "./output/mod.ts";
 import { languageSplit } from "./source-line/mod.ts";
 
-const topFile = "./file1.txt";
+const commandLineSourceFile = "./file1.txt";
 
 const ourContext = createOurContext();
 const pokeBuf = pokeBuffer();
-const loader = fileLoader();
 const split = languageSplit(ourContext);
 const converter = operandConverter(ourContext);
 const process = processor(ourContext, converter, pokeBuf.peek);
 
-addDirectives(ourContext, loader.include, pokeBuf.poke);
+addDirectives(ourContext, includeFile, pokeBuf.poke);
 
 for (const pass of [1, 2]) {
     if (pass == 2) {
         ourContext.programMemoryPos = 0;
         converter.secondPass();
     }
-    loader.include(topFile);
-    const output = pass == 1 ? undefined : outputter(topFile);
-    for (const [fileName, lineNumber, rawLine] of loader.lines()) {
+    topFile(commandLineSourceFile);
+    const output = pass == 1 ? undefined : outputter(commandLineSourceFile);
+    for (const [fileName, lineNumber, rawLine] of sourceLines()) {
         const line = split(rawLine);
         if (output != undefined) {
             output.source(fileName, lineNumber, rawLine);
