@@ -40,7 +40,7 @@ Deno.test("Operands must be defined, at least on the second pass", () => {
     assertThrows(
         () => converter.numeric("byte", "notDefined"),
         ReferenceError,
-        "Javascript error: notDefined is not defined"
+        "notDefined is not defined"
     );
 });
 

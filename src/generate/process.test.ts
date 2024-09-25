@@ -18,11 +18,20 @@ const processing = (context: OurContext, line: string) => {
 
 const findError = (process: ProcessGenerator, line: string, error: string) => {
     for (const processed of process(line)) {
-        if (processed[2] == error) {
+        if (processed[2].includes(error)) {
             return true;
         }
     }
     return false;
+}
+
+const noErrors = (process: ProcessGenerator, line: string) => {
+    for (const processed of process(line)) {
+        if (processed[2].length != 0) {
+            return false;
+        }
+    }
+    return true;
 }
 
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
@@ -76,9 +85,12 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
         operandConverter(context),
         pokeBuffer().peek
     );
-    assert(findError(process, "", ""));
-    assert(findError(process, "", ""));
-    assert(findError(process, "ADIW R26, 5", "No device selected"));
+    assert(noErrors(process, ""), "no error on blank line");
+    assert(noErrors(process, ""), "no error on blank line");
+    assert(
+        findError(process, "ADIW R26, 5", "No device selected"),
+        "error on instruction line"
+    );
 });
 
 Deno.test("The instruction set chosen check is only executed once", () => {
@@ -88,7 +100,10 @@ Deno.test("The instruction set chosen check is only executed once", () => {
         operandConverter(context),
         pokeBuffer().peek
     );
-    assert(findError(process, "ADIW R26, 5", "No device selected"));
-    assert(findError(process, "ADIW R26, 5", ""));
-    assert(findError(process, "ADIW R26, 5", ""));
+    assert(
+        findError(process, "ADIW R26, 5", "No device selected"),
+        "error on instruction line"
+    );
+    assert(noErrors(process, "ADIW R26, 5"), "no error on blank line");
+    assert(noErrors(process, "ADIW R26, 5"), "no error on blank line");
 });
