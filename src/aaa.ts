@@ -8,7 +8,7 @@ import {
     topFile
 } from "./source-files/source-files.ts";
 import { operandConverter } from "./operands/mod.ts";
-import { outputter } from "./output/mod.ts";
+import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
 import { languageSplit, newSplitter } from "./source-line/mod.ts";
 
 const commandLineSourceFile = "./file1.txt";
@@ -25,21 +25,21 @@ for (const pass of [1, 2]) {
     if (pass == 2) {
         ourContext.programMemoryPos = 0;
         converter.secondPass();
+        newOutput(commandLineSourceFile);
     }
     topFile(commandLineSourceFile);
-    const output = pass == 1 ? undefined : outputter(commandLineSourceFile);
     for (const [fileName, lineNumber, rawLine] of sourceLines()) {
         const line = languageSplit(rawLine);
-        if (output != undefined) {
-            output.source(fileName, lineNumber, rawLine);
+        if (pass == 2) {
+            listSource(fileName, lineNumber, rawLine);
         }
         for (const [address, code, errorMessages] of process(line)) {
-            if (output != undefined) {
-                output.output(address, code, errorMessages);
+            if (pass == 2) {
+                output(address, code, errorMessages);
             }
         }
     }
-    if (output != undefined) {
-        output.close();
+    if (pass == 2) {
+        closeOutput();
     }
 }

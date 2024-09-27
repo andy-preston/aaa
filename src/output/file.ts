@@ -1,18 +1,20 @@
-export const outputFile = (fileName: string, extension: string) => {
-    const encoder = new TextEncoder();
+const encoder = new TextEncoder();
 
-    const theFile = Deno.openSync(
+let theFile: Deno.FsFile;
+
+export const openFile = (fileName: string, extension: string) => {
+    theFile = Deno.openSync(
         fileName.substring(0, fileName.lastIndexOf(".")) + extension,
         { create: true, write: true, truncate: true }
     );
-
-    return {
-        "writeLine": (text: string) =>
-            theFile.writeSync(encoder.encode(`${text}\n`)),
-        "close": () => theFile.close()
-    };
 };
 
-type OutputFile = ReturnType<typeof outputFile>;
+export const writeFile = (text: string) => {
+    theFile.writeSync(encoder.encode(`${text}\n`));
+};
 
-export type OutputWriteLine = OutputFile["writeLine"];
+export const closeFile = () => {
+    theFile.close();
+};
+
+export type WriteFile = typeof writeFile;

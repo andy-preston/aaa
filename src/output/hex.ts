@@ -1,53 +1,49 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import type { OutputWriteLine } from "./file.ts";
-import { byteBuffer } from "./hex-buffer.ts";
-import { checksum } from "./hex-checksum.ts";
-import { record } from "./hex-record.ts";
+import { WriteFile } from "./file.ts";
+import {
+    addBytesToBuffer,
+    byteBufferAddress,
+    byteBufferHasAtLeast,
+    bytePairsFromBuffer,
+    isContinuous,
+    restartAt
+} from "./hex-buffer.ts";
+import { addTwoToRecord, newRecord, recordAsString } from "./hex-record.ts";
 
-export const intelHex = () => {
-    const dataRecords: Array<string> = [];
+let dataRecords: Array<string>;
 
-    const bytes = byteBuffer(0);
+export const newHexFile = () => {
+    dataRecords = [];
+}
 
-    const saveRecords = (limit: number) => {
-        while (bytes.has(limit)) {
-            const recordSize = bytes.recordSize();
-            const baseAddress = bytes.baseAddress();
-            const check = checksum(baseAddress, recordSize);
-            const theRecord = record(baseAddress, recordSize);
-            for (let index = 0; index < recordSize; index += 2) {
-                const [first, second] = bytes.getTwo();
-                check.byte(first);
-                check.byte(second);
-                theRecord.addTwo(first, second);
-            }
-            dataRecords.push(theRecord.asString(check.sum()));
+const saveRecordsFromByteBuffer = (minimumRecordSize: 1 | 16) => {
+    while (byteBufferHasAtLeast(minimumRecordSize)) {
+        newRecord(byteBufferAddress());
+        for (const [first, second] of bytePairsFromBuffer()) {
+            addTwoToRecord(first, second);
         }
-    };
-
-    const add = (wordAddress: number, code: GeneratedCode) => {
-        const newAddress = wordAddress * 2;
-        if (!bytes.isContinuous(newAddress)) {
-            saveRecords(1);
-            bytes.restartAt(newAddress);
-        }
-        bytes.add(code);
-        if (bytes.has(16)) {
-            saveRecords(16);
-        }
-    };
-
-    const save = (writeLine: OutputWriteLine) => {
-        saveRecords(1);
-        // extended segment address always zero unless something has more
-        // than 64K of flash - bear in mind this applies to the ATMega 1284
-        // which I do want to support
-        writeLine(":020000020000FC");
-        dataRecords.forEach(writeLine);
-        writeLine(":00000001FF");
-    };
-
-    return { "add": add, "save": save };
+        dataRecords.push(recordAsString());
+    }
 };
 
-export type IntelHex = ReturnType<typeof intelHex>;
+export const codeForHex = (wordAddress: number, code: GeneratedCode) => {
+    const newAddress = wordAddress * 2;
+    if (!isContinuous(newAddress)) {
+        saveRecordsFromByteBuffer(1);
+        restartAt(newAddress);
+    }
+    addBytesToBuffer(code);
+    if (byteBufferHasAtLeast(16)) {
+        saveRecordsFromByteBuffer(16);
+    }
+};
+
+export const saveHexFile = (writeFile: WriteFile) => {
+    saveRecordsFromByteBuffer(1);
+    // extended segment address always zero unless something has more
+    // than 64K of flash - bear in mind this applies to the ATMega 1284
+    // which I do want to support
+    writeFile(":020000020000FC");
+    dataRecords.forEach(writeFile);
+    writeFile(":00000001FF");
+};

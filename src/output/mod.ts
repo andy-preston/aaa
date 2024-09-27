@@ -1,44 +1,42 @@
 import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../source-files/source-files.ts";
-import { outputFile } from "./file.ts";
-import { intelHex } from "./hex.ts";
-import { lister } from "./lister.ts";
+import { closeFile, openFile, writeFile } from "./file.ts";
+import { codeForHex, newHexFile, saveHexFile } from "./hex.ts";
+import { listCode, listError, newListing } from "./listing.ts";
 
-export const outputter = (fileName: FileName) => {
-    const listFile = outputFile(fileName, ".lst");
-    const listing = lister(listFile.writeLine);
-    const hex = intelHex();
-    let anyErrors = false;
+export { listSource } from "./listing.ts";
 
-    const source = (fileName: FileName, line: number, source: string) => {
-        listing.source(fileName, line, source);
-    };
+let baseName: string;
+let anyErrors: boolean;
 
-    const output = (
-        address: number,
-        code: GeneratedCode,
-        errors: Array<string>
-    ) => {
-        listing.code(address, code);
-        for (const message of errors) {
-            listing.error(message);
-            anyErrors = true;
-        }
-        if (!anyErrors) {
-            hex.add(address, code);
-        }
-    };
-
-    const close = () => {
-        listFile.close();
-        if (!anyErrors) {
-            const hexFile = outputFile(fileName, ".hex");
-            hex.save(hexFile.writeLine);
-            hexFile.close();
-        }
-    };
-
-    return { "source": source, "output": output, "close": close };
+export const newOutput = (topFileName: FileName) => {
+    baseName = topFileName;
+    openFile(baseName, ".lst");
+    newListing(writeFile);
+    newHexFile();
+    anyErrors = false;
 };
 
-export type Output = ReturnType<typeof outputter>["output"];
+export const output = (
+    address: number,
+    code: GeneratedCode,
+    errors: Array<string>
+) => {
+    listCode(address, code);
+    for (const message of errors) {
+        listError(message);
+        anyErrors = true;
+    }
+    if (!anyErrors) {
+        codeForHex(address, code);
+    }
+};
+
+export const closeOutput = () => {
+    closeFile();
+    if (!anyErrors) {
+        openFile(baseName, ".hex");
+        saveHexFile(writeFile);
+        closeFile();
+    }
+};
