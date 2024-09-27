@@ -1,6 +1,7 @@
 import { assert, assertEquals } from "assert";
 import {
     type OurContext,
+    chooseDevice,
     createOurContext,
     theirContext
 } from "../context/mod.ts";
@@ -9,12 +10,12 @@ import { pokeBuffer } from "./poke-buffer.ts";
 import { operandConverter } from "../operands/mod.ts";
 
 const processing = (context: OurContext, line: string) => {
-    context.device = "dummy";
     const process = processor(
         context,
         operandConverter(context),
         pokeBuffer().peek
     );
+    chooseDevice("dummy", {});
     for (const _ of process(line)) {
         // pass
     }
@@ -74,13 +75,12 @@ Deno.test("Labels are saved at the current programMemoryPos", () => {
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
     const theirs = theirContext()
     const ours = createOurContext(theirs);
-    context.device = "dummy";
-    context.unsupportedInstructions = ["ADIW"];
     const process = processor(
         ours,
         operandConverter(ours),
         pokeBuffer().peek
     );
+    chooseDevice("dummy", { "unsupportedInstructions": ["ADIW"] });
     assert(findError(process, "ADIW R26, 5", "ADIW is not available on dummy"));
 });
 

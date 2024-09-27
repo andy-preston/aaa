@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { createOurContext } from "../context/mod.ts";
+import { chooseDevice, createOurContext, newDeviceChecker } from "../context/mod.ts";
 import { orgDirective } from "./org-directive.ts";
 import { theirContext } from "../context/their-context.ts";
 

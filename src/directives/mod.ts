@@ -19,7 +19,7 @@ export const addDirectives = (
     poke: BufferPoke
 ) => {
     addDirective(context.theirs, "include", include);
-    addDirective(context.theirs, "device", deviceDirective(context));
+    addDirective(context.theirs, "device", deviceDirective);
     addDirective(context.theirs, "org", orgDirective(context));
     addDirective(context.theirs, "poke", pokeDirective(poke));
 };

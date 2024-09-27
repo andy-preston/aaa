@@ -32,22 +32,6 @@ export const createOurContext = (theirs: TheirContext) => {
         }
     };
 
-    const chooseDevice = (deviceSpec: object) => {
-        for (const [key, value] of Object.entries(deviceSpec)) {
-            switch (key) {
-                case "unsupportedInstructions":
-                    ourContext[key] = value as Array<string>;
-                    break;
-                case "programEnd":
-                    ourContext.theirs[key] = Math.floor(value as number / 2);
-                    break;
-                default:
-                    addProperty(theirs, key, value as number);
-                    break;
-            }
-        }
-    }
-
     const label = (name: string): void => {
         if (!Object.hasOwn(theirs, name)) {
             addProperty(theirs, name, ourContext.programMemoryPos);
@@ -65,9 +49,6 @@ export const createOurContext = (theirs: TheirContext) => {
     };
 
     const ourContext = {
-        "device": "",
-        "unsupportedInstructions": [] as Array<string>,
-        "chooseDevice": chooseDevice,
         // This, at the very least, effects how the LDS/STS instructions
         // are generated.
         "reducedCore": false,

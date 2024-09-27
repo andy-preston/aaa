@@ -1,5 +1,8 @@
-import { deviceChecker } from "../context/mod.ts";
-import type { OurContext } from "../context/mod.ts";
+import {
+    type OurContext,
+    deviceCheck,
+    newDeviceChecker
+} from "../context/mod.ts";
 import type { BufferPeek } from "./poke-buffer.ts";
 import { translator } from "./translator.ts";
 import type { GeneratedCode } from "./types.ts";
@@ -15,7 +18,7 @@ export const processor = (
     operandConverter: OperandConverter,
     peek: BufferPeek
 ) => {
-    const deviceCheck = deviceChecker(ourContext);
+    newDeviceChecker(ourContext.theirs);
     const translation = translator(ourContext, operandConverter);
     let errorMessages: Array<string>;
 
