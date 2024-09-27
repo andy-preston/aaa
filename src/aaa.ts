@@ -6,7 +6,7 @@ import {
     includeFile,
     sourceLines,
     topFile
-} from "./source-files/source-files.ts";
+} from "./source/source-files.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
 import { languageSplit, newSplitter } from "./source-line/mod.ts";
