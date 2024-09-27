@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
 import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, translator } from "../generate/mod.ts";
-import type { Instruction } from "../source-line/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 import { operandConverter } from "../operands/mod.ts";
 
 export type Tests = Array<[Instruction, GeneratedCode]>;

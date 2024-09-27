@@ -1,7 +1,7 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { OurContext } from "../context/mod.ts";
 import type { OperandConverter } from "../operands/mod.ts";
-import type { Instruction } from "../source-line/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
 export const translator = (

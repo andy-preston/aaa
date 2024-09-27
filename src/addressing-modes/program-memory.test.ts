@@ -1,7 +1,7 @@
 import { assertThrows } from "assert";
 import { createOurContext } from "../context/mod.ts";
 import { translator } from "../generate/mod.ts";
-import type { Instruction } from "../source-line/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 import { type Tests, testDescription, testing } from "./testing.ts";
 import { operandConverter } from "../operands/mod.ts";
 

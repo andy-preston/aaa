@@ -1,5 +1,5 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import type { FileName } from "../source/source-files.ts";
+import type { FileName } from "../source-code/mod.ts";
 import type { WriteFile } from "./file.ts";
 
 const addressWidth = 5;

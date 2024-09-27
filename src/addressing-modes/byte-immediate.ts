@@ -1,7 +1,7 @@
 import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, SymbolicOperand} from "../operands/mod.ts";
-import type { Instruction } from "../source-line/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["CPI", "0011"],

@@ -1,4 +1,4 @@
-import type { Mnemonic } from "../../source-line/tokens.ts";
+import type { Mnemonic } from "../../source-code/mod.ts";
 
 const unsupportedInstructionGroups = {
     "multiply": ["MUL", "MULS", "MULSU", "FMUL", "FMULS", "FMULSU"],

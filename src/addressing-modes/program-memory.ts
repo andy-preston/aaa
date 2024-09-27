@@ -1,7 +1,7 @@
 import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
-import type { Instruction } from "../source-line/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM", "1001_0101 111b_1000"], //     Implied Z OR explicit Z+

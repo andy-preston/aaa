@@ -4,12 +4,13 @@ import { pokeBuffer } from "./generate/mod.ts";
 import { processor } from "./generate/mod.ts";
 import {
     includeFile,
+    languageSplit,
+    newSplitter,
     sourceLines,
     topFile
-} from "./source/source-files.ts";
+} from "./source-code/mod.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
-import { languageSplit, newSplitter } from "./source-line/mod.ts";
 
 const commandLineSourceFile = "./file1.txt";
 

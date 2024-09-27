@@ -5,7 +5,7 @@ import {
     type OperandIndex,
     operandMessage
 } from "../operands/mod.ts";
-import type { Instruction } from "../source-line/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]> =
     new Map([
