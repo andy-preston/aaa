@@ -9,13 +9,13 @@ import {
 } from "./source-files/source-files.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { outputter } from "./output/mod.ts";
-import { languageSplit } from "./source-line/mod.ts";
+import { languageSplit, newSplitter } from "./source-line/mod.ts";
 
 const commandLineSourceFile = "./file1.txt";
 
 const ourContext = createOurContext();
 const pokeBuf = pokeBuffer();
-const split = languageSplit(ourContext);
+newSplitter(ourContext);
 const converter = operandConverter(ourContext);
 const process = processor(ourContext, converter, pokeBuf.peek);
 
@@ -29,7 +29,7 @@ for (const pass of [1, 2]) {
     topFile(commandLineSourceFile);
     const output = pass == 1 ? undefined : outputter(commandLineSourceFile);
     for (const [fileName, lineNumber, rawLine] of sourceLines()) {
-        const line = split(rawLine);
+        const line = languageSplit(rawLine);
         if (output != undefined) {
             output.source(fileName, lineNumber, rawLine);
         }
