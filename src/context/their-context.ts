@@ -2,7 +2,7 @@ import type { Directive } from "../directives/mod.ts";
 
 type SimpleFunction = (_: number) => number;
 
-interface TheirContext {
+export interface TheirContext {
     "low": (n: number) => number;
     "high": (n: number) => number;
     "programEnd": number;

@@ -1,5 +1,9 @@
 import { assert, assertEquals } from "assert";
-import { type OurContext, createOurContext } from "../context/mod.ts";
+import {
+    type OurContext,
+    createOurContext,
+    theirContext
+} from "../context/mod.ts";
 import { ProcessGenerator, processor } from "./process.ts";
 import { pokeBuffer } from "./poke-buffer.ts";
 import { operandConverter } from "../operands/mod.ts";
@@ -35,16 +39,17 @@ const noErrors = (process: ProcessGenerator, line: string) => {
 }
 
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
-    const context = createOurContext();
-    assertEquals(context.programMemoryPos, 0);
-    processing(context, "INC R5");
-    assertEquals(context.programMemoryPos, 1);
-    processing(context, "MOV R5, R6");
-    assertEquals(context.programMemoryPos, 2);
+    const theirs = theirContext();
+    const ours = createOurContext(theirs);
+    assertEquals(ours.programMemoryPos, 0);
+    processing(ours, "INC R5");
+    assertEquals(ours.programMemoryPos, 1);
+    processing(ours, "MOV R5, R6");
+    assertEquals(ours.programMemoryPos, 2);
 });
 
 Deno.test("programMemoryPos can be set from the context i.e. by embedded JS", () => {
-    const context = createOurContext();
+    const context = createOurContext(theirContext());
     assertEquals(context.programMemoryPos, 0);
     processing(context, "INC R5");
     assertEquals(context.programMemoryPos, 1);
@@ -54,7 +59,7 @@ Deno.test("programMemoryPos can be set from the context i.e. by embedded JS", ()
 });
 
 Deno.test("Labels are saved at the current programMemoryPos", () => {
-    const context = createOurContext();
+    const context = createOurContext(theirContext());
     assertEquals(context.programMemoryPos, 0);
     processing(context, "label1: INC R5");
     assertEquals(context.theirs.label1, 0);
@@ -67,19 +72,20 @@ Deno.test("Labels are saved at the current programMemoryPos", () => {
 });
 
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
-    const context = createOurContext();
+    const theirs = theirContext()
+    const ours = createOurContext(theirs);
     context.device = "dummy";
     context.unsupportedInstructions = ["ADIW"];
     const process = processor(
-        context,
-        operandConverter(context),
+        ours,
+        operandConverter(ours),
         pokeBuffer().peek
     );
     assert(findError(process, "ADIW R26, 5", "ADIW is not available on dummy"));
 });
 
 Deno.test("If no device is chosen, warn after the first assembly line", () => {
-    const context = createOurContext();
+    const context = createOurContext(theirContext());
     const process = processor(
         context,
         operandConverter(context),
@@ -94,7 +100,7 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
 });
 
 Deno.test("The instruction set chosen check is only executed once", () => {
-    const context = createOurContext();
+    const context = createOurContext(theirContext());
     const process = processor(
         context,
         operandConverter(context),

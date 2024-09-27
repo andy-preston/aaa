@@ -1,5 +1,5 @@
 import { assertThrows } from "assert";
-import { createOurContext } from "../context/mod.ts";
+import { createOurContext, theirContext } from "../context/mod.ts";
 import { translator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 import { operandConverter } from "../operands/mod.ts";
@@ -14,7 +14,7 @@ const tests: Tests = [
     [["RJMP",  ["forward"]], [0xc0, 0x03]]
 ];
 
-const context = createOurContext();
+const context = createOurContext(theirContext());
 context.theirs.back = 0x00;
 context.theirs.forward = 0x0a
 context.programMemoryPos = 0x03;

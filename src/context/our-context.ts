@@ -1,9 +1,7 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import { addProperty, theirContext } from "./their-context.ts";
+import { type TheirContext, addProperty } from "./their-context.ts";
 
-export const createOurContext = () => {
-    const theirs = theirContext();
-
+export const createOurContext = (theirs: TheirContext) => {
     const returnIfExpression = (trimmedJs: string): string => {
         // This is both "magic" and "clever", so it could well turn out to
         // be a massive annoyance and have to be removed.

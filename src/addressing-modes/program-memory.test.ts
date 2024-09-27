@@ -1,5 +1,5 @@
 import { assertThrows } from "assert";
-import { createOurContext } from "../context/mod.ts";
+import { createOurContext, theirContext } from "../context/mod.ts";
 import { translator } from "../generate/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 import { type Tests, testDescription, testing } from "./testing.ts";
@@ -20,7 +20,7 @@ const tests: Tests = [
     [["LPM",  ["R26", "Z+"]], [0x91, 0xa5]]
 ];
 
-testing(tests, createOurContext());
+testing(tests, createOurContext(theirContext()));
 
 const failingTests: Array<Instruction> = [
     ["SPM", ["-X"]],
@@ -28,7 +28,7 @@ const failingTests: Array<Instruction> = [
 ];
 
 for (const test of failingTests) {
-    const context = createOurContext();
+    const context = createOurContext(theirContext());
     const translate = translator(context, operandConverter(context));
     Deno.test(`Bad syntax: ${testDescription(test)}`, () => {
         assertThrows(

@@ -11,10 +11,11 @@ import {
 } from "./source-code/mod.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
+import { theirContext } from "./context/their-context.ts";
 
 const commandLineSourceFile = "./file1.txt";
 
-const ourContext = createOurContext();
+const ourContext = createOurContext(theirContext());
 const pokeBuf = pokeBuffer();
 newSplitter(ourContext);
 const converter = operandConverter(ourContext);

@@ -1,5 +1,5 @@
 import { assertThrows } from "assert";
-import { createOurContext } from "../context/mod.ts";
+import { createOurContext, theirContext } from "../context/mod.ts";
 import { translator } from "../generate/mod.ts";
 import { type Tests, testing } from "./testing.ts";
 import { operandConverter } from "../operands/mod.ts";
@@ -28,10 +28,10 @@ const tests: Tests = [
     [["ST", ["-Z",  "R9"]], [0x92, 0x92]]
 ];
 
-testing(tests, createOurContext());
+testing(tests, createOurContext(theirContext()));
 
 Deno.test("Bad symbolic operand for LD", () => {
-    const context = createOurContext()
+    const context = createOurContext(theirContext())
     const translate = translator(context, operandConverter(context));
     assertThrows(
         () => translate(["LD", ["R15", "-Q"]]),
@@ -41,7 +41,7 @@ Deno.test("Bad symbolic operand for LD", () => {
 });
 
 Deno.test("Bad symbolic operand for ST", () => {
-    const context = createOurContext()
+    const context = createOurContext(theirContext())
     const translate = translator(context, operandConverter(context));
     assertThrows(
         () => translate(["ST", ["plop", "R16"]]),

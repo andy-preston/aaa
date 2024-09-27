@@ -1,33 +1,33 @@
 import { assertEquals, assertThrows } from "assert";
 import { createOurContext } from "./our-context.ts";
-import { addDirective } from "./their-context.ts";
+import { addDirective, theirContext } from "./their-context.ts";
 
 Deno.test("Simple expressions do not require a `return`", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     const result = ourContext.execute("20 / 2");
     assertEquals(result, "10");
 });
 
 Deno.test("...but you can include one if you want", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     const result = ourContext.execute("return R20 / 2");
     assertEquals(result, "10");
 });
 
 Deno.test("If the result is undefined, execute returns empty string", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     const result = ourContext.execute("undefined;");
     assertEquals(result, "");
 });
 
 Deno.test("A plain assignment will not return a value", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     const result = ourContext.execute("this.test = 4;");
     assertEquals(result, "");
 });
 
 Deno.test("Javascript can contain newlines", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     const result = ourContext.execute(
         "this.test1 = 4;\nthis.test2 = 6;\n return test1 + test2;"
     );
@@ -35,7 +35,7 @@ Deno.test("Javascript can contain newlines", () => {
 });
 
 Deno.test("An unknown variable throws a reference error", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     assertThrows(
         () => ourContext.execute("this.test = plop * 10;"),
         ReferenceError,
@@ -48,14 +48,14 @@ Deno.test("Any directives that are added can be called as functions", () => {
     const testDirective = (parameter: string): void => {
         directiveParameter = parameter;
     };
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     addDirective(ourContext.theirs, "testDirective", testDirective);
     ourContext.execute("testDirective('says hello')");
     assertEquals(directiveParameter, "says hello");
 });
 
 Deno.test("Syntax errors get thrown too", () => {
-    const ourContext = createOurContext();
+    const ourContext = createOurContext(theirContext());
     assertThrows(
         () => ourContext.execute("this is just nonsense"),
         SyntaxError,
