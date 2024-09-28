@@ -1,4 +1,4 @@
-import { execute } from "../context/context.ts";
+import { execute } from "../context/mod.ts";
 import { operandMessage } from "./message.ts";
 import {
     type OperandType,

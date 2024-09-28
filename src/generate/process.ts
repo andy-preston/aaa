@@ -1,14 +1,14 @@
 import {
     deviceCheck,
+    label,
     newDeviceChecker
 } from "../context/mod.ts";
+import { programMemoryAddress, programMemoryStep } from "../generate/mod.ts";
+import type { OperandConverter } from "../operands/mod.ts";
 import type { BufferPeek } from "./poke-buffer.ts";
+import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
 import { translator } from "./translator.ts";
 import type { GeneratedCode } from "./types.ts";
-import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
-import type { OperandConverter } from "../operands/mod.ts";
-import { label } from "../context/context.ts";
-import { programMemoryAddress, programMemoryStep } from "../generate/mod.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;

@@ -1,4 +1,11 @@
-export { addDirective } from "./context.ts";
+export {
+    addCoupledProperty,
+    addDirective,
+    addProperty,
+    execute,
+    label,
+    newContext
+} from "./context.ts";
 export {
     chooseDevice,
     deviceCheck,

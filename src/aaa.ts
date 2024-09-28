@@ -1,4 +1,9 @@
-import { addDirective, deviceDirective } from "./context/mod.ts";
+import {
+    addCoupledProperty,
+    addDirective,
+    deviceDirective,
+    newContext
+} from "./context/mod.ts";
 import {
     getProgramMemoryEnd,
     pokeBuffer,
@@ -14,7 +19,6 @@ import {
 } from "./source-code/mod.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
-import { addCoupledProperty, newContext } from "./context/context.ts";
 import { pokeDirective } from "./directives/poke-directive.ts";
 
 const commandLineSourceFile = "./file1.txt";

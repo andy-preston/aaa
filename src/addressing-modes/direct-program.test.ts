@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import { label, newContext } from "../context/context.ts";
+import { label, newContext } from "../context/mod.ts";
 import { programMemoryOrigin, translator } from "../generate/mod.ts";
 import { operandConverter } from "../operands/mod.ts";
 import { description, type Tests } from "./testing.ts";

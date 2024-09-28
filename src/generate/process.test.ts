@@ -1,11 +1,14 @@
 import { assert, assertEquals } from "assert";
-import { chooseDevice } from "../context/mod.ts";
+import {
+    chooseDevice,
+    execute,
+    newContext,
+    newDeviceChecker
+ } from "../context/mod.ts";
+import { programMemoryAddress, programMemoryOrigin } from "../generate/mod.ts";
+import { operandConverter } from "../operands/mod.ts";
 import { ProcessGenerator, processor } from "./process.ts";
 import { pokeBuffer } from "./poke-buffer.ts";
-import { operandConverter } from "../operands/mod.ts";
-import { programMemoryAddress, programMemoryOrigin } from "../generate/mod.ts";
-import { execute, newContext } from "../context/context.ts";
-import { newDeviceChecker } from "../context/device.ts";
 
 const processing = (line: string) => {
     const process = processor(
@@ -25,7 +28,7 @@ const findError = (process: ProcessGenerator, line: string, error: string) => {
         }
     }
     return false;
-}
+};
 
 const noErrors = (process: ProcessGenerator, line: string) => {
     for (const processed of process(line)) {
@@ -34,7 +37,7 @@ const noErrors = (process: ProcessGenerator, line: string) => {
         }
     }
     return true;
-}
+};
 
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
     programMemoryOrigin(0);
