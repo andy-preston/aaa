@@ -8,7 +8,7 @@ import type { GeneratedCode } from "./types.ts";
 import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
 import type { OperandConverter } from "../operands/mod.ts";
 import { label } from "../context/context.ts";
-import { programMemoryAddress, programMemoryStep } from "../context/program-memory.ts";
+import { programMemoryAddress, programMemoryStep } from "../generate/mod.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;

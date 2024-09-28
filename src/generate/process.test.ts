@@ -3,7 +3,7 @@ import { chooseDevice } from "../context/mod.ts";
 import { ProcessGenerator, processor } from "./process.ts";
 import { pokeBuffer } from "./poke-buffer.ts";
 import { operandConverter } from "../operands/mod.ts";
-import { programMemoryAddress, programMemoryOrigin } from "../context/program-memory.ts";
+import { programMemoryAddress, programMemoryOrigin } from "../generate/mod.ts";
 import { execute, newContext } from "../context/context.ts";
 import { newDeviceChecker } from "../context/device.ts";
 

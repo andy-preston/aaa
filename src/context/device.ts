@@ -1,6 +1,6 @@
 import type { Mnemonic } from "../source-code/mod.ts";
 import { addProperty } from "./context.ts";
-import { setProgramMemoryEnd } from "./program-memory.ts";
+import { setProgramMemoryEnd } from "../generate/mod.ts";
 
 let deviceErrorShown: boolean;
 let unsupportedInstructions: Array<string>;

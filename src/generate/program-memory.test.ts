@@ -1,8 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
-import { chooseDevice, newDeviceChecker } from "./device.ts";
-import { programMemoryAddress, programMemoryOrigin } from "./program-memory.ts";
-import { addCoupledProperty, newContext } from "./context.ts";
-import { getProgramMemoryEnd } from "./program-memory.ts";
+import { chooseDevice, newDeviceChecker } from "../context/device.ts";
+import {
+    getProgramMemoryEnd,
+    programMemoryAddress,
+    programMemoryOrigin
+} from "../generate/mod.ts";
+import { addCoupledProperty, newContext } from "../context/context.ts";
 
 Deno.test("org addresses can't be less than zero", () => {
     assertThrows(

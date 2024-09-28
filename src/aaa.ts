@@ -1,6 +1,10 @@
 import { addDirective, deviceDirective } from "./context/mod.ts";
-import { pokeBuffer } from "./generate/mod.ts";
-import { processor } from "./generate/mod.ts";
+import {
+    getProgramMemoryEnd,
+    pokeBuffer,
+    programMemoryOrigin,
+    processor
+} from "./generate/mod.ts";
 import {
     includeFile,
     languageSplit,
@@ -11,7 +15,6 @@ import {
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
 import { addCoupledProperty, newContext } from "./context/context.ts";
-import { getProgramMemoryEnd, programMemoryOrigin } from "./context/program-memory.ts";
 import { pokeDirective } from "./directives/poke-directive.ts";
 
 const commandLineSourceFile = "./file1.txt";

@@ -1,4 +1,4 @@
-import { programMemoryAddress } from "../context/program-memory.ts";
+import { programMemoryAddress } from "../generate/mod.ts";
 import { operandMessage } from "./message.ts";
 import type { NumericOperand, SymbolicOperand } from "./types.ts";
 

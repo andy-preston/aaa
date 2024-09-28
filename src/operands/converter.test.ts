@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { operandConverter } from "./converter.ts";
-import { programMemoryOrigin } from "../context/program-memory.ts";
+import { programMemoryOrigin } from "../generate/mod.ts";
 import { newContext } from "../context/context.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
