@@ -1,5 +1,9 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
+import {
+    type SymbolicOperands,
+    numericOperand,
+    symbolicOperand,
+} from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -26,10 +30,7 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
     }
 };
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
@@ -38,7 +39,7 @@ export const encode = (
     validIndexOperand(isStore, operands);
     const register =
         !isStore && operands.length == 2
-            ? convert.numeric("register", operands[0]!)
+            ? numericOperand("register", operands[0]!)
             : undefined;
     if (isStore) {
         return template(mapping.get(mnemonic)!, [
@@ -49,7 +50,7 @@ export const encode = (
         return template(mapping.get(mnemonic)!, []);
     }
     // This is still a bit horrible and needs more work
-    const index = convert.symbolic(operands[1]!);
+    const index = symbolicOperand(operands[1]!);
     return template(mapping.get(`${mnemonic}.${index}`)!, [
         ["d", register]
     ]);

@@ -2,11 +2,10 @@ import { programMemoryAddress } from "../generate/mod.ts";
 import { operandMessage } from "./message.ts";
 import type { NumericOperand, SymbolicOperand } from "./types.ts";
 
-export type OperandType = [
-    string,
-    (operand: SymbolicOperand) => boolean,
-    (operand: SymbolicOperand) => NumericOperand
-];
+type Description = string;
+type Validator = (operand: SymbolicOperand) => boolean;
+type NumericValue = (operand: SymbolicOperand) => NumericOperand;
+export type OperandType = [Description, Validator, NumericValue];
 
 type OperandValue = (operand: SymbolicOperand) => string;
 

@@ -19,17 +19,16 @@ import {
     sourceLines,
     topFile
 } from "./source-code/mod.ts";
-import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
+import { setPass } from "./operands/mod.ts";
 
 const commandLineSourceFile = "./file1.txt";
 
 newContext();
 newPokeBuffer();
 newSplitter();
-const converter = operandConverter();
 newDeviceChecker();
-const process = processor(converter);
+const process = processor();
 
 addDirective("include", includeFile);
 addDirective("device", deviceDirective);
@@ -41,7 +40,7 @@ addCoupledProperty("progmemEnd", getProgramMemoryEnd);
 for (const pass of [1, 2]) {
     if (pass == 2) {
         programMemoryOrigin(0);
-        converter.secondPass();
+        setPass(pass);
         newOutput(commandLineSourceFile);
     }
     topFile(commandLineSourceFile);

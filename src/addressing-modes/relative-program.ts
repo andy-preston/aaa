@@ -1,5 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter } from "../operands/mod.ts";
+import { checkOperandCount, numericOperand } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -7,18 +7,15 @@ const mapping: Map<string, string> = new Map([
     ["RJMP", "0"]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    convert.checkCount(operands, ["relativeJump"]);
+    checkOperandCount(operands, ["relativeJump"]);
     const absoluteAddress = operands[0]!;
     const operationBit = mapping.get(mnemonic)!;
     return template(`110${operationBit}_kkkk kkkk_kkkk`, [
-        ["k", convert.numeric("relativeJump", absoluteAddress)]
+        ["k", numericOperand("relativeJump", absoluteAddress)]
     ]);
 };

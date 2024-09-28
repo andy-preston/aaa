@@ -1,5 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter } from "../operands/mod.ts";
+import { checkOperandCount, numericOperand } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -9,21 +9,18 @@ const mapping: Map<string, string> = new Map([
     ["SBRS", "11"]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    convert.checkCount(operands, ["register", "bitIndex"]);
+    checkOperandCount(operands, ["register", "bitIndex"]);
     const operationBits = mapping.get(mnemonic)!;
     // In the official documentation, some of these have
     // "#### ###r rrrr #bbb" as their template rather than "d dddd".
     // e.g. `BLD Rd, b` has "d dddd" but `SBRS Rd, b` has "r rrrr".
     return template(`1111_1${operationBits}d dddd_0bbb`, [
-        ["d", convert.numeric("register", operands[0]!)],
-        ["b", convert.numeric("bitIndex", operands[1]!)]
+        ["d", numericOperand("register", operands[0]!)],
+        ["b", numericOperand("bitIndex", operands[1]!)]
     ]);
 };

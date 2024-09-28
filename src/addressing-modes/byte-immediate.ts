@@ -1,5 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter, SymbolicOperand} from "../operands/mod.ts";
+import { checkOperandCount, numericOperand, type SymbolicOperand} from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
@@ -14,14 +14,11 @@ const mapping: Map<string, string> = new Map([
     ["SER", "1110"] //  LDI are ALMOST the same instruction
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter,
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     const immediate = (operand: SymbolicOperand) => {
         const numeric =
-            mnemonic != "SER" ? convert.numeric("byte", operand) : 0;
+            mnemonic != "SER" ? numericOperand("byte", operand) : 0;
         switch (mnemonic) {
             // Clear bits in register is an AND with the inverse of the operand
             case "CBR": // Set all bits is basically an LDI with FF
@@ -36,7 +33,7 @@ export const encode = (
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
-    convert.checkCount(
+    checkOperandCount(
         operands,
         mnemonic != "SER"
             ? ["immediateRegister", "byte"]
@@ -44,7 +41,7 @@ export const encode = (
     );
     const prefix = mapping.get(mnemonic)!;
     return template(`${prefix}_KKKK dddd_KKKK`, [
-        ["d", convert.numeric("immediateRegister", operands[0]!)],
+        ["d", numericOperand("immediateRegister", operands[0]!)],
         ["K", immediate(operands[1]!)]
     ]);
 };

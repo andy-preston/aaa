@@ -1,5 +1,9 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter, TypeName } from "../operands/mod.ts";
+import {
+    type TypeName,
+    checkOperandCount,
+    numericOperand
+} from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
@@ -10,20 +14,17 @@ const mapping: Map<string, [string, string]> = new Map([
     ["MULS", ["0 d", "r"]]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const registerType: TypeName =
         mnemonic == "MULS" ? "immediateRegister" : "multiplyRegister";
-    convert.checkCount(operands, [registerType, registerType]);
+    checkOperandCount(operands, [registerType, registerType]);
     const [firstOperation, secondOperation] = mapping.get(mnemonic)!;
     return template(`0000_001${firstOperation}ddd_${secondOperation}rrr`, [
-        ["d", convert.numeric(registerType, operands[0]!)],
-        ["r", convert.numeric(registerType, operands[1]!)]
+        ["d", numericOperand(registerType, operands[0]!)],
+        ["r", numericOperand(registerType, operands[1]!)]
     ]);
 };

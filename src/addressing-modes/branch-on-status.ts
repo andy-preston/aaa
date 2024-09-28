@@ -1,5 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter } from "../operands/mod.ts";
+import { checkOperandCount, numericOperand } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
@@ -25,16 +25,13 @@ const mapping: Map<string, [string, number?]> = new Map([
     ["BRIE", ["0", 7]]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const [operationBit, impliedOperand] = mapping.get(mnemonic)!;
-    convert.checkCount(
+    checkOperandCount(
         operands,
         impliedOperand == undefined
             ? ["bitIndex", "relativeBranch"]
@@ -42,11 +39,11 @@ export const encode = (
     );
     const bit =
         impliedOperand == undefined
-            ? convert.numeric("bitIndex", operands[0]!)
+            ? numericOperand("bitIndex", operands[0]!)
             : impliedOperand;
     const branchTarget = operands[impliedOperand == undefined ? 1 : 0]!;
     return template(`1111_0${operationBit}kk kkkk_ksss`, [
         ["s", bit],
-        ["k", convert.numeric("relativeBranch", branchTarget)]
+        ["k", numericOperand("relativeBranch", branchTarget)]
     ]);
 };

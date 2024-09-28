@@ -1,6 +1,6 @@
 import { deviceCheck, label } from "../context/mod.ts";
 import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
-import type { OperandConverter } from "../operands/mod.ts";
+import type {  } from "../operands/mod.ts";
 import { peek } from "./poke-buffer.ts";
 import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
 import { translator } from "./translator.ts";
@@ -10,8 +10,8 @@ type Address = number;
 type ErrorMessages = Array<string>;
 type Processed = [Address, GeneratedCode, ErrorMessages];
 
-export const processor = (operandConverter: OperandConverter) => {
-    const translation = translator(operandConverter);
+export const processor = () => {
+    const translation = translator();
     let errorMessages: Array<string>;
 
     const translationWithError = (instruction: Instruction): GeneratedCode => {

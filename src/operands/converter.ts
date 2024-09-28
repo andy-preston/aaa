@@ -11,73 +11,64 @@ import type {
     SymbolicOperands
 } from "./types.ts";
 
-export const operandConverter = () => {
-    let firstPass = true;
+let ignoreErrors: boolean;
 
-    const operandValue = (operand: SymbolicOperand): string => {
-        try {
-            return execute(operand).trim();
-        }
-        catch (error) {
-            if (error.name == "ReferenceError" && firstPass) {
-                return "0";
-            }
-            throw error;
-        }
-    };
+export const setPass = (pass: 1 | 2) => {
+    ignoreErrors = pass == 1;
+}
 
-    const secondPass = () => {
-        firstPass = false;
+const operandValue = (operand: SymbolicOperand): string => {
+    try {
+        return execute(operand).trim();
     }
-
-    const operands = operandTypes(operandValue);
-
-    const description = (typeName: TypeName): string => operands[typeName][0];
-
-    const checkCount = (list: SymbolicOperands, expected: Array<TypeName>) => {
-        if (list.length == expected.length) {
-            return;
+    catch (error) {
+        if (error.name == "ReferenceError" && ignoreErrors) {
+            return "0";
         }
-        const descriptions =
-            expected.length == 0
-                ? "none"
-                : expected.map(description).join(" and ");
-        throw new Error(
-            `Incorrect number of operands - expecting ${descriptions} got ${list}`
-        );
-    };
-
-    const check = (theType: OperandType, symbolic: SymbolicOperand) => {
-        if (theType[1](symbolic)) {
-            return;
-        }
-        throw new RangeError(operandMessage("", theType[0], symbolic));
-    };
-
-    const standaloneCheck = (typeName: TypeName, raw: SymbolicOperand) =>
-        check(operands[typeName], raw);
-
-    const symbolic = (operand: SymbolicOperand): SymbolicOperand => (
-        operand.indexOf(" ") == -1 ? operand.toUpperCase() : operand
-    ) as SymbolicOperand;
-
-    const numeric = (
-        typeName: TypeName,
-        operand: SymbolicOperand
-    ): NumericOperand => {
-        const operandType = operands[typeName];
-        const numericOperand = operandType[2](operand);
-        check(operandType, operand);
-        return numericOperand;
-    };
-
-    return {
-        "numeric": numeric,
-        "symbolic": symbolic,
-        "check": standaloneCheck,
-        "checkCount": checkCount,
-        "secondPass": secondPass
-    };
+        throw error;
+    }
 };
 
-export type OperandConverter = ReturnType<typeof operandConverter>;
+const types = operandTypes(operandValue);
+
+const description = (typeName: TypeName): string => types[typeName][0];
+
+const internalCheck = (theType: OperandType, symbolic: SymbolicOperand) => {
+    const valid = theType[1];
+    if (valid(symbolic)) {
+        return;
+    }
+    throw new RangeError(operandMessage("", theType[0], symbolic));
+};
+
+export const checkOperandCount = (
+    list: SymbolicOperands,
+    expected: Array<TypeName>
+) => {
+    if (list.length == expected.length) {
+        return;
+    }
+    const descriptions = expected.length == 0
+        ? "none"
+        : expected.map(description).join(" and ");
+    throw new Error(
+        `Incorrect number of operands - expecting ${descriptions} got ${list}`
+    );
+};
+
+export const checkOperand = (typeName: TypeName, raw: SymbolicOperand) =>
+    internalCheck(types[typeName], raw);
+
+export const symbolicOperand = (operand: SymbolicOperand): SymbolicOperand => (
+    operand.indexOf(" ") == -1 ? operand.toUpperCase() : operand
+) as SymbolicOperand;
+
+export const numericOperand = (
+    typeName: TypeName,
+    operand: SymbolicOperand
+): NumericOperand => {
+    const operandType = types[typeName];
+    const numericOperand = operandType[2](operand);
+    internalCheck(operandType, operand);
+    return numericOperand;
+};

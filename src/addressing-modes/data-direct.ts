@@ -1,9 +1,10 @@
 import { hasReducedCore } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type {
-    OperandConverter,
-    OperandIndex,
-    TypeName
+import {
+    checkOperandCount,
+    numericOperand,
+    type OperandIndex,
+    type TypeName
 } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
@@ -12,10 +13,7 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["STS", ["1", 1, 0]]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
@@ -30,14 +28,14 @@ export const encode = (
     const suffix = hasReducedCore()
         ? "kkk dddd_kkkk" : "d dddd_0000 kkkk_kkkk kkkk_kkkk";
 
-    convert.checkCount(
+    checkOperandCount(
         operands,
         registerIndex == 0
             ? [registerType, addressType]
             : [addressType, registerType]
     );
     return template(`${prefix}${operationBit}${suffix}`, [
-        ["d", convert.numeric(registerType, operands[registerIndex]!)],
-        ["k", convert.numeric(addressType, operands[addressIndex]!)]
+        ["d", numericOperand(registerType, operands[registerIndex]!)],
+        ["k", numericOperand(addressType, operands[addressIndex]!)]
     ]);
 };

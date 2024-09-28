@@ -1,7 +1,8 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type {
-    OperandConverter,
-    OperandIndex
+import {
+    type OperandIndex,
+    checkOperandCount,
+    numericOperand
 } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
@@ -10,21 +11,18 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["OUT", ["1", 1, 0]]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const [operationBit, register, port] = mapping.get(mnemonic)!;
-    convert.checkCount(
+    checkOperandCount(
         operands,
         register == 0 ? ["register", "port"] : ["port", "register"]
     );
     return template(`1011_${operationBit}AAd dddd_AAAA`, [
-        ["d", convert.numeric("register", operands[register]!)],
-        ["A", convert.numeric("port", operands[port]!)]
+        ["d", numericOperand("register", operands[register]!)],
+        ["A", numericOperand("port", operands[port]!)]
     ]);
 };

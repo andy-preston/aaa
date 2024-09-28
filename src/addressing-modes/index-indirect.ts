@@ -1,6 +1,7 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
-    type OperandConverter,
+checkOperandCount,
+    numericOperand,
     type OperandIndex,
     operandMessage
 } from "../operands/mod.ts";
@@ -25,21 +26,18 @@ const indexMapping: Map<string, [string, string]> = new Map([
 
 const indexDesc = Array.from(indexMapping.keys()).join(", ");
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const [registerIndex, indexIndex, secondOperationBit] =
         mapping.get(mnemonic)!;
-    convert.checkCount(
+    checkOperandCount(
         operands,
         registerIndex == 0 ? ["register", "symbolic"] : ["symbolic", "register"]
     );
-    const register = convert.numeric("register", operands[registerIndex]!);
+    const register = numericOperand("register", operands[registerIndex]!);
     const index = operands[indexIndex]!;
     if (!indexMapping.has(index)) {
         throw new SyntaxError(

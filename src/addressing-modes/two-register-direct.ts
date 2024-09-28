@@ -1,5 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import type { OperandConverter } from "../operands/mod.ts";
+import { checkOperandCount, numericOperand } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, number]> = new Map([
@@ -21,16 +21,13 @@ const mapping: Map<string, [string, number]> = new Map([
     ["MUL", ["1001_11", 2]]
 ]);
 
-export const encode = (
-    instruction: Instruction,
-    convert: OperandConverter
-): GeneratedCode | undefined => {
+export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
         return undefined;
     }
     const [prefix, operandCount] = mapping.get(mnemonic)!;
-    convert.checkCount(
+    checkOperandCount(
         operands,
         operandCount == 1 ? ["register"] : ["register", "register"]
     );
@@ -39,7 +36,7 @@ export const encode = (
         registers[1] = registers[0]!;
     }
     return template(`${prefix}rd dddd_rrrr`, [
-        ["d", convert.numeric("register", registers[0]!)],
-        ["r", convert.numeric("register", registers[1]!)]
+        ["d", numericOperand("register", registers[0]!)],
+        ["r", numericOperand("register", registers[1]!)]
     ]);
 };
