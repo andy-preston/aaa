@@ -1,4 +1,4 @@
-import type { OurContext } from "../context/mod.ts";
+import { type OurContext, hasReducedCore } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type {
     OperandConverter,
@@ -15,7 +15,7 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
 export const encode = (
     instruction: Instruction,
     convert: OperandConverter,
-    ourContext: OurContext
+    _ourContext: OurContext
 ): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
@@ -23,12 +23,12 @@ export const encode = (
     }
     const [operationBit, registerIndex, addressIndex] = mapping.get(mnemonic)!;
 
-    const registerType: TypeName = ourContext.reducedCore
+    const registerType: TypeName = hasReducedCore()
         ? "immediateRegister" : "register";
-    const addressType: TypeName = ourContext.reducedCore
+    const addressType: TypeName = hasReducedCore()
         ? "7bitAddress" : "16bitAddress";
-    const prefix = ourContext.reducedCore ? "1010_" : "1001_00";
-    const suffix = ourContext.reducedCore
+    const prefix = hasReducedCore() ? "1010_" : "1001_00";
+    const suffix = hasReducedCore()
         ? "kkk dddd_kkkk" : "d dddd_0000 kkkk_kkkk kkkk_kkkk";
 
     convert.checkCount(

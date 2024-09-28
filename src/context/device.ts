@@ -4,12 +4,14 @@ import { addProperty } from "./their-context.ts";
 
 let deviceErrorShown: boolean;
 let unsupportedInstructions: Array<string>;
+let reducedCore: boolean;
 let deviceName: string;
 let theirs: TheirContext;
 
 export const newDeviceChecker = (theirContext: TheirContext) => {
     deviceErrorShown = false;
     unsupportedInstructions = [];
+    reducedCore = false;
     deviceName = "";
     theirs = theirContext;
 };
@@ -25,6 +27,8 @@ export const deviceCheck = (mnemonic: Mnemonic): string => {
     return "";
 };
 
+export const hasReducedCore = () => reducedCore;
+
 export const chooseDevice = (name: string, deviceSpec: object) => {
     if (deviceName == name) {
         return;
@@ -32,11 +36,15 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
     if (deviceName != "") {
         throw new Error(`Device ${deviceName} already chosen`);
     }
+    newDeviceChecker(theirs);
     deviceName = name;
     for (const [key, value] of Object.entries(deviceSpec)) {
         switch (key) {
             case "unsupportedInstructions":
                 unsupportedInstructions = value as Array<string>;
+                break;
+            case "reducedCore":
+                reducedCore = value as boolean;
                 break;
             case "programEnd":
                 addProperty(theirs, key, Math.floor(value as number / 2));

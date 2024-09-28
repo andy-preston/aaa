@@ -49,9 +49,6 @@ export const createOurContext = (theirs: TheirContext) => {
     };
 
     const ourContext = {
-        // This, at the very least, effects how the LDS/STS instructions
-        // are generated.
-        "reducedCore": false,
         "execute": execute,
         "label": label,
         "programMemoryPos": 0,
