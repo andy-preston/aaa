@@ -1,7 +1,6 @@
-import type { OurContext } from "../context/mod.ts";
 import { addDirective } from "../context/mod.ts";
+import { programMemoryOrigin } from "../context/program-memory.ts";
 import type { BufferPoke } from "../generate/mod.ts";
-import { orgDirective } from "./org-directive.ts";
 import { pokeDirective } from "./poke-directive.ts";
 
 export type StringDirective = (s: string) => void;
@@ -13,13 +12,12 @@ export type ArrayDirective = (a: Array<number> | string) => void;
 export type Directive = StringDirective | NumberDirective | ArrayDirective;
 
 export const addDirectives = (
-    context: OurContext,
     include: StringDirective,
     device: StringDirective,
     poke: BufferPoke
 ) => {
-    addDirective(context.theirs, "include", include);
-    addDirective(context.theirs, "device", device);
-    addDirective(context.theirs, "org", orgDirective(context));
-    addDirective(context.theirs, "poke", pokeDirective(poke));
+    addDirective("include", include);
+    addDirective("device", device);
+    addDirective("org", programMemoryOrigin);
+    addDirective("poke", pokeDirective(poke));
 };

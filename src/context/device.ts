@@ -1,19 +1,17 @@
 import type { Mnemonic } from "../source-code/mod.ts";
-import { TheirContext } from "./mod.ts";
-import { addProperty } from "./their-context.ts";
+import { addProperty } from "./context.ts";
+import { setProgramMemoryEnd } from "./program-memory.ts";
 
 let deviceErrorShown: boolean;
 let unsupportedInstructions: Array<string>;
 let reducedCore: boolean;
 let deviceName: string;
-let theirs: TheirContext;
 
-export const newDeviceChecker = (theirContext: TheirContext) => {
+export const newDeviceChecker = () => {
     deviceErrorShown = false;
     unsupportedInstructions = [];
     reducedCore = false;
     deviceName = "";
-    theirs = theirContext;
 };
 
 export const deviceCheck = (mnemonic: Mnemonic): string => {
@@ -36,7 +34,7 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
     if (deviceName != "") {
         throw new Error(`Device ${deviceName} already chosen`);
     }
-    newDeviceChecker(theirs);
+    newDeviceChecker();
     deviceName = name;
     for (const [key, value] of Object.entries(deviceSpec)) {
         switch (key) {
@@ -47,10 +45,10 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
                 reducedCore = value as boolean;
                 break;
             case "programEnd":
-                addProperty(theirs, key, Math.floor(value as number / 2));
+                setProgramMemoryEnd(value as number);
                 break;
             default:
-                addProperty(theirs, key, value as number);
+                addProperty(key, value as number);
                 break;
         }
     }

@@ -1,4 +1,4 @@
-import type { OurContext } from "../context/mod.ts";
+import { programMemoryAddress } from "../context/program-memory.ts";
 import { operandMessage } from "./message.ts";
 import type { NumericOperand, SymbolicOperand } from "./types.ts";
 
@@ -10,10 +10,7 @@ export type OperandType = [
 
 type OperandValue = (operand: SymbolicOperand) => string;
 
-export const operandTypes = (
-    ourContext: OurContext,
-    operandValue: OperandValue
-) => {
+export const operandTypes = (operandValue: OperandValue) => {
     const numeric = (operand: SymbolicOperand): NumericOperand => {
         const result = operandValue(operand);
         const intResult = Number.parseInt(result);
@@ -34,7 +31,7 @@ export const operandTypes = (
                 operandMessage(operand, "a memory address", `${target}`)
             );
         }
-        const distance = target - ourContext.programMemoryPos;
+        const distance = target - programMemoryAddress();
         return distance < 0 ? highValue + distance : distance - 1;
     };
 

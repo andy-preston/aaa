@@ -1,4 +1,4 @@
-import type { OurContext } from "../context/mod.ts";
+import { execute } from "../context/context.ts";
 
 const scriptDelimiter = /({{|}})/;
 
@@ -10,8 +10,6 @@ const buffer = {
 type State = keyof typeof buffer;
 
 let state: State;
-
-let context: OurContext;
 
 const change = (token: string) => {
     const newState: State = token == "{{" ? "javascript" : "assembler";
@@ -29,15 +27,15 @@ const usePart = (part: string) => {
     }
     if (part == "}}") {
         change(part);
-        buffer.assembler.push(context.execute(buffer.javascript.join("\n")));
+        buffer.assembler.push(execute(buffer.javascript.join("\n")));
         return;
     }
     buffer[state].push(part);
 };
 
-export const newSplitter = (ourContext: OurContext) => {
-    context = ourContext;
+export const newSplitter = () => {
     state = "assembler";
+    buffer.assembler = [];
 };
 
 export const languageSplit = (line: string): string => {

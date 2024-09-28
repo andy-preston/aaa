@@ -1,5 +1,4 @@
 import {
-    type OurContext,
     deviceCheck,
     newDeviceChecker
 } from "../context/mod.ts";
@@ -8,18 +7,19 @@ import { translator } from "./translator.ts";
 import type { GeneratedCode } from "./types.ts";
 import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
 import type { OperandConverter } from "../operands/mod.ts";
+import { label } from "../context/context.ts";
+import { programMemoryAddress, programMemoryStep } from "../context/program-memory.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;
 type Processed = [Address, GeneratedCode, ErrorMessages];
 
 export const processor = (
-    ourContext: OurContext,
     operandConverter: OperandConverter,
     peek: BufferPeek
 ) => {
-    newDeviceChecker(ourContext.theirs);
-    const translation = translator(ourContext, operandConverter);
+    newDeviceChecker();
+    const translation = translator(operandConverter);
     let errorMessages: Array<string>;
 
     const translationWithError = (instruction: Instruction): GeneratedCode => {
@@ -31,10 +31,10 @@ export const processor = (
         }
     };
 
-    const labelWithError = (label: string) => {
-        if (label != "") {
+    const labelWithError = (labelName: string) => {
+        if (labelName != "") {
             try {
-                ourContext.label(label);
+                label(labelName);
             }
             catch (error) {
                 errorMessages.push(`${error.name}: ${error.message}`)
@@ -61,13 +61,13 @@ export const processor = (
         // correctly for poke directives
         const instruction = nextInstruction(line);
         for (const block of peek()) {
-            yield [ourContext.programMemoryPos, block, []];
-            ourContext.programMemoryStep(block);
+            yield [programMemoryAddress(), block, []];
+            programMemoryStep(block);
         }
         deviceWithError(instruction[0]);
         const code = translationWithError(instruction);
-        yield [ourContext.programMemoryPos, code, errorMessages]
-        ourContext.programMemoryStep(code);
+        yield [programMemoryAddress(), code, errorMessages]
+        programMemoryStep(code);
     };
 };
 

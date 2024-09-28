@@ -1,34 +1,14 @@
-import { assertEquals } from "assert";
-import type { OurContext } from "../context/mod.ts";
-import { type GeneratedCode, translator } from "../generate/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
-import { operandConverter } from "../operands/mod.ts";
+import { GeneratedCode } from "../generate/mod.ts";
+import { Instruction } from "../source-code/mod.ts";
 
-export type Tests = Array<[Instruction, GeneratedCode]>;
+type Test = [Instruction, GeneratedCode];
 
-type SetupFunction = () => void;
+export type Tests = Array<Test>;
 
-export const testDescription = (source: Instruction): string => {
-    const operands = source[1].join(", ");
-    const description = operands ? operands : "; No operands";
-    return `${source[0]} ${description}`;
-};
-
-export const testing = (
-    tests: Tests,
-    context: OurContext,
-    setup?: SetupFunction | undefined
-) => {
-    const translate = translator(context, operandConverter(context));
-    for (const test of tests) {
-        const source = test[0] as Instruction;
-        Deno.test(`Basic code generation: ${testDescription(source)}`, () => {
-            if (setup != undefined) {
-                setup();
-            }
-            const code = translate(source);
-            assertEquals(code, test[1]);
-            context.programMemoryStep(code);
-        });
-    }
+export const description = (test: Test) => {
+    const instruction = test[0];
+    const operands = instruction[1].length == 0
+        ? "; no operands"
+        : instruction[1].join(", ");
+    return `${instruction[0]} ${operands}`;
 };

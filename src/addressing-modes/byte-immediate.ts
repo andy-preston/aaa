@@ -1,4 +1,3 @@
-import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, SymbolicOperand} from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
@@ -18,7 +17,6 @@ const mapping: Map<string, string> = new Map([
 export const encode = (
     instruction: Instruction,
     convert: OperandConverter,
-    _ourContext: OurContext
 ): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     const immediate = (operand: SymbolicOperand) => {

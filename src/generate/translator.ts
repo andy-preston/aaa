@@ -1,11 +1,9 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
-import type { OurContext } from "../context/mod.ts";
 import type { OperandConverter } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 import type { GeneratedCode } from "./types.ts";
 
 export const translator = (
-    ourContext: OurContext,
     operandConverter: OperandConverter
 ) => (instruction: Instruction): GeneratedCode => {
         if (instruction[0] == "") {
@@ -14,8 +12,7 @@ export const translator = (
         for (const addressingMode of addressingModes) {
             const generatedCode = addressingMode(
                 instruction,
-                operandConverter,
-                ourContext
+                operandConverter
             );
             if (generatedCode != null) {
                 return generatedCode;

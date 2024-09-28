@@ -1,4 +1,4 @@
-import type { OurContext } from "../context/mod.ts";
+import { execute } from "../context/context.ts";
 import { operandMessage } from "./message.ts";
 import {
     type OperandType,
@@ -11,12 +11,12 @@ import type {
     SymbolicOperands
 } from "./types.ts";
 
-export const operandConverter = (ourContext: OurContext) => {
+export const operandConverter = () => {
     let firstPass = true;
 
     const operandValue = (operand: SymbolicOperand): string => {
         try {
-            return ourContext.execute(operand).trim();
+            return execute(operand).trim();
         }
         catch (error) {
             if (error.name == "ReferenceError" && firstPass) {
@@ -30,7 +30,7 @@ export const operandConverter = (ourContext: OurContext) => {
         firstPass = false;
     }
 
-    const operands = operandTypes(ourContext, operandValue);
+    const operands = operandTypes(operandValue);
 
     const description = (typeName: TypeName): string => operands[typeName][0];
 

@@ -1,10 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
-import { createOurContext } from "../context/mod.ts";
 import { operandConverter } from "./converter.ts";
-import { theirContext } from "../context/their-context.ts";
+import { programMemoryOrigin } from "../context/program-memory.ts";
+import { newContext } from "../context/context.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertThrows(
         () => converter.numeric("symbolic", "anything"),
         Error,
@@ -19,7 +20,8 @@ Deno.test("Symbolic is only used for Check Count", () => {
 });
 
 Deno.test("Numeric operands must be integers", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("byte", "R10"), 10);
     assertEquals(converter.numeric("byte", "42"), 42);
     assertThrows(
@@ -35,7 +37,8 @@ Deno.test("Numeric operands must be integers", () => {
 });
 
 Deno.test("Operands must be defined, at least on the second pass", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(0, converter.numeric("byte", "notDefined"));
     converter.secondPass();
     assertThrows(
@@ -46,7 +49,8 @@ Deno.test("Operands must be defined, at least on the second pass", () => {
 });
 
 Deno.test("A register should be between zero and 31", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("register", "R0"), 0);
     assertEquals(converter.numeric("register", "6"), 6);
     assertEquals(converter.numeric("register", "Z"), 30);
@@ -65,7 +69,8 @@ Deno.test("A register should be between zero and 31", () => {
 });
 
 Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("immediateRegister", "Z"), 14);
     assertEquals(converter.numeric("immediateRegister", "R31"), 15);
     assertEquals(converter.numeric("immediateRegister", "31"), 15);
@@ -82,7 +87,8 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
 });
 
 Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("multiplyRegister", "R20"), 4);
     assertEquals(converter.numeric("multiplyRegister", "22"), 6);
     assertThrows(
@@ -98,7 +104,8 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
 });
 
 Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("registerPair", "R24"), 0);
     assertEquals(converter.numeric("registerPair", "X"), 1);
     assertEquals(converter.numeric("registerPair", "Y"), 2);
@@ -116,7 +123,8 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
 });
 
 Deno.test("Any register pair is any even numbered register", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("anyRegisterPair", "R0"), 0);
     assertEquals(converter.numeric("anyRegisterPair", "R2"), 1);
     assertEquals(converter.numeric("anyRegisterPair", "R4"), 2);
@@ -136,7 +144,8 @@ Deno.test("Any register pair is any even numbered register", () => {
 });
 
 Deno.test("Some instructions require Z and no other register", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    newContext();
+    const converter = operandConverter();
     assertEquals(converter.numeric("z", "R30"), 30);
     assertEquals(converter.numeric("z", "Z"), 30);
     assertEquals(converter.numeric("z", "30"), 30);
@@ -158,7 +167,7 @@ Deno.test("Some instructions require Z and no other register", () => {
 });
 
 Deno.test("A port is between 0x20 - 0x5F and is remapped to 0x3f", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("port", "0x20"), 0);
     assertEquals(converter.numeric("port", "0x5F"), 0x3f);
     assertThrows(
@@ -179,7 +188,7 @@ Deno.test("A port is between 0x20 - 0x5F and is remapped to 0x3f", () => {
 });
 
 Deno.test("6 bits is between 0 and 0x3F", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("sixBits", "0b111111"), 0x3f);
     assertEquals(converter.numeric("sixBits", "0x3e"), 0x3e);
     assertThrows(
@@ -195,7 +204,7 @@ Deno.test("6 bits is between 0 and 0x3F", () => {
 });
 
 Deno.test("A bit index is 0 - 7", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("bitIndex", "0"), 0);
     assertEquals(converter.numeric("bitIndex", "4"), 4);
     assertEquals(converter.numeric("bitIndex", "7"), 7);
@@ -207,7 +216,7 @@ Deno.test("A bit index is 0 - 7", () => {
 });
 
 Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("byte", "-1"), 0xff);
     assertEquals(converter.numeric("byte", "255"), 0xff);
     assertEquals(converter.numeric("byte", "-128"), 128);
@@ -226,7 +235,7 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
 });
 
 Deno.test("A nybble should be between 0 and 0x0f", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("nybble", "0"), 0);
     assertEquals(converter.numeric("nybble", "6"), 6);
     assertEquals(converter.numeric("nybble", "15"), 15);
@@ -243,7 +252,7 @@ Deno.test("A nybble should be between 0 and 0x0f", () => {
 });
 
 Deno.test("An address is 0 - 0x3FFFFF", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("address", "0"), 0);
     assertEquals(converter.numeric("address", "0x3FFFFF"), 0x3fffff);
     assertThrows(
@@ -259,7 +268,7 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
 });
 
 Deno.test("A RAM address is 0 - 0xFFFF", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("16bitAddress", "0"), 0);
     assertEquals(converter.numeric("16bitAddress", "0xFFFF"), 0xffff);
     assertThrows(
@@ -275,7 +284,7 @@ Deno.test("A RAM address is 0 - 0xFFFF", () => {
 });
 
 Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
-    const converter = operandConverter(createOurContext(theirContext()));
+    const converter = operandConverter();
     assertEquals(converter.numeric("7bitAddress", "0"), 0);
     assertEquals(converter.numeric("7bitAddress", "0x7F"), 0x7f);
     assertThrows(
@@ -291,19 +300,18 @@ Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
 });
 
 Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
-    const context = createOurContext(theirContext());
-    const converter = operandConverter(context);
-    context.programMemoryPos = 0;
+    const converter = operandConverter();
+    programMemoryOrigin(0);
     assertEquals(converter.numeric("relativeJump", "500"), 499);
-    context.programMemoryPos = 1010;
+    programMemoryOrigin(1010);
     assertEquals(converter.numeric("relativeJump", "1000"), 0x0fff - 10);
-    context.programMemoryPos = 0;
+    programMemoryOrigin(0);
     assertThrows(
         () => converter.numeric("relativeJump", "-1"),
         RangeError,
         "Operand out of range: -1 should be a memory address not -1"
     );
-    context.programMemoryPos = 0;
+    programMemoryOrigin(0);
     assertThrows(
         () => converter.numeric("relativeJump", "0x1111"),
         RangeError,
@@ -312,25 +320,24 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
 });
 
 Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
-    const context = createOurContext(theirContext());
-    const converter = operandConverter(context);
-    context.programMemoryPos = 0;
+    const converter = operandConverter();
+    programMemoryOrigin(0);
     assertEquals(converter.numeric("relativeBranch", "60"), 59);
-    context.programMemoryPos = 110;
+    programMemoryOrigin(110);
     assertEquals(converter.numeric("relativeBranch", "100"), 127 - 10);
-    context.programMemoryPos = 0;
+    programMemoryOrigin(0);
     assertThrows(
         () => converter.numeric("relativeBranch", "-1"),
         RangeError,
         "Operand out of range: -1 should be a memory address not -1"
     );
-    context.programMemoryPos = 0;
+    programMemoryOrigin(0);
     assertThrows(
         () => converter.numeric("relativeBranch", "0x10000"),
         RangeError,
         "Operand out of range: 0x10000 should be a memory address not 65536"
     );
-    context.programMemoryPos = 0;
+    programMemoryOrigin(0);
     assertThrows(
         () => converter.numeric("relativeBranch", "0x1111"),
         RangeError,

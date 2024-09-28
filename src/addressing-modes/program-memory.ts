@@ -1,4 +1,3 @@
-import type { OurContext } from "../context/mod.ts";
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import type { OperandConverter, SymbolicOperands } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
@@ -29,8 +28,7 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
 
 export const encode = (
     instruction: Instruction,
-    convert: OperandConverter,
-    _ourContext: OurContext
+    convert: OperandConverter
 ): GeneratedCode | undefined => {
     const [ mnemonic, operands ] = instruction;
     if (!mapping.has(mnemonic)) {
