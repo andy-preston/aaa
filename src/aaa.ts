@@ -6,7 +6,8 @@ import {
 } from "./context/mod.ts";
 import {
     getProgramMemoryEnd,
-    pokeBuffer,
+    newPokeBuffer,
+    poke,
     programMemoryOrigin,
     processor
 } from "./generate/mod.ts";
@@ -19,20 +20,19 @@ import {
 } from "./source-code/mod.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
-import { pokeDirective } from "./directives/poke-directive.ts";
 
 const commandLineSourceFile = "./file1.txt";
 
 newContext();
-const pokeBuf = pokeBuffer();
+newPokeBuffer();
 newSplitter();
 const converter = operandConverter();
-const process = processor(converter, pokeBuf.peek);
+const process = processor(converter);
 
 addDirective("include", includeFile);
 addDirective("device", deviceDirective);
 addDirective("org", programMemoryOrigin);
-addDirective("poke", pokeDirective(pokeBuf.poke));
+addDirective("poke", poke);
 
 addCoupledProperty("progmemEnd", getProgramMemoryEnd);
 

@@ -8,13 +8,10 @@ import {
 import { programMemoryAddress, programMemoryOrigin } from "../generate/mod.ts";
 import { operandConverter } from "../operands/mod.ts";
 import { ProcessGenerator, processor } from "./process.ts";
-import { pokeBuffer } from "./poke-buffer.ts";
+import { newPokeBuffer } from "./poke-buffer.ts";
 
 const processing = (line: string) => {
-    const process = processor(
-        operandConverter(),
-        pokeBuffer().peek
-    );
+    const process = processor(operandConverter());
     chooseDevice("dummy", {});
     for (const _ of process(line)) {
         // pass
@@ -40,6 +37,7 @@ const noErrors = (process: ProcessGenerator, line: string) => {
 };
 
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
+    newPokeBuffer();
     programMemoryOrigin(0);
     assertEquals(programMemoryAddress(), 0);
     processing("INC R5");
@@ -49,6 +47,7 @@ Deno.test("As code is generated, the programMemoryPos is incremented", () => {
 });
 
 Deno.test("programMemoryOrigin can be set from the context i.e. by embedded JS", () => {
+    newPokeBuffer();
     programMemoryOrigin(0);
     assertEquals(programMemoryAddress(), 0);
     processing("INC R5");
@@ -60,6 +59,7 @@ Deno.test("programMemoryOrigin can be set from the context i.e. by embedded JS",
 });
 
 Deno.test("Labels are saved at the current programMemoryPos", () => {
+    newPokeBuffer();
     newContext();
     programMemoryOrigin(0);
     processing("label1: INC R5");
@@ -73,14 +73,16 @@ Deno.test("Labels are saved at the current programMemoryPos", () => {
 });
 
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
+    newPokeBuffer();
     newDeviceChecker();
-    const process = processor(operandConverter(), pokeBuffer().peek);
+    const process = processor(operandConverter());
     chooseDevice("dummy", { "unsupportedInstructions": ["ADIW"] });
     assert(findError(process, "ADIW R26, 5", "ADIW is not available on dummy"));
 });
 
 Deno.test("If no device is chosen, warn after the first assembly line", () => {
-    const process = processor(operandConverter(), pokeBuffer().peek);
+    newPokeBuffer();
+    const process = processor(operandConverter());
     assert(noErrors(process, ""), "no error on blank line");
     assert(noErrors(process, ""), "no error on blank line");
     assert(
@@ -90,7 +92,8 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
 });
 
 Deno.test("The instruction set chosen check is only executed once", () => {
-    const process = processor(operandConverter(), pokeBuffer().peek);
+    newPokeBuffer();
+    const process = processor(operandConverter());
     assert(
         findError(process, "ADIW R26, 5", "No device selected"),
         "error on instruction line"
