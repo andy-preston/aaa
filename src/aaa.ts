@@ -1,5 +1,4 @@
-import { deviceDirective } from "./context/mod.ts";
-import { addDirectives } from "./directives/mod.ts";
+import { addDirective, deviceDirective } from "./context/mod.ts";
 import { pokeBuffer } from "./generate/mod.ts";
 import { processor } from "./generate/mod.ts";
 import {
@@ -11,8 +10,9 @@ import {
 } from "./source-code/mod.ts";
 import { operandConverter } from "./operands/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
-import { newContext } from "./context/context.ts";
-import { programMemoryOrigin } from "./context/program-memory.ts";
+import { addCoupledProperty, newContext } from "./context/context.ts";
+import { getProgramMemoryEnd, programMemoryOrigin } from "./context/program-memory.ts";
+import { pokeDirective } from "./directives/poke-directive.ts";
 
 const commandLineSourceFile = "./file1.txt";
 
@@ -22,7 +22,12 @@ newSplitter();
 const converter = operandConverter();
 const process = processor(converter, pokeBuf.peek);
 
-addDirectives(includeFile, deviceDirective, pokeBuf.poke);
+addDirective("include", includeFile);
+addDirective("device", deviceDirective);
+addDirective("org", programMemoryOrigin);
+addDirective("poke", pokeDirective(pokeBuf.poke));
+
+addCoupledProperty("progmemEnd", getProgramMemoryEnd);
 
 for (const pass of [1, 2]) {
     if (pass == 2) {

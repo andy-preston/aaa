@@ -1,4 +1,3 @@
-import type { Directive } from "../directives/mod.ts";
 import { programMemoryAddress } from "./program-memory.ts";
 
 type SimpleFunction = (_: number) => number;
@@ -39,8 +38,18 @@ export const newContext = () => {
     }
 };
 
+type StringDirective = (s: string) => void;
+type NumberDirective = (n: number) => void;
+type ArrayDirective = (a: Array<number> | string) => void;
+type Directive = StringDirective | NumberDirective | ArrayDirective;
+
 export const addDirective = (name: string, directive: Directive) => {
-    context[name] = directive;
+    Object.defineProperty(context, name, {
+        "configurable": false,
+        "enumerable": true,
+        "value": directive,
+        "writable": false
+    });
 };
 
 export const addProperty = (name: string, value: number) => {
