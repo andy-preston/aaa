@@ -12,6 +12,7 @@ import { newPokeBuffer } from "./poke-buffer.ts";
 
 const processing = (line: string) => {
     const process = processor(operandConverter());
+    newDeviceChecker();
     chooseDevice("dummy", {});
     for (const _ of process(line)) {
         // pass
@@ -82,6 +83,7 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
 
 Deno.test("If no device is chosen, warn after the first assembly line", () => {
     newPokeBuffer();
+    newDeviceChecker();
     const process = processor(operandConverter());
     assert(noErrors(process, ""), "no error on blank line");
     assert(noErrors(process, ""), "no error on blank line");
@@ -93,6 +95,7 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
 
 Deno.test("The instruction set chosen check is only executed once", () => {
     newPokeBuffer();
+    newDeviceChecker();
     const process = processor(operandConverter());
     assert(
         findError(process, "ADIW R26, 5", "No device selected"),

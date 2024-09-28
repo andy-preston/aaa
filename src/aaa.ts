@@ -2,7 +2,8 @@ import {
     addCoupledProperty,
     addDirective,
     deviceDirective,
-    newContext
+    newContext,
+    newDeviceChecker
 } from "./context/mod.ts";
 import {
     getProgramMemoryEnd,
@@ -27,6 +28,7 @@ newContext();
 newPokeBuffer();
 newSplitter();
 const converter = operandConverter();
+newDeviceChecker();
 const process = processor(converter);
 
 addDirective("include", includeFile);
