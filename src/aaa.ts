@@ -1,4 +1,4 @@
-import { createOurContext } from "./context/mod.ts";
+import { createOurContext, deviceDirective } from "./context/mod.ts";
 import { addDirectives } from "./directives/mod.ts";
 import { pokeBuffer } from "./generate/mod.ts";
 import { processor } from "./generate/mod.ts";
@@ -21,7 +21,7 @@ newSplitter(ourContext);
 const converter = operandConverter(ourContext);
 const process = processor(ourContext, converter, pokeBuf.peek);
 
-addDirectives(ourContext, includeFile, pokeBuf.poke);
+addDirectives(ourContext, includeFile, deviceDirective, pokeBuf.poke);
 
 for (const pass of [1, 2]) {
     if (pass == 2) {

@@ -56,3 +56,9 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
     }
 };
 
+export const deviceDirective = (name: string) => {
+    (async () => {
+        const deviceSpec = await import(`../devices/${name.toLowerCase()}.ts`);
+        chooseDevice(name, deviceSpec);
+    })();
+};
