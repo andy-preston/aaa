@@ -4,7 +4,7 @@ export type Mnemonic = string;
 
 type Label = string;
 
-type Tokens = [Label, Mnemonic, SymbolicOperands];
+export type Tokens = [Label, Mnemonic, SymbolicOperands];
 
 export type Instruction = [Mnemonic, SymbolicOperands]
 

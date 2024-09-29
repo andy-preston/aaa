@@ -1,8 +1,9 @@
 import { deviceCheck, label } from "../context/mod.ts";
 import { peek } from "./poke-buffer.ts";
 import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
-import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
+import { type Instruction, lineTokens } from "../source-code/mod.ts";
 import { type GeneratedCode, translate } from "./translate.ts";
+import { macroLines } from "../macro/macro.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;
@@ -12,6 +13,10 @@ type ProcessGenerator = Generator<Processed, void, undefined>;
 let errorMessages: Array<string>;
 
 const translationWithError = (instruction: Instruction): GeneratedCode => {
+    const errorMessage = deviceCheck(instruction[0]);
+    if (errorMessage) {
+        errorMessages.push(errorMessage);
+    }
     try {
         return translate(instruction);
     } catch (error) {
@@ -31,30 +36,33 @@ const labelWithError = (labelName: string) => {
     }
 };
 
-const deviceWithError = (mnemonic: Mnemonic) => {
-    const errorMessage = deviceCheck(mnemonic);
-    if (errorMessage) {
-        errorMessages.push(errorMessage);
-    }
-};
-
-const nextInstruction = (line: string): Instruction => {
-    const [label, mnemonic, operands] = lineTokens(line);
-    labelWithError(label);
-    return [mnemonic, operands];
+const codeBlock = (
+    block: GeneratedCode,
+    errorMessages: ErrorMessages
+): Processed => {
+    const result: Processed = [programMemoryAddress(), block, errorMessages];
+    programMemoryStep(block);
+    return result;
 }
 
 export const process = function* (line: string): ProcessGenerator {
     errorMessages = [];
-    // This has to come before ANY yields to make sure labels are handled
-    // correctly for poke directives
-    const instruction = nextInstruction(line);
+    // Has to come before ANY yields - labels must come before pokes
+    const [label, mnemonic, operands] = lineTokens(line);
+    labelWithError(label);
     for (const block of peek()) {
-        yield [programMemoryAddress(), block, []];
-        programMemoryStep(block);
+        yield codeBlock(block, []);
     }
-    deviceWithError(instruction[0]);
-    const code = translationWithError(instruction);
-    yield [programMemoryAddress(), code, errorMessages]
-    programMemoryStep(code);
+    yield codeBlock(
+        translationWithError([mnemonic, operands]),
+        errorMessages
+    );
+    for (const macroLine of macroLines()) {
+        errorMessages = [];
+        labelWithError(macroLine[0]);
+        yield codeBlock(
+            translationWithError([macroLine[1], macroLine[2]]),
+            errorMessages
+        );
+    }
 };
