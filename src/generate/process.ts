@@ -3,7 +3,7 @@ import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
 import type {  } from "../operands/mod.ts";
 import { peek } from "./poke-buffer.ts";
 import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
-import { translate } from "./translator.ts";
+import { translate } from "./translate.ts";
 import type { GeneratedCode } from "./generated-code.ts";
 
 type Address = number;

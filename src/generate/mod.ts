@@ -4,7 +4,7 @@ export { newPokeBuffer, peek, poke } from "./poke-buffer.ts";
 
 export { template } from "./template.ts";
 
-export { translate } from "./translator.ts";
+export { translate } from "./translate.ts";
 
 export { processor } from "./process.ts";
 
