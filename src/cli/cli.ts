@@ -1,8 +1,8 @@
 import { coupling } from "./coupling.ts";
-import { process, programMemoryOrigin } from "./generate/mod.ts";
-import { setPass } from "./operands/mod.ts";
-import { closeOutput, newOutput, output, listSource } from "./output/mod.ts";
-import { languageSplit, sourceLines, topFile} from "./source-code/mod.ts";
+import { process, programMemoryOrigin } from "../generate/mod.ts";
+import { setPass } from "../operands/mod.ts";
+import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
+import { languageSplit, sourceLines, topFile} from "../source-code/mod.ts";
 
 const commandLineSourceFile = "./file1.txt";
 
