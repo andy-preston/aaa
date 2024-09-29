@@ -3,7 +3,7 @@ import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
 import type {  } from "../operands/mod.ts";
 import { peek } from "./poke-buffer.ts";
 import { type Instruction, lineTokens, Mnemonic } from "../source-code/mod.ts";
-import { translator } from "./translator.ts";
+import { translate } from "./translator.ts";
 import type { GeneratedCode } from "./generated-code.ts";
 
 type Address = number;
@@ -11,12 +11,11 @@ type ErrorMessages = Array<string>;
 type Processed = [Address, GeneratedCode, ErrorMessages];
 
 export const processor = () => {
-    const translation = translator();
     let errorMessages: Array<string>;
 
     const translationWithError = (instruction: Instruction): GeneratedCode => {
         try {
-            return translation(instruction);
+            return translate(instruction);
         } catch (error) {
             errorMessages.push(`${error.name}: ${error.message}`);
             return [];

@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "assert";
 import {
     programMemoryOrigin,
     programMemoryStep,
-    translator
+    translate
 } from "../generate/mod.ts";
 import { description, type Tests } from "./testing.ts";
 import { setPass } from "../operands/mod.ts";
@@ -60,7 +60,6 @@ Deno.test("Branch on status code generation", () => {
     addProperty("forward", 0x002e);
     programMemoryOrigin(3);
     setPass(2);
-    const translate = translator();
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
         programMemoryStep(test[1]);
@@ -70,7 +69,6 @@ Deno.test("Branch on status code generation", () => {
 Deno.test("Absolute address too high on BRNE instruction", () => {
     programMemoryOrigin(0);
     setPass(2);
-    const translate = translator();
     assertThrows(
         () => translate(["BRNE", ["130"]]),
         RangeError,
@@ -81,7 +79,6 @@ Deno.test("Absolute address too high on BRNE instruction", () => {
 Deno.test("Absolute address too low on BREQ instruction", () => {
     programMemoryOrigin(500);
     setPass(2);
-    const translate = translator();
     assertThrows(
         () => translate(["BREQ", ["100"]]),
         RangeError,

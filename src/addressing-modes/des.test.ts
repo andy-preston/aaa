@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import { translator } from "../generate/mod.ts";
+import { translate } from "../generate/mod.ts";
 import { setPass } from "../operands/mod.ts";
 import { type Tests, description} from "./testing.ts";
 
@@ -12,7 +12,6 @@ const tests: Tests = [
 
 Deno.test("DES Code Generation", () => {
     setPass(2);
-    const translate = translator();
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }

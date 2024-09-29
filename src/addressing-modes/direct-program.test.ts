@@ -1,6 +1,6 @@
 import { assertEquals } from "assert";
 import { label, newContext } from "../context/mod.ts";
-import { programMemoryOrigin, translator } from "../generate/mod.ts";
+import { programMemoryOrigin, translate } from "../generate/mod.ts";
 import { setPass } from "../operands/mod.ts";
 import { description, type Tests } from "./testing.ts";
 
@@ -18,7 +18,6 @@ Deno.test("Direct Program Code Generation", () => {
     label("branch");
     programMemoryOrigin(3);
     setPass(2);
-    const translate = translator();
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }

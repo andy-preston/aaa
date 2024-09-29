@@ -4,7 +4,7 @@ import {
     newContext,
     newDeviceChecker
 } from "../context/mod.ts";
-import { translator } from "../generate/mod.ts";
+import { translate } from "../generate/mod.ts";
 import { type Tests, description} from "./testing.ts";
 import { setPass } from "../operands/mod.ts";
 
@@ -25,7 +25,6 @@ Deno.test("Data Direct code generation", () => {
     newContext();
     newDeviceChecker();
     setPass(2);
-    const translate = translator();
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }
@@ -36,7 +35,6 @@ Deno.test("Data Direct (Reduced Core) code generation", () => {
     newDeviceChecker();
     chooseDevice("dummy", { "reducedCore": true });
     setPass(2);
-    const translate = translator();
     for (const test of reducedCoreTests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }

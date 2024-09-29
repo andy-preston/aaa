@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { newContext } from "../context/mod.ts";
-import { translator } from "../generate/mod.ts";
+import { translate } from "../generate/mod.ts";
 import { setPass } from "../operands/mod.ts";
 import { type Tests, description} from "./testing.ts";
 
@@ -31,7 +31,6 @@ const tests: Tests = [
 Deno.test("Index Indirect Code Generation", () => {
     newContext();
     setPass(2);
-    const translate = translator();
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }
@@ -40,7 +39,6 @@ Deno.test("Index Indirect Code Generation", () => {
 Deno.test("Bad symbolic operand for LD", () => {
     newContext();
     setPass(2);
-    const translate = translator();
     assertThrows(
         () => translate(["LD", ["R15", "-Q"]]),
         SyntaxError,
@@ -51,7 +49,6 @@ Deno.test("Bad symbolic operand for LD", () => {
 Deno.test("Bad symbolic operand for ST", () => {
     newContext();
     setPass(2);
-    const translate = translator();
     assertThrows(
         () => translate(["ST", ["plop", "R16"]]),
         SyntaxError,

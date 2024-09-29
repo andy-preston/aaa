@@ -3,7 +3,7 @@ import { label, newContext } from "../context/mod.ts";
 import {
     programMemoryOrigin,
     programMemoryStep,
-    translator
+    translate
 } from "../generate/mod.ts";
 import { type Tests, description} from "./testing.ts";
 import { setPass } from "../operands/mod.ts";
@@ -26,7 +26,6 @@ Deno.test("Relative Program Code Generation", () => {
     label("forward");
     programMemoryOrigin(3);
     setPass(2);
-    const translate = translator();
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
         programMemoryStep(test[1]);
@@ -37,7 +36,6 @@ Deno.test("Absolute address too high on RJMP instruction", () => {
     newContext();
     programMemoryOrigin(0);
     setPass(2);
-    const translate = translator();
     assertThrows(
         () => translate(["RJMP", ["0x1111"]]),
         RangeError,
@@ -49,7 +47,6 @@ Deno.test("Absolute address too low on RCALL instruction", () => {
     newContext();
     programMemoryOrigin(0x2000);
     setPass(2);
-    const translate = translator();
     assertThrows(
         () => translate(["RCALL", ["0x500"]]),
         RangeError,
