@@ -1,5 +1,5 @@
 import type { Mnemonic } from "../source-code/mod.ts";
-import { addProperty } from "./context.ts";
+import { property } from "./context.ts";
 import { setProgramMemoryEnd } from "../generate/mod.ts";
 
 let deviceErrorShown: boolean;
@@ -48,7 +48,7 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
                 setProgramMemoryEnd(value as number);
                 break;
             default:
-                addProperty(key, value as number);
+                property(key, value as number);
                 break;
         }
     }

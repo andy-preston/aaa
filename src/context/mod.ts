@@ -1,7 +1,7 @@
 export {
-    addCoupledProperty,
-    addDirective,
-    addProperty,
+    coupledProperty,
+    directive,
+    property,
     execute,
     label,
     newContext

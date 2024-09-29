@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import {
-    addCoupledProperty,
+    coupledProperty,
     chooseDevice,
     newContext,
     newDeviceChecker
@@ -39,7 +39,7 @@ Deno.test("org addresses must be progmem size when a device is chosen", () => {
 
 Deno.test("org directive sets current address", () => {
     newContext();
-    addCoupledProperty("progmemEnd", getProgramMemoryEnd);
+    coupledProperty("progmemEnd", getProgramMemoryEnd);
     programMemoryOrigin(0);
     assertEquals(0, programMemoryAddress());
     programMemoryOrigin(42);

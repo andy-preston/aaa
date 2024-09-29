@@ -20,7 +20,7 @@ export const newContext = () => {
         "programEnd": Math.floor(0xffff / 2)
     };
     for (let r = 0; r < 32; r++) {
-        addProperty(`R${r}`, r);
+        property(`R${r}`, r);
     }
     const specialRegisters: Array<[string, number]> = [
         ["X", 26],
@@ -34,7 +34,7 @@ export const newContext = () => {
         ["ZH", 31]
     ];
     for (const [name, value] of specialRegisters) {
-        addProperty(name, value);
+        property(name, value);
     }
 };
 
@@ -43,7 +43,7 @@ type NumberDirective = (n: number) => void;
 type ArrayDirective = (a: Array<number> | string) => void;
 type Directive = StringDirective | NumberDirective | ArrayDirective;
 
-export const addDirective = (name: string, directive: Directive) => {
+export const directive = (name: string, directive: Directive) => {
     Object.defineProperty(context, name, {
         "configurable": false,
         "enumerable": true,
@@ -52,7 +52,7 @@ export const addDirective = (name: string, directive: Directive) => {
     });
 };
 
-export const addProperty = (name: string, value: number) => {
+export const property = (name: string, value: number) => {
     Object.defineProperty(context, name, {
         "configurable": false,
         "enumerable": true,
@@ -63,7 +63,7 @@ export const addProperty = (name: string, value: number) => {
 
 type numericGetter = () => number;
 
-export const addCoupledProperty = (name: string, getter: numericGetter) => {
+export const coupledProperty = (name: string, getter: numericGetter) => {
     Object.defineProperty(context, name, {
         "configurable": false,
         "enumerable": true,
@@ -73,7 +73,7 @@ export const addCoupledProperty = (name: string, getter: numericGetter) => {
 
 export const label = (name: string): void => {
     if (!Object.hasOwn(context, name)) {
-        addProperty(name, programMemoryAddress());
+        property(name, programMemoryAddress());
     }
     else if (context[name] != programMemoryAddress()) {
         throw new ReferenceError(

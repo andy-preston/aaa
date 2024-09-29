@@ -1,6 +1,6 @@
 import {
-    addCoupledProperty, addDirective,
     newContext, newDeviceChecker,
+    coupledProperty, directive,
     deviceDirective
 } from "./context/mod.ts";
 import {
@@ -18,12 +18,12 @@ export const coupling = () => {
     newSplitter();
     newDeviceChecker();
 
-    addDirective("include", includeFile);
-    addDirective("device", deviceDirective);
-    addDirective("org", programMemoryOrigin);
-    addDirective("poke", poke);
+    directive("include", includeFile);
+    directive("device", deviceDirective);
+    directive("org", programMemoryOrigin);
+    directive("poke", poke);
 
-    addCoupledProperty("progmemEnd", getProgramMemoryEnd);
+    coupledProperty("progmemEnd", getProgramMemoryEnd);
 
     return processor();
 };
