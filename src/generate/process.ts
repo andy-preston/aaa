@@ -47,7 +47,7 @@ const codeBlock = (
 
 export const process = function* (line: string): ProcessGenerator {
     errorMessages = [];
-    // Has to come before ANY yields - labels must come before pokes
+    // Remember that labels must be processed before pokes!
     const [label, mnemonic, operands] = lineTokens(line);
     labelWithError(label);
     for (const block of peek()) {
@@ -57,11 +57,11 @@ export const process = function* (line: string): ProcessGenerator {
         translationWithError([mnemonic, operands]),
         errorMessages
     );
-    for (const macroLine of macroLines()) {
+    for (const [label, mnemonic, operands] of macroLines()) {
         errorMessages = [];
-        labelWithError(macroLine[0]);
+        labelWithError(label);
         yield codeBlock(
-            translationWithError([macroLine[1], macroLine[2]]),
+            translationWithError([mnemonic, operands]),
             errorMessages
         );
     }
