@@ -5,7 +5,7 @@ import {
 } from "./context/mod.ts";
 import {
     getProgramMemoryEnd, programMemoryOrigin,
-    newPokeBuffer, poke, processor
+    newPokeBuffer, poke
 } from "./generate/mod.ts";
 import {
     newSplitter,
@@ -24,6 +24,4 @@ export const coupling = () => {
     directive("poke", poke);
 
     coupledProperty("progmemEnd", getProgramMemoryEnd);
-
-    return processor();
 };

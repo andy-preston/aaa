@@ -6,12 +6,11 @@ import {
     newDeviceChecker
  } from "../context/mod.ts";
 import { programMemoryAddress, programMemoryOrigin } from "../generate/mod.ts";
-import { ProcessGenerator, processor } from "./process.ts";
-import { newPokeBuffer } from "./poke-buffer.ts";
 import { setPass } from "../operands/mod.ts";
+import { newPokeBuffer } from "./poke-buffer.ts";
+import { process } from "./process.ts";
 
 const processing = (line: string) => {
-    const process = processor();
     newDeviceChecker();
     chooseDevice("dummy", {});
     setPass(2);
@@ -20,7 +19,7 @@ const processing = (line: string) => {
     }
 };
 
-const findError = (process: ProcessGenerator, line: string, error: string) => {
+const findError = (line: string, error: string) => {
     for (const processed of process(line)) {
         if (processed[2].includes(error)) {
             return true;
@@ -29,7 +28,7 @@ const findError = (process: ProcessGenerator, line: string, error: string) => {
     return false;
 };
 
-const noErrors = (process: ProcessGenerator, line: string) => {
+const noErrors = (line: string) => {
     for (const processed of process(line)) {
         if (processed[2].length != 0) {
             return false;
@@ -84,9 +83,8 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
     newPokeBuffer();
     newDeviceChecker();
     setPass(2);
-    const process = processor();
     chooseDevice("dummy", { "unsupportedInstructions": ["ADIW"] });
-    assert(findError(process, "ADIW R26, 5", "ADIW is not available on dummy"));
+    assert(findError("ADIW R26, 5", "ADIW is not available on dummy"));
 });
 
 Deno.test("If no device is chosen, warn after the first assembly line", () => {
@@ -94,11 +92,10 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
     newPokeBuffer();
     newDeviceChecker();
     setPass(2);
-    const process = processor();
-    assert(noErrors(process, ""), "no error on blank line");
-    assert(noErrors(process, ""), "no error on blank line");
+    assert(noErrors(""), "no error on blank line");
+    assert(noErrors(""), "no error on blank line");
     assert(
-        findError(process, "ADIW R26, 5", "No device selected"),
+        findError("ADIW R26, 5", "No device selected"),
         "error on instruction line"
     );
 });
@@ -108,11 +105,10 @@ Deno.test("The instruction set chosen check is only executed once", () => {
     newPokeBuffer();
     newDeviceChecker();
     setPass(2);
-    const process = processor();
     assert(
-        findError(process, "ADIW R26, 5", "No device selected"),
+        findError("ADIW R26, 5", "No device selected"),
         "error on instruction line"
     );
-    assert(noErrors(process, "ADIW R26, 5"), "no error on blank line");
-    assert(noErrors(process, "ADIW R26, 5"), "no error on blank line");
+    assert(noErrors("ADIW R26, 5"), "no error on blank line");
+    assert(noErrors("ADIW R26, 5"), "no error on blank line");
 });

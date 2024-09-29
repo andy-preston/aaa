@@ -6,7 +6,7 @@ export { template } from "./template.ts";
 
 export { translate } from "./translate.ts";
 
-export { processor } from "./process.ts";
+export { process } from "./process.ts";
 
 export {
     getProgramMemoryEnd,
