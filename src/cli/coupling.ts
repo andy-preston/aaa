@@ -3,10 +3,12 @@ import {
     coupledProperty, directive,
     deviceDirective
 } from "../context/mod.ts";
+
 import {
     getProgramMemoryEnd, programMemoryOrigin,
     newPokeBuffer, poke
 } from "../generate/mod.ts";
+
 import {
     newSplitter,
     includeFile

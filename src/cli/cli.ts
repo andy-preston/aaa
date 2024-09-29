@@ -1,6 +1,9 @@
 import { process, programMemoryOrigin } from "../generate/mod.ts";
+
 import { setPass } from "../operands/mod.ts";
+
 import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
+
 import {
     FileName,
     languageSplit,

@@ -99,10 +99,9 @@ export const execute = (jsSource: string): string => {
     if (trimmed == "") {
         return "";
     }
+    const functionBody = `with (this) { ${returnIfExpression(trimmed)}; }`;
     try {
-        const result = new Function(
-            `with (this) { ${returnIfExpression(trimmed)}; }`
-        ).call(context);
+        const result = new Function(functionBody).call(context);
         return result == undefined ? "" : `${result}`;
     } catch (error) {
         if (error.name != "ReferenceError") {
