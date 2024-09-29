@@ -1,6 +1,10 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
-import type { GeneratedCode } from "./generated-code.ts";
+
+export type GeneratedCode =
+    | []
+    | [number, number]
+    | [number, number, number, number];
 
 export const translate = (instruction: Instruction): GeneratedCode => {
     if (instruction[0] == "") {

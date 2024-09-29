@@ -1,4 +1,4 @@
-import { GeneratedCode } from "./mod.ts";
+import { GeneratedCode } from "./translate.ts";
 
 let theBuffer: Array<GeneratedCode>;
 
