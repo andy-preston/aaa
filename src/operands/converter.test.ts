@@ -2,9 +2,9 @@ import { assertEquals, assertThrows } from "assert";
 import {
     checkOperand,
     checkOperandCount,
-    numericOperand,
-    setPass
+    numericOperand
 } from "./converter.ts";
+import { setPass } from "./numeric.ts";
 import { newContext } from "../context/mod.ts";
 import { programMemoryOrigin } from "../generate/mod.ts";
 
