@@ -1,4 +1,4 @@
-import type { GeneratedCode } from "./types.ts";
+import type { GeneratedCode } from "./generated-code.ts";
 
 type TemplateOperandKey =
     | "A"

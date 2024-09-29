@@ -1,4 +1,4 @@
-export type { GeneratedCode } from "./types.ts";
+export type { GeneratedCode } from "./generated-code.ts";
 
 export { newPokeBuffer, peek, poke } from "./poke-buffer.ts";
 
