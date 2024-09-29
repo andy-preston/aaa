@@ -2,9 +2,13 @@ import { assertEquals } from "assert";
 import { newContext } from "../context/mod.ts";
 import { languageSplit, newSplitter } from "./language-split.ts";
 
-Deno.test("JS can be delimited with moustaches on the same line", () => {
+const setupTest = () => {
     newContext();
     newSplitter();
+};
+
+Deno.test("JS can be delimited with moustaches on the same line", () => {
+    setupTest();
     const result = languageSplit(
         "MOV {{ this.test = 27; return this.test; }}, R2"
     );
@@ -12,15 +16,13 @@ Deno.test("JS can be delimited with moustaches on the same line", () => {
 });
 
 Deno.test("JS can use registers from the context", () => {
-    newContext();
-    newSplitter();
+    setupTest();
     const result = languageSplit("MOV {{ R6 }}, R2");
     assertEquals(result, "MOV 6, R2");
 });
 
 Deno.test("JS can be delimited by moustaches across several lines", () => {
-    newContext();
-    newSplitter();
+    setupTest();
     const firstResult = languageSplit(
         "some ordinary stuff {{ this.test = 27;"
     );
