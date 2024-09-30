@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { directive, execute, newContext } from "./context.ts";
+import { coupledProperty, directive, execute, newContext } from "./context.ts";
 
 Deno.test("Simple expressions do not require a `return`", () => {
     newContext
@@ -60,4 +60,11 @@ Deno.test("Syntax errors get thrown too", () => {
         SyntaxError,
         "Unexpected identifier 'is'"
     );
+});
+
+Deno.test("Coupled properties can be an arrow function", () => {
+    const aFunction = () => 57;
+    coupledProperty("testProperty", aFunction);
+    const result = execute("testProperty");
+    assertEquals(result, "57");
 });

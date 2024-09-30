@@ -1,7 +1,7 @@
 import {
-    newContext, newDeviceChecker,
-    coupledProperty, directive,
-    deviceDirective
+    coupledProperty,
+    directive, deviceDirective,
+    newContext, newDeviceChecker
 } from "../context/mod.ts";
 
 import {
