@@ -1,5 +1,5 @@
-import { SymbolicOperand } from "./symbolic.ts";
 import { between, numeric } from "./numeric.ts";
+import type { SymbolicOperand } from "./symbolic.ts";
 
 const pairs = [24, 26, 28, 30];
 

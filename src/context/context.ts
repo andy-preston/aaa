@@ -61,9 +61,9 @@ export const property = (name: string, value: number) => {
     });
 };
 
-type numericGetter = () => number;
+type NumericGetter = () => number;
 
-export const coupledProperty = (name: string, getter: numericGetter) => {
+export const coupledProperty = (name: string, getter: NumericGetter) => {
     Object.defineProperty(context, name, {
         "configurable": false,
         "enumerable": true,

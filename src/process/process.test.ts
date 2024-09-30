@@ -4,9 +4,9 @@ import {
     execute,
     newContext,
     newDeviceChecker
- } from "../context/mod.ts";
-import { programMemoryAddress, programMemoryOrigin } from "./mod.ts";
+} from "../context/mod.ts";
 import { setPass } from "../operands/mod.ts";
+import { programMemoryAddress, programMemoryOrigin } from "./mod.ts";
 import { newPokeBuffer } from "./poke-buffer.ts";
 import { process } from "./process.ts";
 

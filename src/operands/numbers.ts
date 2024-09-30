@@ -1,5 +1,5 @@
 import { between, numeric } from "./numeric.ts";
-import { SymbolicOperand } from "./symbolic.ts";
+import type { SymbolicOperand } from "./symbolic.ts";
 
 export const is6Bits = (operand: SymbolicOperand) =>
     between(0, operand, 0x3f);

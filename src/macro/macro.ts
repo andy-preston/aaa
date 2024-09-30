@@ -1,4 +1,4 @@
-import { Tokens } from "../source-code/mod.ts";
+import type { Tokens } from "../source-code/mod.ts";
 
 const activeMacro = false;
 

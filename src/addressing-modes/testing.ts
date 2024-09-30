@@ -1,5 +1,5 @@
-import { GeneratedCode } from "../process/mod.ts";
-import { Instruction } from "../source-code/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
+import type { Instruction } from "../source-code/mod.ts";
 
 type Test = [Instruction, GeneratedCode];
 

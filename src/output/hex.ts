@@ -1,5 +1,5 @@
 import type { GeneratedCode } from "../generate/mod.ts";
-import { WriteFile } from "./file.ts";
+import type { WriteFile } from "./file.ts";
 import {
     addBytesToBuffer,
     byteBufferAddress,
