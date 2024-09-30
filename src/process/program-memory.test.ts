@@ -9,7 +9,7 @@ import {
     getProgramMemoryEnd,
     programMemoryAddress,
     programMemoryOrigin
-} from "../generate/mod.ts";
+} from "./mod.ts";
 
 Deno.test("org addresses can't be less than zero", () => {
     assertThrows(

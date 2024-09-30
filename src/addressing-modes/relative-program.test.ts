@@ -4,7 +4,7 @@ import {
     programMemoryOrigin,
     programMemoryStep,
     translate
-} from "../generate/mod.ts";
+} from "../process/mod.ts";
 import { type Tests, description} from "./testing.ts";
 import { setPass } from "../operands/mod.ts";
 

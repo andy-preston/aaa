@@ -6,7 +6,7 @@ import {
 } from "./converter.ts";
 import { setPass } from "./numeric.ts";
 import { newContext } from "../context/mod.ts";
-import { programMemoryOrigin } from "../generate/mod.ts";
+import { programMemoryOrigin } from "../process/mod.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
     newContext();

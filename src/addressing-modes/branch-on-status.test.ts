@@ -3,7 +3,7 @@ import {
     programMemoryOrigin,
     programMemoryStep,
     translate
-} from "../generate/mod.ts";
+} from "../process/mod.ts";
 import { description, type Tests } from "./testing.ts";
 import { setPass } from "../operands/mod.ts";
 import { property, newContext } from "../context/mod.ts";

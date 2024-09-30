@@ -4,7 +4,7 @@ import {
     newContext,
     newDeviceChecker
 } from "../context/mod.ts";
-import { translate } from "../generate/mod.ts";
+import { translate } from "../process/mod.ts";
 import { type Tests, description} from "./testing.ts";
 import { setPass } from "../operands/mod.ts";
 

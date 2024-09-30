@@ -7,7 +7,7 @@ import {
 import {
     getProgramMemoryEnd, programMemoryOrigin,
     newPokeBuffer, poke
-} from "../generate/mod.ts";
+} from "../process/mod.ts";
 
 import {
     newSplitter,

@@ -1,4 +1,4 @@
-import { process, programMemoryOrigin } from "../generate/mod.ts";
+import { process, programMemoryOrigin } from "../process/mod.ts";
 
 import { setPass } from "../operands/mod.ts";
 
