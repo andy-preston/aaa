@@ -23,7 +23,7 @@ export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const registerType: TypeName = hasReducedCore()
         ? "immediateRegister" : "register";
     const addressType: TypeName = hasReducedCore()
-        ? "7bitAddress" : "16bitAddress";
+        ? "7bitRamAddress" : "16bitRamAddress";
     const prefix = hasReducedCore() ? "1010_" : "1001_00";
     const suffix = hasReducedCore()
         ? "kkk dddd_kkkk" : "d dddd_0000 kkkk_kkkk kkkk_kkkk";

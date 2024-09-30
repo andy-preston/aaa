@@ -79,14 +79,6 @@ export const operandTypes = {
         "nybble (0 - 0x0F)",
         isNybble, numeric, undefined
     ],
-    "16bitAddress": [
-        "16 bit RAM address (0 - 0xFFFF) (64 K)",
-        is64K, numeric
-    ],
-    "7bitAddress": [
-        "7 bit RAM address (0 - 0x7F) (127 Bytes)",
-        is127, numeric
-    ],
     "port": [
         "Data memory mapped into IO space (0x20 - 0x5F)",
         isPortInDataMemory, portInIOSpace, undefined
@@ -102,6 +94,14 @@ export const operandTypes = {
     "relativeBranch": [
         "relative branch to 7 bit range (-64 - 63)",
         is64EachWay, relative64, isInProgramMemory
+    ],
+    "16bitRamAddress": [
+        "16 bit RAM address (0 - 0xFFFF) (64 K)",
+        is64K, numeric, undefined
+    ],
+    "7bitRamAddress": [
+        "7 bit RAM address (0 - 0x7F) (127 Bytes)",
+        is127, numeric, undefined
     ]
 } as const satisfies Record<string, OperandType>;
 
