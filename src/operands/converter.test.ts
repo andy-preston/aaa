@@ -1,16 +1,20 @@
 import { assertEquals, assertThrows } from "assert";
+import { newContext } from "../context/mod.ts";
+import { programMemoryBytes, programMemoryOrigin } from "../process/mod.ts";
 import {
     checkOperand,
     checkOperandCount,
     numericOperand
 } from "./converter.ts";
 import { setPass } from "./numeric.ts";
-import { newContext } from "../context/mod.ts";
-import { programMemoryOrigin } from "../process/mod.ts";
 
-Deno.test("Symbolic is only used for Check Count", () => {
+const setupTest = () => {
     newContext();
     setPass(2);
+}
+
+Deno.test("Symbolic is only used for Check Count", () => {
+    setupTest();
     assertThrows(
         () => numericOperand("symbolic", "anything"),
         Error,
@@ -25,8 +29,7 @@ Deno.test("Symbolic is only used for Check Count", () => {
 });
 
 Deno.test("Numeric operands must be integers", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("byte", "R10"), 10);
     assertEquals(numericOperand("byte", "42"), 42);
     assertThrows(
@@ -42,20 +45,18 @@ Deno.test("Numeric operands must be integers", () => {
 });
 
 Deno.test("Operands must be defined, at least on the second pass", () => {
-    newContext();
-    setPass(1);
-    assertEquals(0, numericOperand("byte", "notDefined"));
-    setPass(2);
+    setupTest();
     assertThrows(
         () => numericOperand("byte", "notDefined"),
         ReferenceError,
         "notDefined is not defined"
     );
+    setPass(1);
+    assertEquals(0, numericOperand("byte", "notDefined"));
 });
 
 Deno.test("A register should be between zero and 31", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("register", "R0"), 0);
     assertEquals(numericOperand("register", "6"), 6);
     assertEquals(numericOperand("register", "Z"), 30);
@@ -74,8 +75,7 @@ Deno.test("A register should be between zero and 31", () => {
 });
 
 Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("immediateRegister", "Z"), 14);
     assertEquals(numericOperand("immediateRegister", "R31"), 15);
     assertEquals(numericOperand("immediateRegister", "31"), 15);
@@ -92,8 +92,7 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
 });
 
 Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("multiplyRegister", "R20"), 4);
     assertEquals(numericOperand("multiplyRegister", "22"), 6);
     assertThrows(
@@ -109,8 +108,7 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
 });
 
 Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("registerPair", "R24"), 0);
     assertEquals(numericOperand("registerPair", "X"), 1);
     assertEquals(numericOperand("registerPair", "Y"), 2);
@@ -128,8 +126,7 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
 });
 
 Deno.test("Any register pair is any even numbered register", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("anyRegisterPair", "R0"), 0);
     assertEquals(numericOperand("anyRegisterPair", "R2"), 1);
     assertEquals(numericOperand("anyRegisterPair", "R4"), 2);
@@ -149,8 +146,7 @@ Deno.test("Any register pair is any even numbered register", () => {
 });
 
 Deno.test("Some instructions require Z and no other register", () => {
-    newContext();
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("z", "R30"), 30);
     assertEquals(numericOperand("z", "Z"), 30);
     assertEquals(numericOperand("z", "30"), 30);
@@ -172,7 +168,7 @@ Deno.test("Some instructions require Z and no other register", () => {
 });
 
 Deno.test("A port is between 0x20 - 0x5F and is remapped to 0x3f", () => {
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("port", "0x20"), 0);
     assertEquals(numericOperand("port", "0x5F"), 0x3f);
     assertThrows(
@@ -193,7 +189,7 @@ Deno.test("A port is between 0x20 - 0x5F and is remapped to 0x3f", () => {
 });
 
 Deno.test("6 bits is between 0 and 0x3F", () => {
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("sixBits", "0b111111"), 0x3f);
     assertEquals(numericOperand("sixBits", "0x3e"), 0x3e);
     assertThrows(
@@ -209,7 +205,7 @@ Deno.test("6 bits is between 0 and 0x3F", () => {
 });
 
 Deno.test("A bit index is 0 - 7", () => {
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("bitIndex", "0"), 0);
     assertEquals(numericOperand("bitIndex", "4"), 4);
     assertEquals(numericOperand("bitIndex", "7"), 7);
@@ -221,7 +217,7 @@ Deno.test("A bit index is 0 - 7", () => {
 });
 
 Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("byte", "-1"), 0xff);
     assertEquals(numericOperand("byte", "255"), 0xff);
     assertEquals(numericOperand("byte", "-128"), 128);
@@ -240,7 +236,7 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
 });
 
 Deno.test("A nybble should be between 0 and 0x0f", () => {
-    setPass(2);
+    setupTest();
     assertEquals(numericOperand("nybble", "0"), 0);
     assertEquals(numericOperand("nybble", "6"), 6);
     assertEquals(numericOperand("nybble", "15"), 15);
@@ -257,14 +253,11 @@ Deno.test("A nybble should be between 0 and 0x0f", () => {
 });
 
 Deno.test("An address is 0 - 0x3FFFFF", () => {
-    setPass(2);
+    setupTest();
+    const moreProgramMemoryThanAddresses = 0xf00000;
+    programMemoryBytes(moreProgramMemoryThanAddresses);
     assertEquals(numericOperand("address", "0"), 0);
     assertEquals(numericOperand("address", "0x3FFFFF"), 0x3fffff);
-    assertThrows(
-        () => numericOperand("address", "-1"),
-        RangeError,
-        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not -1"
-    );
     assertThrows(
         () => numericOperand("address", "0x400000"),
         RangeError,
@@ -272,50 +265,62 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
     );
 });
 
-Deno.test("A RAM address is 0 - 0xFFFF", () => {
-    setPass(2);
-    assertEquals(numericOperand("16bitAddress", "0"), 0);
-    assertEquals(numericOperand("16bitAddress", "0xFFFF"), 0xffff);
+Deno.test("An address is should not exceed program memory", () => {
+    setupTest();
+    programMemoryBytes(0x400);
     assertThrows(
-        () => numericOperand("16bitAddress", "-1"),
+        () => numericOperand("address", "-1"),
+        RangeError,
+        "Operand out of range: should be within program memory 0 - 0x200 not -1"
+    );
+    assertThrows(
+        () => numericOperand("address", "0x400000"),
+        RangeError,
+        "Operand out of range: should be within program memory 0 - 0x200 not 0x400000"
+    );
+});
+
+Deno.test("A RAM address is 0 - 0xFFFF", () => {
+    setupTest();
+    const moreProgramMemoryThanAddresses = 0x10000;
+    programMemoryBytes(moreProgramMemoryThanAddresses);
+
+    assertEquals(numericOperand("16bitRamAddress", "0"), 0);
+    assertEquals(numericOperand("16bitRamAddress", "0xFFFF"), 0xffff);
+    assertThrows(
+        () => numericOperand("16bitRamAddress", "-1"),
         RangeError,
         "Operand out of range: should be 16 bit RAM address (0 - 0xFFFF) (64 K) not -1"
     );
     assertThrows(
-        () => numericOperand("16bitAddress", "0x10000"),
+        () => numericOperand("16bitRamAddress", "0x10000"),
         RangeError,
         "Operand out of range: should be 16 bit RAM address (0 - 0xFFFF) (64 K) not 0x10000"
     );
 });
 
 Deno.test("A 7 bit RAM address is 0 - 0x7F", () => {
-    setPass(2);
-    assertEquals(numericOperand("7bitAddress", "0"), 0);
-    assertEquals(numericOperand("7bitAddress", "0x7F"), 0x7f);
+    setupTest();
+    assertEquals(numericOperand("7bitRamAddress", "0"), 0);
+    assertEquals(numericOperand("7bitRamAddress", "0x7F"), 0x7f);
     assertThrows(
-        () => numericOperand("7bitAddress", "-1"),
+        () => numericOperand("7bitRamAddress", "-1"),
         RangeError,
         "Operand out of range: should be 7 bit RAM address (0 - 0x7F) (127 Bytes) not -1"
     );
     assertThrows(
-        () => numericOperand("7bitAddress", "0x80"),
+        () => numericOperand("7bitRamAddress", "0x80"),
         RangeError,
         "Operand out of range: should be 7 bit RAM address (0 - 0x7F) (127 Bytes) not 0x80"
     );
 });
 
 Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
-    setPass(2);
+    setupTest();
     programMemoryOrigin(0);
     assertEquals(numericOperand("relativeJump", "500"), 499);
     programMemoryOrigin(1010);
     assertEquals(numericOperand("relativeJump", "1000"), 0x0fff - 10);
-    programMemoryOrigin(0);
-    assertThrows(
-        () => numericOperand("relativeJump", "-1"),
-        RangeError,
-        "Operand out of range: -1 should be a memory address not -1"
-    );
     programMemoryOrigin(0);
     assertThrows(
         () => numericOperand("relativeJump", "0x1111"),
@@ -324,28 +329,54 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     );
 });
 
+Deno.test("A relative jump should not be outside program memory", () => {
+    setupTest();
+    assertThrows(
+        () => numericOperand("relativeJump", "-1"),
+        RangeError,
+        "Operand out of range: should be within program memory 0 - 0x8000 not -1"
+    );
+    programMemoryBytes(32);
+    assertThrows(
+        () => numericOperand("relativeJump", "23"),
+        RangeError,
+        "Operand out of range: should be within program memory 0 - 0x10 not 23"
+    );
+});
+
 Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
-    setPass(2);
+    setupTest();
+    programMemoryBytes(1024);
     programMemoryOrigin(0);
     assertEquals(numericOperand("relativeBranch", "60"), 59);
     programMemoryOrigin(110);
     assertEquals(numericOperand("relativeBranch", "100"), 127 - 10);
     programMemoryOrigin(0);
     assertThrows(
+        () => numericOperand("relativeBranch", "0x200"),
+        RangeError,
+        "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x200"
+    );
+    programMemoryOrigin(0x200);
+    assertThrows(
+        () => numericOperand("relativeBranch", "0x180"),
+        RangeError,
+        "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x180"
+    );
+});
+
+Deno.test("A relative branch should not be outside program memory", () => {
+    setupTest();
+    programMemoryBytes(0x20);
+    programMemoryOrigin(0);
+    assertThrows(
         () => numericOperand("relativeBranch", "-1"),
         RangeError,
-        "Operand out of range: -1 should be a memory address not -1"
+        "Operand out of range: should be within program memory 0 - 0x10 not -1"
     );
-    programMemoryOrigin(0);
     assertThrows(
-        () => numericOperand("relativeBranch", "0x10000"),
+        () => numericOperand("relativeBranch", "0x20"),
         RangeError,
-        "Operand out of range: 0x10000 should be a memory address not 65536"
-    );
-    programMemoryOrigin(0);
-    assertThrows(
-        () => numericOperand("relativeBranch", "0x1111"),
-        RangeError,
-        "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x1111"
+        "Operand out of range: should be within program memory 0 - 0x10 not 0x20"
     );
 });

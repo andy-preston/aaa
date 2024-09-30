@@ -1,7 +1,6 @@
-import { programMemoryAddress } from "../process/mod.ts";
-import { operandMessage } from "./message.ts";
-import type { SymbolicOperand } from "./symbolic.ts";
+import { programMemoryEnd, programMemoryAddress } from "../process/mod.ts";
 import { type NumericOperand, between, numeric } from "./numeric.ts";
+import type { SymbolicOperand } from "./symbolic.ts";
 
 const relative = (
     highValue: number,
@@ -9,11 +8,6 @@ const relative = (
 ): NumericOperand => {
     const target = numeric(operand);
     // TODO: we currently only support 64K of program memory
-    if (target < 0 || target > 0xffff) {
-        throw new RangeError(
-            operandMessage(operand, "a memory address", `${target}`)
-        );
-    }
     const distance = target - programMemoryAddress();
     return distance < 0 ? highValue + distance : distance - 1;
 };
@@ -21,6 +15,12 @@ const relative = (
 const relativeRange = (highValue: number, operand: SymbolicOperand) => {
     const value = relative(highValue, operand);
     return value >= 0 && value <= highValue;
+};
+
+export const isInProgramMemory = (operand: SymbolicOperand): string => {
+    const end = programMemoryEnd();
+    return between(0, operand, end)
+        ? "" : `within program memory 0 - 0x${end.toString(16)}`;
 };
 
 export const is4Meg = (operand: SymbolicOperand) =>

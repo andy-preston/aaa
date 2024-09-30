@@ -1,12 +1,12 @@
 import { assertEquals, assertThrows } from "assert";
 import {
-    coupledProperty,
     chooseDevice,
+    coupledProperty,
     newContext,
     newDeviceChecker
 } from "../context/mod.ts";
 import {
-    getProgramMemoryEnd,
+    programMemoryEnd,
     programMemoryAddress,
     programMemoryOrigin
 } from "./mod.ts";
@@ -23,7 +23,7 @@ Deno.test("org addresses must be below 0xffff/2 by default", () => {
     assertThrows(
         () => { programMemoryOrigin(32768); },
         Error,
-        "32768 beyond programEnd (32767)"
+        "32768 beyond end of program memory (0x7fff)"
     );
 });
 
@@ -33,13 +33,13 @@ Deno.test("org addresses must be progmem size when a device is chosen", () => {
     assertThrows(
         () => { programMemoryOrigin(92); },
         Error,
-        "92 beyond programEnd (50)"
+        "92 beyond end of program memory (0x32)"
     );
 });
 
 Deno.test("org directive sets current address", () => {
     newContext();
-    coupledProperty("progmemEnd", getProgramMemoryEnd);
+    coupledProperty("progmemEnd", programMemoryEnd);
     programMemoryOrigin(0);
     assertEquals(0, programMemoryAddress());
     programMemoryOrigin(42);

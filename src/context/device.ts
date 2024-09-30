@@ -1,6 +1,6 @@
+import { programMemoryBytes } from "../process/mod.ts";
 import type { Mnemonic } from "../source-code/mod.ts";
 import { property } from "./context.ts";
-import { setProgramMemoryEnd } from "../process/mod.ts";
 
 let deviceErrorShown: boolean;
 let unsupportedInstructions: Array<string>;
@@ -45,7 +45,7 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
                 reducedCore = value as boolean;
                 break;
             case "programEnd":
-                setProgramMemoryEnd(value as number);
+                programMemoryBytes(value as number);
                 break;
             default:
                 property(key, value as number);

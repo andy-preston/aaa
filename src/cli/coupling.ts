@@ -5,7 +5,7 @@ import {
 } from "../context/mod.ts";
 
 import {
-    getProgramMemoryEnd, programMemoryOrigin,
+    programMemoryEnd, programMemoryOrigin,
     newPokeBuffer, poke
 } from "../process/mod.ts";
 
@@ -25,5 +25,5 @@ export const coupling = () => {
     directive("org", programMemoryOrigin);
     directive("poke", poke);
 
-    coupledProperty("progmemEnd", getProgramMemoryEnd);
+    coupledProperty("progmemEnd", programMemoryEnd);
 };
