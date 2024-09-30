@@ -15,4 +15,4 @@ export {
     includeFile,
     sourceLines,
     topFile
-} from "./source-files.ts"
+} from "./source-lines.ts";
