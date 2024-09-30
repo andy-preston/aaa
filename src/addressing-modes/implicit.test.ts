@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import { translate } from "../process/mod.ts";
+import { translate } from "../generate/mod.ts";
 import { setPass } from "../operands/mod.ts";
 import { type Tests, description} from "./testing.ts";
 

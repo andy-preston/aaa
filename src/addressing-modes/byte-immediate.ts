@@ -1,5 +1,9 @@
-import { type GeneratedCode, template } from "../process/mod.ts";
-import { checkOperandCount, numericOperand, type SymbolicOperand} from "../operands/mod.ts";
+import { type GeneratedCode, template } from "../generate/mod.ts";
+import {
+    type SymbolicOperand,
+    checkOperandCount,
+    numericOperand
+} from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([

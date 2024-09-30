@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { newContext } from "../context/mod.ts";
-import { translate } from "../process/mod.ts";
+import { translate } from "../generate/mod.ts";
 import { setPass } from "../operands/mod.ts";
 import { type Tests, description} from "./testing.ts";
 

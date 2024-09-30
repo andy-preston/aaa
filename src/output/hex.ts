@@ -1,4 +1,4 @@
-import type { GeneratedCode } from "../process/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 import { WriteFile } from "./file.ts";
 import {
     addBytesToBuffer,

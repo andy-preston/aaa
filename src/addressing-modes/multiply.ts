@@ -1,4 +1,4 @@
-import { type GeneratedCode, template } from "../process/mod.ts";
+import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
     type TypeName,
     checkOperandCount,

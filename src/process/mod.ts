@@ -1,15 +1,11 @@
 export { newPokeBuffer, poke } from "./poke-buffer.ts";
 
-export { template } from "./template.ts";
-
-export {type GeneratedCode, translate } from "./translate.ts";
-
 export { process } from "./process.ts";
 
 export {
-    getProgramMemoryEnd,
+    programMemoryEnd,
     programMemoryAddress,
     programMemoryOrigin,
     programMemoryStep,
-    setProgramMemoryEnd
+    programMemoryBytes
 } from "./program-memory.ts";

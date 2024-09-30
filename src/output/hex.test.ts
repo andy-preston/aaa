@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "assert";
-import type { GeneratedCode } from "../process/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 import { codeForHex, newHexFile } from "./hex.ts";
 import { saveHexFile } from "./hex.ts";
 

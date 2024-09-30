@@ -1,4 +1,4 @@
-import type { GeneratedCode } from "./mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 
 let address = 0;
 let end = Math.floor(0xffff / 2);

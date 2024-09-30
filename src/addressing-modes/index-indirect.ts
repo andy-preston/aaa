@@ -1,8 +1,8 @@
-import { type GeneratedCode, template } from "../process/mod.ts";
+import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
-checkOperandCount,
-    numericOperand,
     type OperandIndex,
+    checkOperandCount,
+    numericOperand,
     operandMessage
 } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";

@@ -1,10 +1,10 @@
 import { hasReducedCore } from "../context/mod.ts";
-import { type GeneratedCode, template } from "../process/mod.ts";
+import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
-    checkOperandCount,
-    numericOperand,
     type OperandIndex,
-    type TypeName
+    type TypeName,
+    checkOperandCount,
+    numericOperand
 } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 

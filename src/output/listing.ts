@@ -1,4 +1,4 @@
-import type { GeneratedCode } from "../process/mod.ts";
+import type { GeneratedCode } from "../generate/mod.ts";
 import type { FileName } from "../source-code/mod.ts";
 import type { WriteFile } from "./file.ts";
 
