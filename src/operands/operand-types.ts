@@ -7,7 +7,7 @@ import {
 import {
     is6Bits, isBitIndex, isByte, isNybble,
     byteValue
-} from "./numbers.ts";
+} from "./numeric.ts";
 
 import {
     isAnyPair, isImmediate, isMultiply, isPair, isRegister, isZRegister,
