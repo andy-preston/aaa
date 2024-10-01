@@ -1,12 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
-import { newContext } from "../context/mod.ts";
 import { numericOperand } from "./converter.ts";
-import { setPass } from "./numeric.ts";
-
-const setupTest = () => {
-    newContext();
-    setPass(2);
-}
+import { setupTest } from "./testing.ts";
 
 Deno.test("Numeric operands must be integers", () => {
     setupTest();

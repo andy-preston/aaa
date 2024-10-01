@@ -1,6 +1,6 @@
 import {
-    is127, is2KEachWay, is4Meg, is64K, is64EachWay, isPortInDataMemory,
-    relative64, relative2K, portInIOSpace,
+    is127, isRelative12Bit, is4Meg, is64K, isRelative7Bit, isPortInDataMemory,
+    relative7Bit, relative12Bit, portInIOSpace,
     isInProgramMemory
 } from "./addresses.ts";
 
@@ -89,11 +89,11 @@ export const operandTypes = {
     ],
     "relativeJump": [
         "relative jump to 12 bit range (-2048 - 2047)",
-        is2KEachWay, relative2K, isInProgramMemory
+        isRelative12Bit, relative12Bit, isInProgramMemory
     ],
     "relativeBranch": [
         "relative branch to 7 bit range (-64 - 63)",
-        is64EachWay, relative64, isInProgramMemory
+        isRelative7Bit, relative7Bit, isInProgramMemory
     ],
     "16bitRamAddress": [
         "16 bit RAM address (0 - 0xFFFF) (64 K)",

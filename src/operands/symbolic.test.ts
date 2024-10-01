@@ -1,16 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
-import { newContext } from "../context/mod.ts";
 import {
     checkOperand,
     checkOperandCount,
     numericOperand
 } from "./converter.ts";
 import { setPass } from "./numeric.ts";
-
-const setupTest = () => {
-    newContext();
-    setPass(2);
-}
+import { setupTest } from "./testing.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
     setupTest();
