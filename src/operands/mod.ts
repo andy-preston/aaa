@@ -3,7 +3,7 @@ export type { SymbolicOperand, SymbolicOperands } from "./symbolic.ts";
 export type { TypeName } from "./operand-types.ts";
 
 export {
-    checkOperand, checkOperandCount,
+    checkOperandCount,
     numericOperand, symbolicOperand
 } from "./converter.ts";
 

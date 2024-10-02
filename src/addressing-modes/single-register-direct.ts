@@ -1,9 +1,5 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
-import {
-    checkOperand,
-    checkOperandCount,
-    numericOperand
-} from "../operands/mod.ts";
+import { checkOperandCount, numericOperand } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
@@ -31,7 +27,7 @@ export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const usesZ = ["LAC", "LAS", "LAT", "XCH"].includes(mnemonic);
     checkOperandCount(operands, usesZ ? ["z", "register"] : ["register"]);
     if (usesZ) {
-        checkOperand("z", operands[0]!);
+        const _ = numericOperand("z", operands[0]!);
     }
     const [operationBits, suffix] = mapping.get(mnemonic)!;
     // In the official documentation, some of these have

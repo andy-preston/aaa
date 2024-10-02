@@ -1,4 +1,6 @@
-import { between, numeric } from "./numeric.ts";
+import { operandRangeError } from "./message.ts";
+import { numeric, NumericOperand } from "./numeric.ts";
+import { Description } from "./operand-types.ts";
 import type { SymbolicOperand } from "./symbolic.ts";
 
 const pairs = [24, 26, 28, 30];
@@ -9,34 +11,27 @@ const allPairs = [
     (i) => i * 2
 );
 
-export const isPair = (operand: SymbolicOperand) =>
-    pairs.includes(numeric(operand));
+export const registerPair = (
+    symbolic: SymbolicOperand,
+    expectation: Description
+) => {
+    const value = numeric(symbolic);
+    if (!pairs.includes(value)) {
+        operandRangeError(expectation, symbolic);
+    }
+    return (value - 24) / 2;
 
-export const pairValue = (operand: SymbolicOperand) =>
-    (numeric(operand) - 24) / 2;
+};
 
-export const isAnyPair = (operand: SymbolicOperand) =>
-    allPairs.includes(numeric(operand));
+export const anyRegisterPair = (
+    symbolic: SymbolicOperand,
+    expectation: Description
+) => {
+    const value = numeric(symbolic);
+    if (!allPairs.includes(value)) {
+        operandRangeError(expectation, symbolic);
+    }
+    return value / 2;
+};
 
-export const anyPairValue = (operand: SymbolicOperand) =>
-    numeric(operand) / 2;
-
-export const isZRegister = (operand: SymbolicOperand) =>
-    numeric(operand) == 30;
-
-export const isMultiply = (operand: SymbolicOperand) =>
-    between(16, operand, 23);
-
-export const multiplyValue = (operand: SymbolicOperand) =>
-    numeric(operand) - 16;
-
-export const isImmediate = (operand: SymbolicOperand) =>
-    between(16, operand, 31);
-
-export const immediateValue = (operand: SymbolicOperand) =>
-    numeric(operand) - 16;
-
-// TODO: On reduced core ALL registers are immediateRegister
-
-export const isRegister = (operand: SymbolicOperand) =>
-    between(0, operand, 31);
+export const immediateScaler = (numeric: NumericOperand) => numeric - 16;

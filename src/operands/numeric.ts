@@ -1,4 +1,6 @@
 import { execute } from "../context/mod.ts";
+import { operandRangeError } from "./message.ts";
+import { Description } from "./operand-types.ts";
 import type { SymbolicOperand } from "./symbolic.ts";
 
 export type NumericOperand = number;
@@ -30,24 +32,19 @@ export const numeric = (operand: SymbolicOperand): NumericOperand => {
     return intResult;
 };
 
-export const between = (min: number, operand: SymbolicOperand, max: number) => {
-    const value = numeric(operand);
-    return value >= min && value <= max;
-};
+type Scaler = (unscaled: NumericOperand) => NumericOperand;
 
-export const is6Bits = (operand: SymbolicOperand) =>
-    between(0, operand, 0x3f);
+export const noScaler = (value: NumericOperand) => value;
 
-export const isBitIndex = (operand: SymbolicOperand) =>
-    between(0, operand, 7);
+export const signedOrUnsignedByte = (value: NumericOperand) =>
+    value < 0 ? 0x0100 + value : value;
 
-export const isByte = (operand: SymbolicOperand) =>
-    between(-128, operand, 0xff);
+export const scaledNumeric = (min: number, max: number, scaler: Scaler) =>
+    (symbolic: SymbolicOperand, expectation: Description) => {
+        const value = numeric(symbolic);
+        if (value < min || value > max) {
+            operandRangeError(expectation, symbolic);
+        }
+        return scaler(value);
+    };
 
-export const byteValue = (operand: SymbolicOperand) => {
-    const value = numeric(operand);
-    return value < 0 ? 0x0100 + value : value;
-};
-
-export const isNybble = (operand: SymbolicOperand) =>
-    between(0, operand, 0x0f);

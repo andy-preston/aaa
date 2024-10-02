@@ -1,108 +1,99 @@
-import {
-    is127, isRelative12Bit, is4Meg, is64K, isRelative7Bit, isPortInDataMemory,
-    relative7Bit, relative12Bit, portInIOSpace,
-    isInProgramMemory
-} from "./addresses.ts";
+import { portMapper, programMemory, relativeAddress } from "./addresses.ts";
 
 import {
-    is6Bits, isBitIndex, isByte, isNybble,
-    byteValue
+    type NumericOperand,
+    noScaler,
+    signedOrUnsignedByte,
+    scaledNumeric
 } from "./numeric.ts";
 
-import {
-    isAnyPair, isImmediate, isMultiply, isPair, isRegister, isZRegister,
-    anyPairValue, immediateValue, multiplyValue, pairValue
-} from "./registers.ts";
+import { anyRegisterPair, immediateScaler, registerPair } from "./registers.ts";
 
 import type { SymbolicOperand } from "./symbolic.ts";
 
-import { type NumericOperand, numeric } from "./numeric.ts";
+export type Description = string;
+type NumericValue = (
+    operand: SymbolicOperand,
+    expected: Description
+) => NumericOperand;
+type OperandType = [Description, NumericValue];
 
-type Description = string;
-type Validator = (operand: SymbolicOperand) => boolean;
-type NumericValue = (operand: SymbolicOperand) => NumericOperand;
-type SpecialPreCheck = (operand: SymbolicOperand) => string;
-
-export type OperandType = [
-    Description,
-    Validator,
-    NumericValue,
-    SpecialPreCheck | undefined
-];
-
-const symbolicIsOnlyForCheckCount = (_operand: SymbolicOperand) => {
+const symbolicIsOnlyForCheckCount = (
+    _operand: SymbolicOperand,
+    _expected: Description
+) => {
     throw Error("Internal error: symbolic is only for checkCount");
 };
 
 export const operandTypes = {
     "symbolic": [
-        "symbolic operand only here for checkCount",
-        symbolicIsOnlyForCheckCount, symbolicIsOnlyForCheckCount, undefined
+        "(symbolic operand)",
+        symbolicIsOnlyForCheckCount
     ],
     "register": [
         "register (R0 - R31)",
-        isRegister, numeric, undefined
+        scaledNumeric(0, 31, noScaler)
     ],
     "immediateRegister": [
         "immediate register (R16 - R31)",
-        isImmediate, immediateValue, undefined
+        scaledNumeric(16, 31, immediateScaler)
     ],
     "multiplyRegister": [
         "multiply register (R16 - R23)",
-        isMultiply, multiplyValue, undefined
+        scaledNumeric(16, 23, immediateScaler)
     ],
     "registerPair": [
         "register pair (R24:R25, R26:R27, R28:29, R30:R31)",
-        isPair, pairValue, undefined
+        registerPair
     ],
     "anyRegisterPair": [
         "any register pair (R0:R1 - R30:R31)",
-        isAnyPair, anyPairValue, undefined
+        anyRegisterPair
     ],
     "z": [
         "Z Register only (R30:R31)",
-        isZRegister, numeric, undefined
+        scaledNumeric(30, 30, noScaler)
     ],
     "sixBits": [
         "six bit number (0 - 0x3F)",
-        is6Bits, numeric, undefined
+        scaledNumeric(0, 0x3f, noScaler)
     ],
     "bitIndex": [
         "bit index (0 - 7)",
-        isBitIndex, numeric, undefined
+        scaledNumeric(0, 7, noScaler)
     ],
     "byte": [
         "byte (-127 - 128) or (0 - 0xFF)",
-        isByte, byteValue, undefined
+        scaledNumeric(-128, 0xff, signedOrUnsignedByte)
     ],
     "nybble": [
         "nybble (0 - 0x0F)",
-        isNybble, numeric, undefined
+        scaledNumeric(0, 0x0f, noScaler)
     ],
     "port": [
         "Data memory mapped into IO space (0x20 - 0x5F)",
-        isPortInDataMemory, portInIOSpace, undefined
+        scaledNumeric(0x20, 0x5f, portMapper)
     ],
     "address": [
         "22 bit address (0 - 0x3FFFFF) (4 Meg)",
-        is4Meg, numeric, isInProgramMemory
+        programMemory(0, 0x3fffff)
     ],
     "relativeJump": [
         "relative jump to 12 bit range (-2048 - 2047)",
-        isRelative12Bit, relative12Bit, isInProgramMemory
+        relativeAddress(2048)
     ],
     "relativeBranch": [
         "relative branch to 7 bit range (-64 - 63)",
-        isRelative7Bit, relative7Bit, isInProgramMemory
+        relativeAddress(64)
     ],
     "16bitRamAddress": [
         "16 bit RAM address (0 - 0xFFFF) (64 K)",
-        is64K, numeric, undefined
+        scaledNumeric(0, 0xffff, noScaler)
     ],
     "7bitRamAddress": [
         "7 bit RAM address (0 - 0x7F) (127 Bytes)",
-        is127, numeric, undefined
-    ]
+        scaledNumeric(0, 0x7f, noScaler)
+    ],
 } as const satisfies Record<string, OperandType>;
 
 export type TypeName = keyof typeof operandTypes;

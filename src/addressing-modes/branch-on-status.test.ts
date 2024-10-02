@@ -68,6 +68,7 @@ Deno.test("Branch on status code generation", () => {
 });
 
 Deno.test("Absolute address out of relative range on BRNE instruction", () => {
+    newContext();
     programMemoryOrigin(0);
     setPass(2);
     assertThrows(
@@ -85,6 +86,7 @@ Deno.test("Absolute address out of relative range on BRNE instruction", () => {
 });
 
 Deno.test("Absolute address outside available program memory", () => {
+    newContext();
     programMemoryOrigin(0);
     programMemoryBytes(0x40);
     setPass(2);
@@ -93,10 +95,16 @@ Deno.test("Absolute address outside available program memory", () => {
         RangeError,
         "Operand out of range: should be within program memory 0 - 0x20 not 0x23"
     );
+});
+
+Deno.test("Absolute target of branch can't be below 0", () => {
+    newContext();
+    programMemoryOrigin(0);
+    programMemoryBytes(0x40);
     setPass(2);
     assertThrows(
         () => translate(["BREQ", ["-1"]]),
         RangeError,
-        "Operand out of range: should be within program memory 0 - 0x20 not -1"
+        "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not -1"
     );
 });

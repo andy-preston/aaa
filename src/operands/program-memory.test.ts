@@ -28,12 +28,12 @@ Deno.test("An address is should not exceed program memory", () => {
     assertThrows(
         () => numericOperand("address", "-1"),
         RangeError,
-        "Operand out of range: should be within program memory 0 - 0x200 not -1"
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not -1"
     );
     assertThrows(
         () => numericOperand("address", "0x400000"),
         RangeError,
-        "Operand out of range: should be within program memory 0 - 0x200 not 0x400000"
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not 0x400000"
     );
 });
 
@@ -49,6 +49,13 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
 
     programMemoryOrigin(0);
     assertThrows(
+        () => numericOperand("relativeJump", "-1"),
+        RangeError,
+        "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not -1"
+    );
+
+    programMemoryOrigin(0);
+    assertThrows(
         () => numericOperand("relativeJump", "2050"),
         RangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 2050"
@@ -60,14 +67,9 @@ Deno.test("A relative jump should not be outside program memory", () => {
     moreProgramMemoryThanAddresses(32);
 
     assertThrows(
-        () => numericOperand("relativeJump", "-1"),
-        RangeError,
-        "Operand out of range: should be within program memory 0 - 0x10 not -1"
-    );
-    assertThrows(
         () => numericOperand("relativeJump", "23"),
         RangeError,
-        "Operand out of range: should be within program memory 0 - 0x10 not 23"
+        "Operand out of range: should be within program memory 0 - 0x10 not 0x17"
     );
 });
 
@@ -80,6 +82,13 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
 
     programMemoryOrigin(110);
     assertEquals(numericOperand("relativeBranch", "100"), 127 - 10);
+
+    programMemoryOrigin(0);
+    assertThrows(
+        () => numericOperand("relativeBranch", "-1"),
+        RangeError,
+        "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not -1"
+    );
 
     programMemoryOrigin(0);
     assertThrows(
@@ -101,13 +110,8 @@ Deno.test("A relative branch should not be outside program memory", () => {
     moreProgramMemoryThanAddresses(0x20);
 
     assertThrows(
-        () => numericOperand("relativeBranch", "-1"),
+        () => numericOperand("relativeBranch", "0x11"),
         RangeError,
-        "Operand out of range: should be within program memory 0 - 0x10 not -1"
-    );
-    assertThrows(
-        () => numericOperand("relativeBranch", "0x20"),
-        RangeError,
-        "Operand out of range: should be within program memory 0 - 0x10 not 0x20"
+        "Operand out of range: should be within program memory 0 - 0x10 not 0x11"
     );
 });

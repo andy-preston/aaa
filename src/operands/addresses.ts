@@ -1,52 +1,41 @@
 import { programMemoryEnd, programMemoryAddress } from "../process/mod.ts";
-import { type NumericOperand, between, numeric } from "./numeric.ts";
+import { operandRangeError } from "./message.ts";
+import { type NumericOperand, numeric } from "./numeric.ts";
+import { Description } from "./operand-types.ts";
 import type { SymbolicOperand } from "./symbolic.ts";
 
-const relativeDistance = (operand: SymbolicOperand): number =>
-    numeric(operand) - programMemoryAddress() - 1;
-
-const relative = (limit: number, operand: SymbolicOperand): NumericOperand => {
-    if (!relativeRange(limit, operand)) {
-        return 0;
-    }
-    const distance = relativeDistance(operand);
-    return distance < 0 ? (limit * 2) + distance : distance;
-};
-
-const relativeRange = (limit: number, operand: SymbolicOperand) => {
-    const distance = relativeDistance(operand);
-    return distance >= -limit && distance < limit;
-};
-
-export const isInProgramMemory = (operand: SymbolicOperand): string => {
+const programMemoryCheck = (address: NumericOperand) => {
     const end = programMemoryEnd();
-    return between(0, operand, end)
-        ? "" : `within program memory 0 - 0x${end.toString(16)}`;
+    if (address > end) {
+        operandRangeError(
+            `within program memory 0 - 0x${end.toString(16)}`,
+            `0x${address.toString(16)}`
+        );
+    }
 };
 
-export const is4Meg = (operand: SymbolicOperand) =>
-    between(0, operand, 0x3fffff);
+export const programMemory = (min: number, max: number) =>
+    (symbolic: SymbolicOperand, expectation: Description) => {
+        const value = numeric(symbolic);
+        if (value < min || value > max) {
+            operandRangeError(expectation, symbolic);
+        }
+        programMemoryCheck(value);
+        return value;
+    };
 
-export const is64K = (operand: SymbolicOperand) =>
-    between(0, operand, 0xffff);
+export const relativeAddress = (limit: number) =>
+    (symbolic: SymbolicOperand, expectation: Description) => {
+        const absolute = numeric(symbolic);
+        programMemoryCheck(absolute);
+        if (absolute < 0) {
+            operandRangeError(expectation, symbolic);
+        }
+        const distance = absolute - programMemoryAddress() - 1;
+        if (distance < -limit || distance >= limit) {
+            operandRangeError(expectation, symbolic);
+        }
+        return distance < 0 ? (limit * 2) + distance : distance;
+    };
 
-export const is127 = (operand: SymbolicOperand) =>
-    between(0, operand, 0x7f);
-
-export const isRelative12Bit = (operand: SymbolicOperand) =>
-    relativeRange(2048, operand);
-
-export const relative12Bit = (operand: SymbolicOperand) =>
-    relative(2048, operand);
-
-export const isRelative7Bit = (operand: SymbolicOperand) =>
-    relativeRange(64, operand);
-
-export const relative7Bit = (operand: SymbolicOperand) =>
-    relative(64, operand);
-
-export const isPortInDataMemory = (operand: SymbolicOperand) =>
-    between(0x20, operand, 0x5f);
-
-export const portInIOSpace = (operand: SymbolicOperand) =>
-    (numeric(operand) - 0x20);
+export const portMapper = (dataSpace: NumericOperand) => dataSpace - 0x20;
