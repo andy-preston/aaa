@@ -1,9 +1,8 @@
 import { deviceCheck, label } from "../context/mod.ts";
+import { type GeneratedCode, translate } from "../generate/translate.ts";
+import { type Instruction, lineTokens, macroLines } from "../source-code/mod.ts";
 import { peek } from "./poke-buffer.ts";
 import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
-import { type Instruction, lineTokens } from "../source-code/mod.ts";
-import { type GeneratedCode, translate } from "../generate/translate.ts";
-import { macroLines } from "../macro/macro.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;
