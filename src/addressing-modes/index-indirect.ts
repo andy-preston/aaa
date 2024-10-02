@@ -3,7 +3,7 @@ import {
     type OperandIndex,
     checkOperandCount,
     numericOperand,
-    operandMessage
+    operandRangeError
 } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
@@ -40,9 +40,7 @@ export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const register = numericOperand("register", operands[registerIndex]!);
     const index = operands[indexIndex]!;
     if (!indexMapping.has(index)) {
-        throw new SyntaxError(
-            operandMessage("index register", indexDesc, index)
-        );
+        operandRangeError("index register", indexDesc, index);
     }
     const [firstOperationBit, suffix] = indexMapping.get(index)!;
     // In the official documentation, the store operations have

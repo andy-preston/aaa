@@ -1,7 +1,6 @@
 import { execute } from "../context/mod.ts";
-import { operandRangeError } from "./message.ts";
 import { Description } from "./operand-types.ts";
-import type { SymbolicOperand } from "./symbolic.ts";
+import { type SymbolicOperand, operandRangeError } from "./operands.ts";
 
 export type NumericOperand = number;
 
@@ -43,7 +42,7 @@ export const scaledNumeric = (min: number, max: number, scaler: Scaler) =>
     (symbolic: SymbolicOperand, expectation: Description) => {
         const value = numeric(symbolic);
         if (value < min || value > max) {
-            operandRangeError(expectation, symbolic);
+            operandRangeError("", expectation, symbolic);
         }
         return scaler(value);
     };

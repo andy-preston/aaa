@@ -1,9 +1,9 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import {
-checkOperandCount,
+    checkOperandCount,
     numericOperand,
+    operandRangeError,
     type OperandIndex,
-    operandMessage
 } from "../operands/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 
@@ -37,9 +37,7 @@ export const encode = (instruction: Instruction): GeneratedCode | undefined => {
     const offset = numericOperand("sixBits", operands[offsetIndex]!);
     const index = operands[indexIndex]!;
     if (!indexMapping.has(index)) {
-        throw new SyntaxError(
-            operandMessage("index register", indexDesc, index)
-        );
+        operandRangeError("index register", indexDesc, index);
     }
     const secondOperationBit = indexMapping.get(index)!;
     // In the official documentation, the store operations have

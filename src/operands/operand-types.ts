@@ -2,14 +2,12 @@ import { portMapper, programMemory, relativeAddress } from "./addresses.ts";
 
 import {
     type NumericOperand,
-    noScaler,
-    signedOrUnsignedByte,
-    scaledNumeric
+    noScaler, signedOrUnsignedByte, scaledNumeric
 } from "./numeric.ts";
 
 import { anyRegisterPair, immediateScaler, registerPair } from "./registers.ts";
 
-import type { SymbolicOperand } from "./symbolic.ts";
+import type { SymbolicOperand } from "./operands.ts";
 
 export type Description = string;
 type NumericValue = (

@@ -3,7 +3,7 @@ import {
     type TypeName,
     operandTypes
 } from "./operand-types.ts";
-import type { SymbolicOperand, SymbolicOperands } from "./symbolic.ts";
+import type { SymbolicOperand, SymbolicOperands } from "./operands.ts";
 
 const description = (typeName: TypeName): string => operandTypes[typeName][0];
 

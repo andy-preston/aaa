@@ -1,7 +1,6 @@
-import { operandRangeError } from "./message.ts";
 import { numeric, NumericOperand } from "./numeric.ts";
 import { Description } from "./operand-types.ts";
-import type { SymbolicOperand } from "./symbolic.ts";
+import { type SymbolicOperand, operandRangeError } from "./operands.ts";
 
 const pairs = [24, 26, 28, 30];
 
@@ -17,7 +16,7 @@ export const registerPair = (
 ) => {
     const value = numeric(symbolic);
     if (!pairs.includes(value)) {
-        operandRangeError(expectation, symbolic);
+        operandRangeError("", expectation, symbolic);
     }
     return (value - 24) / 2;
 
@@ -29,7 +28,7 @@ export const anyRegisterPair = (
 ) => {
     const value = numeric(symbolic);
     if (!allPairs.includes(value)) {
-        operandRangeError(expectation, symbolic);
+        operandRangeError("", expectation, symbolic);
     }
     return value / 2;
 };
