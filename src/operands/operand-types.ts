@@ -1,4 +1,6 @@
-import { portMapper, programMemory, relativeAddress } from "./addresses.ts";
+import { programMemory, relativeAddress } from "./addresses.ts";
+
+import { portMapper } from "./data-memory.ts";
 
 import {
     type NumericOperand,

@@ -37,5 +37,3 @@ export const relativeAddress = (limit: number) =>
         }
         return distance < 0 ? (limit * 2) + distance : distance;
     };
-
-export const portMapper = (dataSpace: NumericOperand) => dataSpace - 0x20;
