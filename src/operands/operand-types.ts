@@ -84,11 +84,11 @@ export const operandTypes = {
         "relative branch to 7 bit range (-64 - 63)",
         relativeAddress(64)
     ],
-    "16bitRamAddress": [
+    "dataAddress16Bit": [
         "16 bit RAM address (0 - 0xFFFF) (64 K)",
         scaledNumeric(0, 0xffff, noScaler)
     ],
-    "7bitRamAddress": [
+    "dataAddress7Bit": [
         "7 bit RAM address (0 - 0x7F) (127 Bytes)",
         scaledNumeric(0, 0x7f, noScaler)
     ],
