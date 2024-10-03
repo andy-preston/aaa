@@ -7,7 +7,7 @@ import {
 } from "../context/mod.ts";
 import { setPass } from "../operands/mod.ts";
 import { programMemoryAddress, programMemoryOrigin } from "./mod.ts";
-import { newPokeBuffer } from "./poke-buffer.ts";
+import { newPokeBuffer } from "./poke-peek.ts";
 import { process } from "./process.ts";
 
 const processing = (line: string) => {

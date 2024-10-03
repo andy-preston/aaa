@@ -1,4 +1,4 @@
-export { newPokeBuffer, poke } from "./poke-buffer.ts";
+export { newPokeBuffer, poke } from "./poke-peek.ts";
 
 export { process } from "./process.ts";
 
