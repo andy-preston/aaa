@@ -1,7 +1,9 @@
 import { programMemoryEnd, programMemoryAddress } from "../process/mod.ts";
-import { type NumericOperand, numeric } from "./numeric.ts";
-import type { Description } from "./operand-types.ts";
-import { type SymbolicOperand, operandRangeError } from "./operands.ts";
+import { numeric } from "./numeric.ts";
+import {
+    type NumericOperand, type SymbolicOperand,
+    type Description, operandRangeError
+} from "./operands.ts";
 
 const programMemoryCheck = (address: NumericOperand) => {
     const end = programMemoryEnd();

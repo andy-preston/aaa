@@ -1,22 +1,12 @@
 import { portMapper } from "./data-memory.ts";
 
-import {
-    type NumericOperand,
-    noScaler, signedOrUnsignedByte, scaledNumeric
-} from "./numeric.ts";
+import { signedOrUnsignedByte, scaledNumeric } from "./numeric.ts";
 
 import { programMemory, relativeAddress } from "./program-memory.ts";
 
 import { anyRegisterPair, immediateScaler, registerPair } from "./registers.ts";
 
-import type { SymbolicOperand } from "./operands.ts";
-
-export type Description = string;
-type NumericValue = (
-    operand: SymbolicOperand,
-    expected: Description
-) => NumericOperand;
-type OperandType = [Description, NumericValue];
+import { noScaler, type Description, type OperandType, type SymbolicOperand } from "./operands.ts";
 
 const symbolicIsOnlyForCheckCount = (
     _operand: SymbolicOperand,

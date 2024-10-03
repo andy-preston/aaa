@@ -1,15 +1,12 @@
 export {
-    checkOperandCount,
-    numericOperand, symbolicOperand
+    checkOperandCount, numericOperand, symbolicOperand
 } from "./converter.ts";
 
-export { type NumericOperand, setPass } from "./numeric.ts";
+export { setPass } from "./numeric.ts";
 
 export {
-    type OperandIndex,
-    type SymbolicOperand,
-    type SymbolicOperands,
-    operandRangeError
+    type NumericOperand, type SymbolicOperand, type SymbolicOperands,
+    type OperandIndex, operandRangeError
 } from "./operands.ts";
 
 export type { TypeName } from "./operand-types.ts";

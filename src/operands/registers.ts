@@ -1,6 +1,8 @@
-import { numeric, NumericOperand } from "./numeric.ts";
-import { Description } from "./operand-types.ts";
-import { type SymbolicOperand, operandRangeError } from "./operands.ts";
+import { numeric } from "./numeric.ts";
+import {
+    type NumericOperand, type SymbolicOperand,
+    type Description, operandRangeError
+} from "./operands.ts";
 
 const pairs = [24, 26, 28, 30];
 

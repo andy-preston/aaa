@@ -1,9 +1,7 @@
-import type { NumericOperand } from "./numeric.ts";
-import {
-    type TypeName,
-    operandTypes
-} from "./operand-types.ts";
-import type { SymbolicOperand, SymbolicOperands } from "./operands.ts";
+import { type TypeName, operandTypes } from "./operand-types.ts";
+import type {
+    NumericOperand, SymbolicOperand, SymbolicOperands
+} from "./operands.ts";
 
 const description = (typeName: TypeName): string => operandTypes[typeName][0];
 

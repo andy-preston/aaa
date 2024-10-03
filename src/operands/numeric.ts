@@ -1,8 +1,8 @@
 import { execute } from "../context/mod.ts";
-import { Description } from "./operand-types.ts";
-import { type SymbolicOperand, operandRangeError } from "./operands.ts";
-
-export type NumericOperand = number;
+import {
+    type NumericOperand, type SymbolicOperand,
+    type Description, type Scaler, operandRangeError
+} from "./operands.ts";
 
 let ignoreErrors: boolean;
 
@@ -31,10 +31,6 @@ export const numeric = (operand: SymbolicOperand): NumericOperand => {
     return intResult;
 };
 
-type Scaler = (unscaled: NumericOperand) => NumericOperand;
-
-export const noScaler = (value: NumericOperand) => value;
-
 export const signedOrUnsignedByte = (value: NumericOperand) =>
     value < 0 ? 0x0100 + value : value;
 
@@ -46,4 +42,3 @@ export const scaledNumeric = (min: number, max: number, scaler: Scaler) =>
         }
         return scaler(value);
     };
-
