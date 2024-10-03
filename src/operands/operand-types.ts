@@ -1,11 +1,11 @@
-import { programMemory, relativeAddress } from "./addresses.ts";
-
 import { portMapper } from "./data-memory.ts";
 
 import {
     type NumericOperand,
     noScaler, signedOrUnsignedByte, scaledNumeric
 } from "./numeric.ts";
+
+import { programMemory, relativeAddress } from "./program-memory.ts";
 
 import { anyRegisterPair, immediateScaler, registerPair } from "./registers.ts";
 

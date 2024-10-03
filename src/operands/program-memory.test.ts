@@ -1,7 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { programMemoryBytes, programMemoryOrigin } from "../process/mod.ts";
 import { numericOperand } from "./converter.ts";
-
 import { setupTest } from "./testing.ts";
 
 const moreProgramMemoryThanAddresses = (bytes: number) => {
