@@ -68,12 +68,8 @@ export const operandTypes = {
         "nybble (0 - 0x0F)",
         scaledNumeric(0, 0x0f, noScaler)
     ],
-    "port": [
-        "Data memory mapped into IO space (0x20 - 0x5F)",
-        scaledNumeric(0x20, 0x5f, portMapper)
-    ],
     "address": [
-        "22 bit address (0 - 0x3FFFFF) (4 Meg)",
+        "22 bit address (0 - 0x3FFFFF) (4M Words)",
         programMemory(0, 0x3fffff)
     ],
     "relativeJump": [
@@ -85,13 +81,17 @@ export const operandTypes = {
         relativeAddress(64)
     ],
     "dataAddress16Bit": [
-        "16 bit RAM address (0 - 0xFFFF) (64 K)",
+        "16 bit Data Memory address (0 - 0xFFFF) (64 K)",
         scaledNumeric(0, 0xffff, noScaler)
     ],
     "dataAddress7Bit": [
-        "7 bit RAM address (0 - 0x7F) (127 Bytes)",
+        "7 bit Data Memory address (0 - 0x7F) (127 Bytes)",
         scaledNumeric(0, 0x7f, noScaler)
     ],
+    "port": [
+        "Data Memory mapped into IO space (0x20 - 0x5F)",
+        scaledNumeric(0x20, 0x5f, portMapper)
+    ]
 } as const satisfies Record<string, OperandType>;
 
 export type TypeName = keyof typeof operandTypes;

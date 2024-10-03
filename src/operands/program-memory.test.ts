@@ -15,9 +15,14 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
     assertEquals(numericOperand("address", "0"), 0);
     assertEquals(numericOperand("address", "0x3FFFFF"), 0x3fffff);
     assertThrows(
+        () => numericOperand("address", "-1"),
+        RangeError,
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4M Words) not -1"
+    );
+    assertThrows(
         () => numericOperand("address", "0x400000"),
         RangeError,
-        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not 0x400000"
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4M Words) not 0x400000"
     );
 });
 
@@ -26,14 +31,9 @@ Deno.test("An address is should not exceed program memory", () => {
     moreProgramMemoryThanAddresses(0x400);
 
     assertThrows(
-        () => numericOperand("address", "-1"),
-        RangeError,
-        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not -1"
-    );
-    assertThrows(
         () => numericOperand("address", "0x400000"),
         RangeError,
-        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4 Meg) not 0x400000"
+        "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4M Words) not 0x400000"
     );
 });
 
