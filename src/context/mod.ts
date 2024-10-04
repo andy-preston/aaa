@@ -2,7 +2,7 @@ export {
     coupledProperty,
     directive,
     property,
-    execute,
+    inContext,
     label,
     newContext
 } from "./context.ts";

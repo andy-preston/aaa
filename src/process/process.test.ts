@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
 import {
     chooseDevice,
-    execute,
+    inContext,
     newContext,
     newDeviceChecker
 } from "../context/mod.ts";
@@ -43,11 +43,11 @@ Deno.test("Labels are saved at the current programMemoryPos", () => {
     setupTest();
     chooseDevice("dummy", {});
     for (const _ of process("label1: INC R5")) { /* pass */ }
-    assertEquals(execute("label1"), "0");
+    assertEquals(inContext("label1"), "0");
     for (const _ of process("label2:")) { /* pass */ }
-    assertEquals(execute("label2"), "1");
+    assertEquals(inContext("label2"), "1");
     for (const _ of process("label3: MOV R5, R6")) { /* pass */ }
-    assertEquals(execute("label3"), "1");
+    assertEquals(inContext("label3"), "1");
     for (const _ of process("label4:")) { /* pass */ }
-    assertEquals(execute("label4"), "2");
+    assertEquals(inContext("label4"), "2");
 });

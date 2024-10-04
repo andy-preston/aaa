@@ -1,4 +1,4 @@
-import { execute } from "../context/mod.ts";
+import { inContext } from "../context/mod.ts";
 import { ignoreErrors } from "../process/pass.ts";
 import {
     type NumericOperand, type SymbolicOperand,
@@ -7,7 +7,7 @@ import {
 
 const operandValue = (operand: SymbolicOperand): string => {
     try {
-        return execute(operand).trim();
+        return inContext(operand).trim();
     }
     catch (error) {
         if (error.name == "ReferenceError" && ignoreErrors()) {

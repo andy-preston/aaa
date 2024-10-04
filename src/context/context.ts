@@ -94,7 +94,7 @@ const returnIfExpression = (trimmedJs: string): string => {
         : trimmedJs;
 };
 
-export const execute = (jsSource: string): string => {
+export const inContext = (jsSource: string): string => {
     const trimmed = jsSource.trim().replace(/;*$/, "").trim();
     if (trimmed == "") {
         return "";

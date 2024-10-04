@@ -1,4 +1,4 @@
-import { execute } from "../context/mod.ts";
+import { inContext } from "../context/mod.ts";
 
 const scriptDelimiter = /({{|}})/;
 
@@ -27,7 +27,7 @@ const usePart = (part: string) => {
     }
     if (part == "}}") {
         change(part);
-        buffer.assembler.push(execute(buffer.javascript.join("\n")));
+        buffer.assembler.push(inContext(buffer.javascript.join("\n")));
         return;
     }
     buffer[state].push(part);

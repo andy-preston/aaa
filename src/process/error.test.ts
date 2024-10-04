@@ -54,7 +54,7 @@ Deno.test("no device not chosen on first pass", () => {
     }
 });
 
-Deno.test("The instruction set chosen check is only executed once", () => {
+Deno.test("The device selection error is only shown once", () => {
     setupTest();
     startPass(2);
     for (const [_address, _code, errors] of process("ADIW R26, 5")) {
