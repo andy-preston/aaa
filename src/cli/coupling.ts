@@ -6,7 +6,8 @@ import {
 
 import {
     programMemoryEnd, programMemoryOrigin,
-    newPokeBuffer, poke
+    ramStart, ramEnd, allocStack, alloc,
+    newPokeBuffer, poke,
 } from "../process/mod.ts";
 
 import {
@@ -24,6 +25,10 @@ export const coupling = () => {
     directive("device", deviceDirective);
     directive("org", programMemoryOrigin);
     directive("poke", poke);
+    directive("allocStack", allocStack);
+    directive("alloc", alloc);
 
     coupledProperty("progmemEnd", programMemoryEnd);
+    coupledProperty("ramStart", ramStart);
+    coupledProperty("ramEnd", ramEnd);
 };

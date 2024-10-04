@@ -1,4 +1,4 @@
-import { programMemoryBytes } from "../process/mod.ts";
+import { programMemoryBytes, setRamEnd, setRamStart } from "../process/mod.ts";
 import type { Mnemonic } from "../source-code/mod.ts";
 import { property } from "./context.ts";
 
@@ -46,6 +46,12 @@ export const chooseDevice = (name: string, deviceSpec: object) => {
                 break;
             case "programEnd":
                 programMemoryBytes(value as number);
+                break;
+            case "ramStart":
+                setRamStart(value as number);
+                break;
+            case "ramEnd":
+                setRamEnd(value as number);
                 break;
             default:
                 property(key, value as number);

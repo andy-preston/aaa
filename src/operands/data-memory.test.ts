@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "assert";
 import { numericOperand } from "./converter.ts";
 import { setupTest } from "./testing.ts";
 
-Deno.test("A Data Memory address is 0 - 0xFFFF", () => {
+Deno.test("A Data Memory Address is 0 - 0xFFFF", () => {
     setupTest();
     assertEquals(numericOperand("dataAddress16Bit", "0"), 0);
     assertEquals(numericOperand("dataAddress16Bit", "0xFFFF"), 0xffff);
