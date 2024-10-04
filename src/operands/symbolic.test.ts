@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
+import { startPass } from "../process/mod.ts";
 import { checkOperandCount, numericOperand } from "./converter.ts";
-import { setPass } from "./numeric.ts";
 import { setupTest } from "./testing.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
@@ -20,6 +20,6 @@ Deno.test("Operands must be defined, at least on the second pass", () => {
         ReferenceError,
         "notDefined is not defined"
     );
-    setPass(1);
+    startPass(1);
     assertEquals(0, numericOperand("byte", "notDefined"));
 });

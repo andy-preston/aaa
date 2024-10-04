@@ -1,6 +1,7 @@
 import { deviceCheck, label } from "../context/mod.ts";
 import { type GeneratedCode, translate } from "../generate/translate.ts";
 import { type Instruction, lineTokens, macroLines } from "../source-code/mod.ts";
+import { ignoreErrors } from "./pass.ts";
 import { peek } from "./poke-peek.ts";
 import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
 
@@ -11,27 +12,34 @@ type ProcessGenerator = Generator<Processed, void, undefined>;
 
 let errorMessages: Array<string>;
 
+const labelWithError = (labelName: string) => {
+    if (labelName == "") {
+        return;
+    }
+    try {
+        label(labelName);
+    }
+    catch (error) {
+        if (!ignoreErrors()) {
+            errorMessages.push(`${error.name}: ${error.message}`)
+        }
+    }
+};
+
 const translationWithError = (instruction: Instruction): GeneratedCode => {
-    const errorMessage = deviceCheck(instruction[0]);
-    if (errorMessage) {
-        errorMessages.push(errorMessage);
+    if (!ignoreErrors()) {
+        const errorMessage = deviceCheck(instruction[0]);
+        if (errorMessage) {
+            errorMessages.push(errorMessage);
+        }
     }
     try {
         return translate(instruction);
     } catch (error) {
-        errorMessages.push(`${error.name}: ${error.message}`);
+        if (!ignoreErrors()) {
+            errorMessages.push(`${error.name}: ${error.message}`);
+        }
         return [];
-    }
-};
-
-const labelWithError = (labelName: string) => {
-    if (labelName != "") {
-        try {
-            label(labelName);
-        }
-        catch (error) {
-            errorMessages.push(`${error.name}: ${error.message}`)
-        }
     }
 };
 

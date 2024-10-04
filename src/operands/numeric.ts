@@ -1,21 +1,16 @@
 import { execute } from "../context/mod.ts";
+import { ignoreErrors } from "../process/pass.ts";
 import {
     type NumericOperand, type SymbolicOperand,
     type Description, type Scaler, operandRangeError
 } from "./operands.ts";
-
-let ignoreErrors: boolean;
-
-export const setPass = (pass: 1 | 2) => {
-    ignoreErrors = pass == 1;
-}
 
 const operandValue = (operand: SymbolicOperand): string => {
     try {
         return execute(operand).trim();
     }
     catch (error) {
-        if (error.name == "ReferenceError" && ignoreErrors) {
+        if (error.name == "ReferenceError" && ignoreErrors()) {
             return "0";
         }
         throw error;

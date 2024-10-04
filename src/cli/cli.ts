@@ -1,6 +1,4 @@
-import { process, programMemoryOrigin } from "../process/mod.ts";
-
-import { setPass } from "../operands/mod.ts";
+import { passes, process, startPass } from "../process/mod.ts";
 
 import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
 
@@ -12,10 +10,9 @@ import {
 } from "../source-code/mod.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
-    for (const pass of [1, 2]) {
+    for (const pass of passes) {
+        startPass(pass);
         if (pass == 2) {
-            programMemoryOrigin(0);
-            setPass(pass);
             newOutput(commandLineSourceFile);
         }
         topFile(commandLineSourceFile);

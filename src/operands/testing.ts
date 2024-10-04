@@ -1,8 +1,8 @@
 import { newContext, newDeviceChecker } from "../context/mod.ts";
-import { setPass } from "./numeric.ts";
+import { startPass } from "../process/mod.ts";
 
 export const setupTest = () => {
     newContext();
     newDeviceChecker();
-    setPass(2);
+    startPass(2);
 }

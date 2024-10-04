@@ -1,11 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
 import { newContext, property } from "../context/mod.ts";
 import { translate } from "../generate/mod.ts";
-import { setPass } from "../operands/mod.ts";
 import {
     programMemoryOrigin,
     programMemoryStep,
-    programMemoryBytes
+    programMemoryBytes,
+    startPass
 } from "../process/mod.ts";
 import { description, type Tests } from "./testing.ts";
 
@@ -55,12 +55,16 @@ const tests: Tests = [
     [["BRVS", [     "forward"]], [0xf0, 0x1b]]
 ];
 
-Deno.test("Branch on status code generation", () => {
+const setupTest = () => {
     newContext();
+    startPass(2);
+};
+
+Deno.test("Branch on status code generation", () => {
+    setupTest();
     property("back", 0x0000);
     property("forward", 0x002e);
     programMemoryOrigin(3);
-    setPass(2);
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
         programMemoryStep(test[1]);
@@ -68,16 +72,15 @@ Deno.test("Branch on status code generation", () => {
 });
 
 Deno.test("Absolute address out of relative range on BRNE instruction", () => {
-    newContext();
+    setupTest();
     programMemoryOrigin(0);
-    setPass(2);
     assertThrows(
         () => translate(["BRNE", ["130"]]),
         RangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 130"
     );
     programMemoryOrigin(500);
-    setPass(2);
+    startPass(2);
     assertThrows(
         () => translate(["BREQ", ["100"]]),
         RangeError,
@@ -86,10 +89,8 @@ Deno.test("Absolute address out of relative range on BRNE instruction", () => {
 });
 
 Deno.test("Absolute address outside available program memory", () => {
-    newContext();
-    programMemoryOrigin(0);
+    setupTest();
     programMemoryBytes(0x40);
-    setPass(2);
     assertThrows(
         () => translate(["BRNE", ["0x23"]]),
         RangeError,
@@ -98,10 +99,8 @@ Deno.test("Absolute address outside available program memory", () => {
 });
 
 Deno.test("Absolute target of branch can't be below 0", () => {
-    newContext();
-    programMemoryOrigin(0);
+    setupTest();
     programMemoryBytes(0x40);
-    setPass(2);
     assertThrows(
         () => translate(["BREQ", ["-1"]]),
         RangeError,

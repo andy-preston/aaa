@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
 import { newContext } from "../context/mod.ts";
 import { translate } from "../generate/mod.ts";
-import { setPass } from "../operands/mod.ts";
+import { startPass } from "../process/mod.ts";
 import type { Instruction } from "../source-code/mod.ts";
 import { type Tests, description} from "./testing.ts";
 
@@ -22,7 +22,7 @@ const tests: Tests = [
 
 Deno.test("Program Memory Code Generation", () => {
     newContext();
-    setPass(2);
+    startPass(2);
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }
@@ -35,7 +35,7 @@ const failingTests: Array<Instruction> = [
 
 Deno.test("Program Memory (Bad Syntax) Code Generation", () => {
     newContext();
-    setPass(2);
+    startPass(2);
     for (const test of failingTests) {
         assertThrows(
             () => translate(test),
