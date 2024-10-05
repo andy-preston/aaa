@@ -3,6 +3,7 @@ import {
     directive, deviceDirective,
     newContext, newDeviceChecker
 } from "../context/mod.ts";
+import { newDataMemory } from "../process/data-memory.ts";
 
 import {
     programMemoryEnd, programMemoryOrigin,
@@ -20,6 +21,7 @@ export const blankSlate = () => {
     newPokeBuffer();
     newSplitter();
     newDeviceChecker();
+    newDataMemory();
 }
 
 export const coupling = () => {

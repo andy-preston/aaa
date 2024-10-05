@@ -1,9 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
 import { numericOperand } from "./converter.ts";
-import { setupTest } from "./testing.ts";
+import { blankSlate } from "../coupling/coupling.ts";
+import { startPass } from "../process/pass.ts";
 
 Deno.test("A Data Memory Address is 0 - 0xFFFF", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("dataAddress16Bit", "0"), 0);
     assertEquals(numericOperand("dataAddress16Bit", "0xFFFF"), 0xffff);
     assertThrows(
@@ -18,8 +20,15 @@ Deno.test("A Data Memory Address is 0 - 0xFFFF", () => {
     );
 });
 
-Deno.test("A 7 bit Data Memory address is 0 - 0x7F", () => {
-    setupTest();
+Deno.test("A Data Memory Address can't exceed available data memory", () => {
+    blankSlate();
+    startPass(2);
+
+});
+
+Deno.test("A 7 bit Data Memory Address is 0 - 0x7F", () => {
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("dataAddress7Bit", "0"), 0);
     assertEquals(numericOperand("dataAddress7Bit", "0x7F"), 0x7f);
     assertThrows(
@@ -35,7 +44,8 @@ Deno.test("A 7 bit Data Memory address is 0 - 0x7F", () => {
 });
 
 Deno.test("A port is between 0x20 - 0x5F and is remapped to 0x3f", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("port", "0x20"), 0);
     assertEquals(numericOperand("port", "0x5F"), 0x3f);
     assertThrows(
