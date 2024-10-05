@@ -8,8 +8,8 @@ export {
 } from "./context.ts";
 export {
     chooseDevice,
-    deviceCheck,
     deviceDirective,
+    deviceName,
     newDeviceChecker,
     hasReducedCore
 } from "./device.ts";

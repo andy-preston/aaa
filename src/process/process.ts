@@ -1,4 +1,4 @@
-import { deviceCheck, label } from "../context/mod.ts";
+import { label } from "../context/mod.ts";
 import { type GeneratedCode, translate } from "../generate/translate.ts";
 import { type Instruction, lineTokens, macroLines } from "../source-code/mod.ts";
 import { ignoreErrors } from "./pass.ts";
@@ -27,12 +27,6 @@ const labelWithError = (labelName: string) => {
 };
 
 const translationWithError = (instruction: Instruction): GeneratedCode => {
-    if (!ignoreErrors()) {
-        const errorMessage = deviceCheck(instruction[0]);
-        if (errorMessage) {
-            errorMessages.push(errorMessage);
-        }
-    }
     try {
         return translate(instruction);
     } catch (error) {

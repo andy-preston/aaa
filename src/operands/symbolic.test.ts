@@ -2,13 +2,14 @@ import { assertEquals, assertThrows } from "assert";
 import { startPass } from "../process/mod.ts";
 import { checkOperandCount, numericOperand } from "./converter.ts";
 import { setupTest } from "./testing.ts";
+import { InternalError } from "../errors/errors.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
     setupTest();
     assertThrows(
         () => numericOperand("symbolic", "anything"),
-        Error,
-        "Internal error: symbolic is only for checkCount"
+        InternalError,
+        "symbolic is only for checkCount"
     );
     checkOperandCount(["A", "B"], ["symbolic", "symbolic"]);
 });

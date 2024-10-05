@@ -8,11 +8,13 @@ import { anyRegisterPair, immediateScaler, registerPair } from "./registers.ts";
 
 import { noScaler, type Description, type OperandType, type SymbolicOperand } from "./operands.ts";
 
+import { InternalError } from "../errors/errors.ts";
+
 const symbolicIsOnlyForCheckCount = (
     _operand: SymbolicOperand,
     _expected: Description
 ) => {
-    throw Error("Internal error: symbolic is only for checkCount");
+    throw new InternalError("symbolic is only for checkCount");
 };
 
 export const operandTypes = {

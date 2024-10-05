@@ -12,7 +12,6 @@ export const restartAt = (newByteAddress: number) => {
     byteAddress = newByteAddress;
 };
 
-
 export const bytePairsFromBuffer =
     function*(): Generator<PairOfBytes, void, unknown>  {
         const pairsToDeliver = Math.min(16, buffer.length) / 2;

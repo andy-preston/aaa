@@ -21,20 +21,23 @@ const reducedCoreTests: Tests = [
     [["STS", ["126", "R18"]], [0xaf, 0x2e]]
 ];
 
-Deno.test("Data Direct code generation", () => {
+const setupTest = () => {
     newContext();
     newDeviceChecker();
     startPass(2);
+};
+
+Deno.test("Data Direct code generation", () => {
+    setupTest();
+    chooseDevice("dummy", {});
     for (const test of tests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }
 });
 
 Deno.test("Data Direct (Reduced Core) code generation", () => {
-    newContext();
-    newDeviceChecker();
+    setupTest();
     chooseDevice("dummy", { "reducedCore": true });
-    startPass(2);
     for (const test of reducedCoreTests) {
         assertEquals(translate(test[0]), test[1], description(test));
     }

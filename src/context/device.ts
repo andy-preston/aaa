@@ -1,45 +1,42 @@
+import { setUnsupportedInstructions } from "../generate/mod.ts";
 import { programMemoryBytes, setRamEnd, setRamStart } from "../process/mod.ts";
-import type { Mnemonic } from "../source-code/mod.ts";
 import { property } from "./context.ts";
 
 let deviceErrorShown: boolean;
-let unsupportedInstructions: Array<string>;
 let reducedCore: boolean;
-let deviceName: string;
+let name: string;
 
 export const newDeviceChecker = () => {
     deviceErrorShown = false;
-    unsupportedInstructions = [];
     reducedCore = false;
-    deviceName = "";
+    name = "";
 };
 
-export const deviceCheck = (mnemonic: Mnemonic): string => {
-    if (mnemonic && deviceName == "" && !deviceErrorShown) {
+export const deviceName = (reason: string) => {
+    if (name == "" && !deviceErrorShown) {
         deviceErrorShown = true;
-        return "No device selected";
-    }
-    if (unsupportedInstructions.includes(mnemonic)) {
-        return `${mnemonic} is not available on ${deviceName}`;
-    }
-    return "";
+        throw new Error(
+            `Without a device selected, it's not possible to ${reason}`
+        );
+    };
+    return name;
 };
 
 export const hasReducedCore = () => reducedCore;
 
-export const chooseDevice = (name: string, deviceSpec: object) => {
-    if (deviceName == name) {
+export const chooseDevice = (deviceName: string, deviceSpec: object) => {
+    if (name == deviceName) {
         return;
     }
-    if (deviceName != "") {
-        throw new Error(`Device ${deviceName} already chosen`);
+    if (name != "") {
+        throw new Error(`Device ${name} already chosen`);
     }
     newDeviceChecker();
-    deviceName = name;
+    name = deviceName;
     for (const [key, value] of Object.entries(deviceSpec)) {
         switch (key) {
             case "unsupportedInstructions":
-                unsupportedInstructions = value as Array<string>;
+                setUnsupportedInstructions(value as Array<string>);
                 break;
             case "reducedCore":
                 reducedCore = value as boolean;
