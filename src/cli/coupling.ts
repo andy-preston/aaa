@@ -15,19 +15,20 @@ import {
     includeFile
 } from "../source-code/mod.ts";
 
-export const coupling = () => {
+export const blankSlate = () => {
     newContext();
     newPokeBuffer();
     newSplitter();
     newDeviceChecker();
+}
 
+export const coupling = () => {
     directive("include", includeFile);
     directive("device", deviceDirective);
     directive("org", programMemoryOrigin);
     directive("poke", poke);
     directive("allocStack", allocStack);
     directive("alloc", alloc);
-
     coupledProperty("progmemEnd", programMemoryEnd);
     coupledProperty("ramStart", ramStart);
     coupledProperty("ramEnd", ramEnd);
