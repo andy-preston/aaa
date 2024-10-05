@@ -1,13 +1,19 @@
+import { deviceName } from "../context/mod.ts";
 import type { GeneratedCode } from "../generate/mod.ts";
 
-let address = 0;
-let end = Math.floor(0xffff / 2);
+let address: number = 0;
+let end: number = 0;
 
 export const programMemoryOrigin = (newAddress: number) => {
+    if (newAddress == 0) {
+        address = 0;
+        return;
+    }
     if (newAddress < 0) {
         throw new Error("Addresses must be positive");
     }
-    if (newAddress > end) {
+    deviceName("determine size of Program Memory");
+    if (end > 0 && newAddress > end) {
         throw new Error(
             `${newAddress} beyond end of program memory (0x${end.toString(16)})`
         );

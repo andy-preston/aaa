@@ -1,17 +1,21 @@
 import { assertEquals, assertThrows } from "assert";
+import { chooseDevice, coupledProperty } from "../context/mod.ts";
 import {
-    chooseDevice,
-    coupledProperty,
-    newContext,
-    newDeviceChecker
-} from "../context/mod.ts";
-import {
-    programMemoryEnd,
-    programMemoryAddress,
-    programMemoryOrigin
+    programMemoryEnd, programMemoryAddress, programMemoryOrigin
 } from "./mod.ts";
+import { blankSlate } from "../coupling/coupling.ts";
+
+Deno.test("a device must be selected before program memory can be set", () => {
+    blankSlate();
+    assertThrows(
+        () => { programMemoryOrigin(10); },
+        Error,
+        "Without a device selected, it's not possible to determine size of Program Memory"
+    );
+});
 
 Deno.test("org addresses can't be less than zero", () => {
+    blankSlate();
     assertThrows(
         () => { programMemoryOrigin(-1); },
         Error,
@@ -19,16 +23,8 @@ Deno.test("org addresses can't be less than zero", () => {
     );
 });
 
-Deno.test("org addresses must be below 0xffff/2 by default", () => {
-    assertThrows(
-        () => { programMemoryOrigin(32768); },
-        Error,
-        "32768 beyond end of program memory (0x7fff)"
-    );
-});
-
 Deno.test("org addresses must be progmem size when a device is chosen", () => {
-    newDeviceChecker();
+    blankSlate();
     chooseDevice("dummy", { "programEnd": 100 })
     assertThrows(
         () => { programMemoryOrigin(92); },
@@ -37,8 +33,9 @@ Deno.test("org addresses must be progmem size when a device is chosen", () => {
     );
 });
 
-Deno.test("org directive sets current address", () => {
-    newContext();
+Deno.test("programMemoryOrigin directive sets current address", () => {
+    blankSlate();
+    chooseDevice("dummy", { "programEnd": 100 })
     coupledProperty("progmemEnd", programMemoryEnd);
     programMemoryOrigin(0);
     assertEquals(0, programMemoryAddress());

@@ -1,25 +1,14 @@
 import { assertEquals } from "assert";
-import {
-    chooseDevice,
-    inContext,
-    newContext,
-    newDeviceChecker
-} from "../context/mod.ts";
+import { chooseDevice, inContext } from "../context/mod.ts";
 import { programMemoryAddress, programMemoryOrigin } from "./mod.ts";
 import { startPass } from "./pass.ts";
-import { newPokeBuffer } from "./poke-peek.ts";
 import { process } from "./process.ts";
-
-const setupTest = () => {
-    newContext();
-    newPokeBuffer();
-    newDeviceChecker();
-    startPass(2);
-}
+import { blankSlate } from "../coupling/coupling.ts";
 
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
-    setupTest();
-    chooseDevice("dummy", {});
+    blankSlate();
+    chooseDevice("dummy", { "programEnd": 4096 });
+    startPass(2);
     assertEquals(programMemoryAddress(), 0);
     for (const _ of process("INC R5")) { /* pass */ }
     assertEquals(programMemoryAddress(), 1);
@@ -28,8 +17,9 @@ Deno.test("As code is generated, the programMemoryPos is incremented", () => {
 });
 
 Deno.test("programMemoryOrigin can be set from the context i.e. by embedded JS", () => {
-    setupTest();
-    chooseDevice("dummy", {});
+    blankSlate();
+    chooseDevice("dummy", { "programEnd": 4096 });
+    startPass(2);
     assertEquals(programMemoryAddress(), 0);
     for (const _ of process("INC R5")) { /* pass */ }
     assertEquals(programMemoryAddress(), 1);
@@ -40,8 +30,9 @@ Deno.test("programMemoryOrigin can be set from the context i.e. by embedded JS",
 });
 
 Deno.test("Labels are saved at the current programMemoryPos", () => {
-    setupTest();
-    chooseDevice("dummy", {});
+    blankSlate();
+    chooseDevice("dummy", { "programEnd": 4096 });
+    startPass(2);
     for (const _ of process("label1: INC R5")) { /* pass */ }
     assertEquals(inContext("label1"), "0");
     for (const _ of process("label2:")) { /* pass */ }

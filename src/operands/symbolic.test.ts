@@ -1,11 +1,12 @@
 import { assertEquals, assertThrows } from "assert";
 import { startPass } from "../process/mod.ts";
 import { checkOperandCount, numericOperand } from "./converter.ts";
-import { setupTest } from "./testing.ts";
 import { InternalError } from "../errors/errors.ts";
+import { blankSlate } from "../coupling/coupling.ts";
 
 Deno.test("Symbolic is only used for Check Count", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertThrows(
         () => numericOperand("symbolic", "anything"),
         InternalError,
@@ -15,7 +16,8 @@ Deno.test("Symbolic is only used for Check Count", () => {
 });
 
 Deno.test("Operands must be defined, at least on the second pass", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertThrows(
         () => numericOperand("byte", "notDefined"),
         ReferenceError,

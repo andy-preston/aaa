@@ -1,9 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
 import { numericOperand } from "./converter.ts";
-import { setupTest } from "./testing.ts";
+import { blankSlate } from "../coupling/coupling.ts";
+import { startPass } from "../process/mod.ts";
 
 Deno.test("A register should be between zero and 31", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("register", "R0"), 0);
     assertEquals(numericOperand("register", "6"), 6);
     assertEquals(numericOperand("register", "Z"), 30);
@@ -22,7 +24,8 @@ Deno.test("A register should be between zero and 31", () => {
 });
 
 Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("immediateRegister", "Z"), 14);
     assertEquals(numericOperand("immediateRegister", "R31"), 15);
     assertEquals(numericOperand("immediateRegister", "31"), 15);
@@ -39,7 +42,8 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
 });
 
 Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("multiplyRegister", "R20"), 4);
     assertEquals(numericOperand("multiplyRegister", "22"), 6);
     assertThrows(
@@ -55,7 +59,8 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
 });
 
 Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("registerPair", "R24"), 0);
     assertEquals(numericOperand("registerPair", "X"), 1);
     assertEquals(numericOperand("registerPair", "Y"), 2);
@@ -73,7 +78,8 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
 });
 
 Deno.test("Any register pair is any even numbered register", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("anyRegisterPair", "R0"), 0);
     assertEquals(numericOperand("anyRegisterPair", "R2"), 1);
     assertEquals(numericOperand("anyRegisterPair", "R4"), 2);
@@ -93,7 +99,8 @@ Deno.test("Any register pair is any even numbered register", () => {
 });
 
 Deno.test("Some instructions require Z and no other register", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("z", "R30"), 30);
     assertEquals(numericOperand("z", "Z"), 30);
     assertEquals(numericOperand("z", "30"), 30);

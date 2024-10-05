@@ -1,16 +1,13 @@
 import { assertEquals, assertThrows } from "assert";
-import { programMemoryBytes, programMemoryOrigin } from "../process/mod.ts";
+import { programMemoryOrigin, startPass } from "../process/mod.ts";
 import { numericOperand } from "./converter.ts";
-import { setupTest } from "./testing.ts";
-
-const moreProgramMemoryThanAddresses = (bytes: number) => {
-    programMemoryBytes(bytes);
-};
+import { blankSlate } from "../coupling/coupling.ts";
+import { chooseDevice } from "../context/mod.ts";
 
 Deno.test("An address is 0 - 0x3FFFFF", () => {
-    setupTest();
-    moreProgramMemoryThanAddresses(0xf00000);
-
+    blankSlate();
+    startPass(2);
+    chooseDevice("dummy", { "programEnd": 0xf00000 });
     assertEquals(numericOperand("address", "0"), 0);
     assertEquals(numericOperand("address", "0x3FFFFF"), 0x3fffff);
     assertThrows(
@@ -26,9 +23,9 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
 });
 
 Deno.test("An address is should not exceed program memory", () => {
-    setupTest();
-    moreProgramMemoryThanAddresses(0x400);
-
+    blankSlate();
+    startPass(2);
+    chooseDevice("dummy", { "programEnd": 0x400 });
     assertThrows(
         () => numericOperand("address", "0x400000"),
         RangeError,
@@ -37,8 +34,9 @@ Deno.test("An address is should not exceed program memory", () => {
 });
 
 Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
-    setupTest();
-    moreProgramMemoryThanAddresses(8 * 1024);
+    blankSlate();
+    startPass(2);
+    chooseDevice("dummy", { "programEnd": 8 * 1024 });
 
     programMemoryOrigin(0);
     assertEquals(numericOperand("relativeJump", "500"), 499);
@@ -62,9 +60,9 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
 });
 
 Deno.test("A relative jump should not be outside program memory", () => {
-    setupTest();
-    moreProgramMemoryThanAddresses(32);
-
+    blankSlate();
+    startPass(2);
+    chooseDevice("dummy", { "programEnd": 32 });
     assertThrows(
         () => numericOperand("relativeJump", "23"),
         RangeError,
@@ -73,8 +71,9 @@ Deno.test("A relative jump should not be outside program memory", () => {
 });
 
 Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
-    setupTest();
-    moreProgramMemoryThanAddresses(1024);
+    blankSlate();
+    startPass(2);
+    chooseDevice("dummy", { "programEnd": 1024 });
 
     programMemoryOrigin(0);
     assertEquals(numericOperand("relativeBranch", "60"), 59);
@@ -105,9 +104,9 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
 });
 
 Deno.test("A relative branch should not be outside program memory", () => {
-    setupTest();
-    moreProgramMemoryThanAddresses(0x20);
-
+    blankSlate();
+    startPass(2);
+    chooseDevice("dummy", { "programEnd": 0x20 });
     assertThrows(
         () => numericOperand("relativeBranch", "0x11"),
         RangeError,

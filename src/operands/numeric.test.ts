@@ -1,9 +1,11 @@
 import { assertEquals, assertThrows } from "assert";
 import { numericOperand } from "./converter.ts";
-import { setupTest } from "./testing.ts";
+import { blankSlate } from "../coupling/coupling.ts";
+import { startPass } from "../process/mod.ts";
 
 Deno.test("Numeric operands must be integers", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("byte", "R10"), 10);
     assertEquals(numericOperand("byte", "42"), 42);
     assertThrows(
@@ -19,7 +21,8 @@ Deno.test("Numeric operands must be integers", () => {
 });
 
 Deno.test("6 bits is between 0 and 0x3F", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("sixBits", "0b111111"), 0x3f);
     assertEquals(numericOperand("sixBits", "0x3e"), 0x3e);
     assertThrows(
@@ -35,7 +38,8 @@ Deno.test("6 bits is between 0 and 0x3F", () => {
 });
 
 Deno.test("A bit index is 0 - 7", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("bitIndex", "0"), 0);
     assertEquals(numericOperand("bitIndex", "4"), 4);
     assertEquals(numericOperand("bitIndex", "7"), 7);
@@ -47,7 +51,8 @@ Deno.test("A bit index is 0 - 7", () => {
 });
 
 Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("byte", "-1"), 0xff);
     assertEquals(numericOperand("byte", "255"), 0xff);
     assertEquals(numericOperand("byte", "-128"), 128);
@@ -66,7 +71,8 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
 });
 
 Deno.test("A nybble should be between 0 and 0x0f", () => {
-    setupTest();
+    blankSlate();
+    startPass(2);
     assertEquals(numericOperand("nybble", "0"), 0);
     assertEquals(numericOperand("nybble", "6"), 6);
     assertEquals(numericOperand("nybble", "15"), 15);
