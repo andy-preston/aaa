@@ -3,7 +3,7 @@ import { programMemoryOrigin } from "./program-memory.ts";
 
 export const passes = [1, 2] as const;
 
-type Pass = typeof passes[number];
+export type Pass = typeof passes[number];
 
 let currentPass: Pass;
 

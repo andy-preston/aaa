@@ -10,8 +10,7 @@ export {
 export {
     type FileName,
     includeFile,
-    sourceLines,
-    topFile
+    sourceLines
 } from "./source-lines.ts";
 
 export {

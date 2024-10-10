@@ -1,10 +1,7 @@
+import { Line, LineNumber, newLine, RawSource } from "../line.ts";
+import { Pass } from "../process/pass.ts";
+
 export type FileName = string;
-
-type LineNumber = number;
-
-type RawSource = string;
-
-type Line = [FileName, LineNumber, RawSource];
 
 type StackEntry = [FileName, IterableIterator<[LineNumber, RawSource]>];
 
@@ -22,23 +19,21 @@ export const includeFile = (fileName: FileName) => {
     fileStack.push(stackEntry(fileName));
 };
 
-export const topFile = (fileName: FileName) => {
+export const sourceLines = (pass: Pass, fileName: FileName) => {
     fileStack = [stackEntry(fileName)];
-}
-
-export const sourceLines = function* (): Generator<Line, undefined, undefined> {
-    let next: IteratorResult<[LineNumber, RawSource]>;
-    let file = currentFile();
-    while (file != undefined) {
-        next = file[1].next();
-        if (next.done) {
-            fileStack.pop();
-        } else {
-            const [lineNumber, rawLine] = next.value;
-            yield [file[0], lineNumber, rawLine];
+    return function* (): Generator<Line, undefined, undefined> {
+        let file = currentFile();
+        while (file != undefined) {
+            const next = file[1].next();
+            if (next.done) {
+                fileStack.pop();
+            } else {
+                const [lineNumber, rawLine] = next.value;
+                yield newLine(pass, file[0], lineNumber, rawLine);
+            }
+            // Bear in mind that another file could have been pushed on top
+            // by an include directive "whilst we weren't watching"
+            file = currentFile();
         }
-        // Bear in mind that another file could have been pushed on top
-        // by an include directive "whilst we weren't watching"
-        file = currentFile();
-    }
+    };
 };
