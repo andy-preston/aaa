@@ -104,7 +104,7 @@ export const inContext = (jsSource: string): string => {
         const result = new Function(functionBody).call(context);
         return result == undefined ? "" : `${result}`;
     } catch (error) {
-        if (error.name != "ReferenceError") {
+        if (error instanceof ReferenceError) {
             error.message = `Javascript error: ${error.message}`;
         }
         throw error;

@@ -20,7 +20,7 @@ const labelWithError = (labelName: string) => {
         label(labelName);
     }
     catch (error) {
-        if (!ignoreErrors()) {
+        if (!ignoreErrors() && error instanceof Error) {
             errorMessages.push(`${error.name}: ${error.message}`)
         }
     }
@@ -30,7 +30,7 @@ const translationWithError = (instruction: Instruction): GeneratedCode => {
     try {
         return translate(instruction);
     } catch (error) {
-        if (!ignoreErrors()) {
+        if (!ignoreErrors() && error instanceof Error) {
             errorMessages.push(`${error.name}: ${error.message}`);
         }
         return [];

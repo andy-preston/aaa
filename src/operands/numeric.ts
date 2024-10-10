@@ -10,7 +10,7 @@ const operandValue = (operand: SymbolicOperand): string => {
         return inContext(operand).trim();
     }
     catch (error) {
-        if (error.name == "ReferenceError" && ignoreErrors()) {
+        if (ignoreErrors() && error instanceof ReferenceError) {
             return "0";
         }
         throw error;
