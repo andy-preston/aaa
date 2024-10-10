@@ -1,16 +1,38 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import { deviceName } from "../context/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import { InternalError } from "../errors/errors.ts";
+import type { Instruction, Mnemonic } from "../source-code/mod.ts";
 
 export type GeneratedCode =
     | []
     | [number, number]
     | [number, number, number, number];
 
-let unsupportedInstructions: Array<string> = [];
+let unsupportedInstructions: Array<Mnemonic> = [];
 
-export const setUnsupportedInstructions = (instructions: Array<string>) => {
-    unsupportedInstructions = instructions;
+const unsupportedInstructionGroups: Map<string, Array<Mnemonic>> = new Map([
+    ["multiply", ["MUL", "MULS", "MULSU", "FMUL", "FMULS", "FMULSU"]],
+    ["readModifyWrite", ["LAC", "LAS", "LAT", "XCH"]],
+    ["DES", ["DES"]],
+    ["FlashMore128", ["EICALL", "EIJMP"]],
+    ["FlashMore8", ["CALL", "JMP"]],
+    // We need to understand this better to explain WHY some devices have
+    // SPM but not SPM.Z
+    ["SPM.Z", ["SPM.Z"]],
+    // ELPM needs more study!
+    ["ELPM", ["ELPM", "ELPM.Z"]]
+]);
+
+export const setUnsupportedInstructions = (groups: Array<string>) => {
+    unsupportedInstructions = groups.flatMap((group) => {
+        if (!unsupportedInstructionGroups.has(group)) {
+            throw new InternalError(
+                `Unknown unsupported instruction group: ${group}`
+            );
+        }
+        return unsupportedInstructionGroups.get(group)!;
+    });
+
 };
 
 export const translate = (instruction: Instruction): GeneratedCode => {

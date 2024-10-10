@@ -1,3 +1,4 @@
+import { InternalError } from "../errors/errors.ts";
 import { setUnsupportedInstructions } from "../generate/mod.ts";
 import { programMemoryBytes, setRamEnd, setRamStart } from "../process/mod.ts";
 import { property } from "./context.ts";
@@ -24,7 +25,9 @@ export const deviceName = (reason: string) => {
 
 export const hasReducedCore = () => reducedCore;
 
-export const chooseDevice = (deviceName: string, deviceSpec: object) => {
+type FullSpec = Record<string, number | boolean | Array<string>>;
+
+export const chooseDevice = (deviceName: string, fullSpec: FullSpec) => {
     if (name == deviceName) {
         return;
     }
@@ -33,9 +36,10 @@ export const chooseDevice = (deviceName: string, deviceSpec: object) => {
     }
     newDeviceChecker();
     name = deviceName;
-    for (const [key, value] of Object.entries(deviceSpec)) {
+    for (const [key, value] of Object.entries(fullSpec)) {
         switch (key) {
             case "unsupportedInstructions":
+                console.log("chooseDevice switch", value);
                 setUnsupportedInstructions(value as Array<string>);
                 break;
             case "reducedCore":
@@ -57,9 +61,48 @@ export const chooseDevice = (deviceName: string, deviceSpec: object) => {
     }
 };
 
+type RawProperty = string | boolean | Array<string>;
+type RawItem = { "value": RawProperty };
+type RawItems = Record<string, RawItem>;
+type DeviceSpec = { "family"? : string, "spec": RawItems };
+
+const loadJsonFile = (name: string) => {
+    const json = Deno.readTextFileSync(name);
+    return JSON.parse(json);
+};
+
+const hexNumber = (value: string): number => {
+    const asNumber = parseInt(value, 16);
+    const asHex = asNumber.toString(16).padStart(value.length, "0");
+    if (asHex != value.toLowerCase()) {
+        throw new InternalError(`expected ${value} to be a hex number`);
+    }
+    return asNumber;
+};
+
 export const deviceDirective = (name: string) => {
-    (async () => {
-        const deviceSpec = await import(`../devices/${name.toLowerCase()}.ts`);
-        chooseDevice(name, deviceSpec);
-    })();
+    const fullSpec: FullSpec = {};
+
+    const loadSpec = (spec: RawItems) => {
+        for (const [key, item] of Object.entries(spec)) {
+            if (Object.hasOwn(fullSpec, key)) {
+                throw new InternalError(
+                    `${key} declared multiple times in ${name} spec`
+                );
+            }
+            fullSpec[key] = typeof item.value != "string"
+                ? item.value
+                : hexNumber(item.value);
+        }
+    };
+
+    const baseSpec: DeviceSpec = loadJsonFile(
+        `./src/devices/${name.toLowerCase()}.json`
+    );
+    const familySpec: RawItems = "family" in baseSpec
+        ? loadJsonFile(`./src/devices/families/${baseSpec.family}.json`)
+        : {};
+    loadSpec(baseSpec.spec);
+    loadSpec(familySpec);
+    chooseDevice(name, fullSpec);
 };

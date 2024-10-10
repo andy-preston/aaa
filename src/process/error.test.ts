@@ -8,11 +8,11 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
     blankSlate();
     chooseDevice("dummy", {
         "programEnd": 4096,
-        "unsupportedInstructions": ["ADIW"]
+        "unsupportedInstructions": ["multiply"]
     });
     startPass(2);
-    for (const [_address, _code, errors] of process("ADIW R26, 5")) {
-        assertArrayIncludes(errors, ["Error: ADIW is not available on dummy"]);
+    for (const [_address, _code, errors] of process("MUL R26, R28")) {
+        assertArrayIncludes(errors, ["Error: MUL is not available on dummy"]);
     }
 });
 
@@ -20,10 +20,10 @@ Deno.test("no unsupported instruction error on first pass", () => {
     blankSlate();
     chooseDevice("dummy", {
         "programEnd": 4096,
-        "unsupportedInstructions": ["ADIW"]
+        "unsupportedInstructions": ["multiply"]
     });
     startPass(1);
-    for (const [_address, _code, errors] of process("ADIW R26, 5")) {
+    for (const [_address, _code, errors] of process("MUL R26, R28")) {
         assertEquals(0, errors.length, "no error on first pass");
     }
 });
