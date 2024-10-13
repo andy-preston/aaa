@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
 import { chooseDevice } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { translate } from "../generate/mod.ts";
+import { translate } from "../generate/translate.ts";
 import { startPass } from "../state/mod.ts";
 import { tokenLine } from "../source-code/testing.ts";
 import { type Tests, description } from "./testing.ts";

@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { label, newContext } from "../context/mod.ts";
-import { translate } from "../generate/mod.ts";
+import { translate } from "../generate/translate.ts";
 import {
     programMemoryOrigin, programMemoryBytes, startPass
 } from "../state/mod.ts";

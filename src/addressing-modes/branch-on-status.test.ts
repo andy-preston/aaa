@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
 import { chooseDevice, property } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { translate } from "../generate/mod.ts";
+import { translate } from "../generate/translate.ts";
 import {
     programMemoryOrigin, programMemoryStep, startPass
 } from "../state/mod.ts";
