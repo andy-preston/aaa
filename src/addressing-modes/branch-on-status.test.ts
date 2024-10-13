@@ -4,7 +4,7 @@ import { blankSlate } from "../coupling/coupling.ts";
 import { translate } from "../generate/mod.ts";
 import {
     programMemoryOrigin, programMemoryStep, startPass
-} from "../process/mod.ts";
+} from "../state/mod.ts";
 import { tokenLine } from "../source-code/testing.ts";
 import { description, type Tests } from "./testing.ts";
 

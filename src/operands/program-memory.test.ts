@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { programMemoryOrigin, startPass } from "../process/mod.ts";
+import { programMemoryOrigin, startPass } from "../state/mod.ts";
 import { numericOperand } from "./converter.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import { chooseDevice } from "../context/mod.ts";

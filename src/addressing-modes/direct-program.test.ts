@@ -3,7 +3,7 @@ import { label, newContext } from "../context/mod.ts";
 import { translate } from "../generate/mod.ts";
 import {
     programMemoryOrigin, programMemoryBytes, startPass
-} from "../process/mod.ts";
+} from "../state/mod.ts";
 import { tokenLine } from "../source-code/testing.ts";
 import { type Tests, description } from "./testing.ts";
 

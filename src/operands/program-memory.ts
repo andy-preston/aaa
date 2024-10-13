@@ -1,4 +1,4 @@
-import { programMemoryEnd, programMemoryAddress } from "../process/mod.ts";
+import { programMemoryEnd, programMemoryAddress } from "../state/mod.ts";
 import { numeric } from "./numeric.ts";
 import {
     type NumericOperand, type SymbolicOperand,

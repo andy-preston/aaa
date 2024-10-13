@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
 import { numericOperand } from "./converter.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { startPass } from "../process/mod.ts";
+import { startPass } from "../state/mod.ts";
 
 Deno.test("A register should be between zero and 31", () => {
     blankSlate();

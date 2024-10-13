@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { startPass } from "../process/mod.ts";
+import { startPass } from "../state/mod.ts";
 import { checkOperandCount, numericOperand } from "./converter.ts";
 import { InternalError } from "../errors/errors.ts";
 import { blankSlate } from "../coupling/coupling.ts";

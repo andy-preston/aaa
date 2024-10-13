@@ -1,5 +1,5 @@
 import { inContext } from "../context/mod.ts";
-import { ignoreErrors } from "../process/pass.ts";
+import { ignoreErrors } from "../state/mod.ts";
 import {
     type NumericOperand, type SymbolicOperand,
     type Description, type Scaler, operandRangeError

@@ -1,4 +1,4 @@
-import { programMemoryAddress } from "../process/mod.ts";
+import { programMemoryAddress } from "../state/mod.ts";
 
 type SimpleFunction = (_: number) => number;
 

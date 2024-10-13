@@ -1,6 +1,6 @@
 import { InternalError } from "../errors/errors.ts";
 import { setUnsupportedInstructions } from "../generate/mod.ts";
-import { programMemoryBytes, setRamEnd, setRamStart } from "../process/mod.ts";
+import { programMemoryBytes, setRamEnd, setRamStart } from "../state/mod.ts";
 import { property } from "./context.ts";
 
 let deviceErrorShown: boolean;

@@ -2,9 +2,12 @@ import { assertEquals } from "assert";
 import { chooseDevice, inContext } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import { tokenLine } from "../source-code/testing.ts";
-import { startPass } from "./pass.ts";
+import {
+    programMemoryAddress,
+    programMemoryOrigin,
+    startPass
+} from "../state/mod.ts";
 import { process } from "./process.ts";
-import { programMemoryAddress, programMemoryOrigin } from "./program-memory.ts";
 
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
     blankSlate();

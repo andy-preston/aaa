@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
 import { numericOperand } from "./converter.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { startPass } from "../process/mod.ts";
+import { startPass } from "../state/mod.ts";
 
 Deno.test("Numeric operands must be integers", () => {
     blankSlate();

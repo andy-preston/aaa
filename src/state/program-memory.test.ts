@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "assert";
 import { chooseDevice, coupledProperty } from "../context/mod.ts";
 import {
     programMemoryEnd, programMemoryAddress, programMemoryOrigin
-} from "./mod.ts";
+} from "../state/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 
 Deno.test("a device must be selected before program memory can be set", () => {

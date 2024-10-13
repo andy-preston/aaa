@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
-import { numericOperand } from "./converter.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { startPass } from "../process/pass.ts";
+import { startPass } from "../state/mod.ts";
+import { numericOperand } from "./converter.ts";
 
 Deno.test("A Data Memory Address is 0 - 0xFFFF", () => {
     blankSlate();

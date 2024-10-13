@@ -1,9 +1,9 @@
 import { assertArrayIncludes, assertEquals } from "assert";
 import { chooseDevice } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { startPass } from "./pass.ts";
-import { process } from "./process.ts";
 import { tokenLine } from "../source-code/testing.ts";
+import { startPass } from "../state/mod.ts";
+import { process } from "./process.ts";
 
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
     blankSlate();

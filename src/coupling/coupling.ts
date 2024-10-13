@@ -3,13 +3,11 @@ import {
     directive, deviceDirective,
     newContext, newDeviceChecker
 } from "../context/mod.ts";
-import { newDataMemory } from "../process/data-memory.ts";
-
 import {
     programMemoryEnd, programMemoryOrigin,
-    ramStart, ramEnd, allocStack, alloc,
+    newDataMemory, ramStart, ramEnd, allocStack, alloc,
     newPokeBuffer, poke,
-} from "../process/mod.ts";
+} from "../state/mod.ts";
 
 import {
     includeFile
