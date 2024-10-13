@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
 import { languageSplit, newSplitter } from "./language-split.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import type { Line, RawSource } from "../line.ts";
+import type { Line, RawSource } from "./line.ts";
 
 const testLine = (rawLine: RawSource): Line => ({
     "pass": 2,

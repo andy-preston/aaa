@@ -1,5 +1,5 @@
+import { Line } from "./line.ts";
 import { inContext } from "../context/mod.ts";
-import { Line } from "../line.ts";
 
 const scriptDelimiter = /({{|}})/;
 

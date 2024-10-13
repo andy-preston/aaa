@@ -1,5 +1,5 @@
-import { Pass } from "./process/pass.ts";
-import { FileName } from "./source-code/mod.ts";
+import { Pass } from "../process/pass.ts";
+import { FileName } from "./mod.ts";
 
 export type LineNumber = number;
 
