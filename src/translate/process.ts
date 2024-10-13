@@ -1,10 +1,9 @@
 import { label } from "../context/mod.ts";
-import { type GeneratedCode, translate } from "./translate.ts";
 import { macroLines, type Line } from "../source-code/mod.ts";
 import {
-    programMemoryAddress, programMemoryStep,
-    ignoreErrors, peek
+    programMemoryAddress, programMemoryStep, ignoreErrors, peek
 } from "../state/mod.ts";
+import { type GeneratedCode, translate } from "./translate.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;

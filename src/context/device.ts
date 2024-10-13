@@ -1,5 +1,5 @@
 import { InternalError } from "../errors/errors.ts";
-import { setUnsupportedInstructions } from "../generate/mod.ts";
+import { setUnsupportedInstructions } from "../translate/mod.ts";
 import { programMemoryBytes, setRamEnd, setRamStart } from "../state/mod.ts";
 import { property } from "./context.ts";
 
@@ -39,7 +39,6 @@ export const chooseDevice = (deviceName: string, fullSpec: FullSpec) => {
     for (const [key, value] of Object.entries(fullSpec)) {
         switch (key) {
             case "unsupportedInstructions":
-                console.log("chooseDevice switch", value);
                 setUnsupportedInstructions(value as Array<string>);
                 break;
             case "reducedCore":

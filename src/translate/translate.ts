@@ -1,4 +1,4 @@
-import { addressingModes } from "../addressing-modes/mod.ts";
+import { addressingModes } from "./addressing-modes.ts";
 import { deviceName } from "../context/mod.ts";
 import { InternalError } from "../errors/errors.ts";
 import type { Line, Mnemonic } from "../source-code/mod.ts";

@@ -1,5 +1,5 @@
 import type { FileName } from "../coupling/coupling.ts";
-import type { GeneratedCode } from "../generate/mod.ts";
+import type { GeneratedCode } from "../translate/mod.ts";
 import type { WriteFile } from "./file.ts";
 
 const addressWidth = 5;

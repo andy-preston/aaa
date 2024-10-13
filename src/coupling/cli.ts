@@ -1,4 +1,4 @@
-import { process } from "../generate/mod.ts";
+import { process } from "../translate/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
 import { passes, startPass } from "../state/mod.ts";
 import { sourceLines, sourceCheck } from "../source-code/mod.ts";

@@ -1,5 +1,5 @@
 import { deviceName } from "../context/mod.ts";
-import type { GeneratedCode } from "../generate/mod.ts";
+import type { GeneratedCode } from "../translate/mod.ts";
 
 let address: number = 0;
 let end: number = 0;
