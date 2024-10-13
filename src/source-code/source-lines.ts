@@ -1,5 +1,7 @@
-import { Line, LineNumber, newLine, RawSource } from "../line.ts";
-import { Pass } from "../process/pass.ts";
+import type { Pass } from "../process/pass.ts";
+import {
+    type Line, type LineNumber, type RawSource, newLine
+} from "./line.ts";
 
 export type FileName = string;
 

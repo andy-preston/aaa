@@ -4,7 +4,7 @@ import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
 
 import {
     type FileName,
-    languageSplit, newSplitter, sourceLines
+    languageSplit, sourceLines, splitterCheck
 } from "../source-code/mod.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
@@ -16,7 +16,6 @@ export const cli = (commandLineSourceFile: FileName) => {
         if (pass == 2) {
             newOutput(commandLineSourceFile);
         }
-        const splitLanguages = newSplitter();
         const eachLine = sourceLines(pass, commandLineSourceFile);
         for (const line of eachLine()) {
             if (pass == 2) {
@@ -26,7 +25,7 @@ export const cli = (commandLineSourceFile: FileName) => {
                     line.rawLine
                 );
             }
-            languageSplit(splitLanguages, line);
+            languageSplit(line);
             for (const [address, code, errorMessages] of process(line.rawLine)) {
                 if (pass == 2) {
                     output(address, code, errorMessages);
@@ -36,5 +35,6 @@ export const cli = (commandLineSourceFile: FileName) => {
         if (pass == 2) {
             closeOutput();
         }
+        splitterCheck();
     }
 };

@@ -1,7 +1,4 @@
-export {
-    languageSplit,
-    newSplitter
-} from "./language-split.ts";
+export { languageSplit, splitterCheck } from "./language-split.ts";
 
 export {
     macroLines
