@@ -1,8 +1,8 @@
-import { passes, startPass } from "../state/mod.ts";
+import { process } from "../generate/mod.ts";
 import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
+import { passes, startPass } from "../state/mod.ts";
 import { sourceLines, sourceCheck } from "../source-code/mod.ts";
 import type { FileName } from "./coupling.ts";
-import { process } from "../generate/process.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
     for (const pass of passes) {
