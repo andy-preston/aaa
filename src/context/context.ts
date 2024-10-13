@@ -5,7 +5,7 @@ type SimpleFunction = (_: number) => number;
 export interface Context {
     "low": (n: number) => number;
     "high": (n: number) => number;
-    "programEnd": number;
+    "programMemoryEnd": number;
     [x: string]: number | SimpleFunction | Directive;
 }
 
@@ -17,7 +17,7 @@ export const newContext = () => {
         "high": (n) => (n >> 8) & 0xff,
         // some devices have more flash than 0xffff
         // but our current .HEX output only goes that far :/
-        "programEnd": Math.floor(0xffff / 2)
+        "programMemoryEnd": Math.floor(0xffff / 2)
     };
     for (let r = 0; r < 32; r++) {
         property(`R${r}`, r);

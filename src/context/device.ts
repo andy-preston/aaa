@@ -39,6 +39,7 @@ export const chooseDevice = (deviceName: string, fullSpec: FullSpec) => {
     for (const [key, value] of Object.entries(fullSpec)) {
         switch (key) {
             case "unsupportedInstructions":
+                console.log("chooseDevice switch", value);
                 setUnsupportedInstructions(value as Array<string>);
                 break;
             case "reducedCore":
