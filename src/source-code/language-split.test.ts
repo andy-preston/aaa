@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import { languageSplit, newSplitter } from "./language-split.ts";
+import { languageSplit, splitterCheck } from "./language-split.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import type { Line, RawSource } from "./line.ts";
 
@@ -13,29 +13,30 @@ const testLine = (rawLine: RawSource): Line => ({
 Deno.test("JS can be delimited with moustaches on the same line", () => {
     blankSlate();
     const line = testLine("MOV {{ this.test = 27; return this.test; }}, R2");
-    languageSplit(newSplitter(), line);
+    languageSplit(line);
     assertEquals(line.rawLine, "MOV 27, R2");
+    splitterCheck();
 });
 
 Deno.test("JS can use registers from the context", () => {
     blankSlate();
     const line = testLine("MOV {{ R6 }}, R2");
-    languageSplit(newSplitter(), line);
+    languageSplit(line);
     assertEquals(line.rawLine, "MOV 6, R2");
+    splitterCheck();
 });
 
 Deno.test("JS can be delimited by moustaches across several lines", () => {
     blankSlate();
-    const split = newSplitter();
-
     const line1 = testLine("some ordinary stuff {{ this.test = 27;");
     const line2 = testLine("this.andThat = \"hello\";");
     const line3 = testLine("return this.andThat; }} matey!")
 
-    languageSplit(split, line1);
+    languageSplit(line1);
     assertEquals(line1.rawLine, "some ordinary stuff");
-    languageSplit(split, line2);
+    languageSplit(line2);
     assertEquals(line2.rawLine, "");
-    languageSplit(split, line3);
+    languageSplit(line3);
     assertEquals(line3.rawLine, "hello matey!");
+    splitterCheck();
 });

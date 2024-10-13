@@ -12,14 +12,12 @@ import {
 } from "../process/mod.ts";
 
 import {
-    newSplitter,
     includeFile
 } from "../source-code/mod.ts";
 
 export const blankSlate = () => {
     newContext();
     newPokeBuffer();
-    newSplitter();
     newDeviceChecker();
     newDataMemory();
 }
