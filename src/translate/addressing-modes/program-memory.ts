@@ -4,8 +4,8 @@ import {
     symbolicOperand,
 } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { GeneratedCode } from "../translate.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM", "1001_0101 111b_1000"], //     Implied Z OR explicit Z+

@@ -5,8 +5,8 @@ import {
     type OperandIndex,
 } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { GeneratedCode } from "../translate.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [OperandIndex, OperandIndex, OperandIndex, string]> =
     new Map([

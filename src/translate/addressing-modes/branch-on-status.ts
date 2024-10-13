@@ -1,7 +1,7 @@
-import type { GeneratedCode } from "../translate.ts";
-import { template } from "../template.ts";
 import { checkOperandCount, numericOperand } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
+import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BRBC", ["1", undefined]],
