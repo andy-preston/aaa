@@ -7,8 +7,6 @@ import { type GeneratedCode, translate } from "./translate.ts";
 
 type Address = number;
 type ErrorMessages = Array<string>;
-type Processed = [Address, GeneratedCode, ErrorMessages];
-type ProcessGenerator = Generator<Processed, void, undefined>;
 
 let errorMessages: Array<string>;
 
@@ -37,16 +35,21 @@ const translationWithError = (line: Line): GeneratedCode => {
     }
 };
 
-const codeBlock = (
-    block: GeneratedCode,
-    errorMessages: ErrorMessages
-): Processed => {
-    const result: Processed = [programMemoryAddress(), block, errorMessages];
+const codeBlock = (block: GeneratedCode, errorMessages: ErrorMessages) => {
+    const result = {
+        "address": programMemoryAddress(),
+        "code": block,
+        "errors": errorMessages
+    };
     programMemoryStep(block);
     return result;
 }
 
-export const process = function* (line: Line): ProcessGenerator {
+export type CodeBlock = ReturnType<typeof codeBlock>;
+
+type CodeGenerator = Generator<CodeBlock, void, undefined>;
+
+export const process = function* (line: Line): CodeGenerator {
     errorMessages = [];
     // Remember that labels must be processed before pokes!
     labelWithError(line.label);

@@ -1,5 +1,5 @@
 import type { FileName } from "../coupling/coupling.ts";
-import type { GeneratedCode } from "../translate/mod.ts";
+import type { CodeBlock } from "../translate/mod.ts";
 import { closeFile, openFile, writeFile } from "./file.ts";
 import { codeForHex, newHexFile, saveHexFile } from "./hex.ts";
 import { listCode, listError, newListing } from "./listing.ts";
@@ -17,18 +17,14 @@ export const newOutput = (topFileName: FileName) => {
     anyErrors = false;
 };
 
-export const output = (
-    address: number,
-    code: GeneratedCode,
-    errors: Array<string>
-) => {
-    listCode(address, code);
-    for (const message of errors) {
+export const output = (block: CodeBlock) => {
+    listCode(block.address, block.code);
+    for (const message of block.errors) {
         listError(message);
         anyErrors = true;
     }
     if (!anyErrors) {
-        codeForHex(address, code);
+        codeForHex(block.address, block.code);
     }
 };
 

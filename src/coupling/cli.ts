@@ -15,15 +15,11 @@ export const cli = (commandLineSourceFile: FileName) => {
         }
         for (const line of sourceLines(commandLineSourceFile)) {
             if (pass == 2) {
-                listSource(
-                    line.filename,
-                    line.lineNumber,
-                    line.rawLine
-                );
+                listSource(line);
             }
-            for (const [address, code, errorMessages] of process(line)) {
+            for (const processed of process(line)) {
                 if (pass == 2) {
-                    output(address, code, errorMessages);
+                    output(processed);
                 }
             }
         }

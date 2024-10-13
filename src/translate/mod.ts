@@ -1,3 +1,2 @@
 export { type GeneratedCode, setUnsupportedInstructions } from "./translate.ts";
-
-export { process } from "./process.ts";
+export { type CodeBlock, process } from "./process.ts";

@@ -1,4 +1,4 @@
-import type { FileName } from "../coupling/coupling.ts";
+import type { Line } from "../source-code/mod.ts";
 import type { GeneratedCode } from "../translate/mod.ts";
 import type { WriteFile } from "./file.ts";
 
@@ -39,14 +39,14 @@ export const newListing = (writeFileFunc: WriteFile) => {
     currentFile = "";
 };
 
-export const listSource = (file: FileName, line: number, text: string) => {
-    if (file != currentFile) {
-        const underline = "=".repeat(file.length);
-        writeFile(`\n${file}\n${underline}\n`);
-        currentFile = file;
+export const listSource = (line: Line) => {
+    if (line.filename != currentFile) {
+        const underline = "=".repeat(line.filename.length);
+        writeFile(`\n${line.filename}\n${underline}\n`);
+        currentFile = line.filename;
     }
-    currentLine = line;
-    sourceLine = text;
+    currentLine = line.lineNumber;
+    sourceLine = line.rawLine;
     newLine = true;
 };
 
