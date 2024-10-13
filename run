@@ -16,11 +16,15 @@ check)
     deno lint
     deno run -A npm:@biomejs/biome check --javascript-formatter-enabled=false
     ;;
+report)
+    deno run -A ./analysis/import-graph.ts
+    d2 --scale 1 graph.d2 graph.svg
+    ;;
 biome)
     deno run -A npm:@biomejs/biome check
     ;;
 *)
-    echo "./run [check|biome|run]"
+    echo "./run [check|biome|run|report]"
     exit 1
     ;;
 esac

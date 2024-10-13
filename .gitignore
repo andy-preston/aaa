@@ -1,5 +1,6 @@
 _deno
 deno.lock
+graph.*
 test.asm
 test.hex
 test.lst
