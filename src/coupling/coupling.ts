@@ -15,6 +15,8 @@ import {
     includeFile
 } from "../source-code/mod.ts";
 
+export type FileName = string;
+
 export const blankSlate = () => {
     newContext();
     newPokeBuffer();

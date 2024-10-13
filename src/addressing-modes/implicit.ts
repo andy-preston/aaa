@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import { checkOperandCount } from "../operands/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import type { Line } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["BREAK", "1001_0101 1001_1000"],
@@ -16,11 +16,10 @@ const mapping: Map<string, string> = new Map([
     ["EICALL", "1001_0101 0001_1001"]
 ]);
 
-export const encode = (instruction: Instruction): GeneratedCode | undefined => {
-    const [ mnemonic, operands ] = instruction;
-    if (!mapping.has(mnemonic)) {
+export const encode = (line: Line): GeneratedCode | undefined => {
+    if (!mapping.has(line.mnemonic)) {
         return undefined;
     }
-    checkOperandCount(operands, []);
-    return template(mapping.get(mnemonic)!, []);
+    checkOperandCount(line.operands, []);
+    return template(mapping.get(line.mnemonic)!, []);
 };

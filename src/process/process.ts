@@ -1,6 +1,6 @@
 import { label } from "../context/mod.ts";
 import { type GeneratedCode, translate } from "../generate/translate.ts";
-import { type Instruction, lineTokens, macroLines } from "../source-code/mod.ts";
+import { macroLines, type Line } from "../source-code/mod.ts";
 import { ignoreErrors } from "./pass.ts";
 import { peek } from "./poke-peek.ts";
 import { programMemoryAddress, programMemoryStep } from "./program-memory.ts";
@@ -26,9 +26,9 @@ const labelWithError = (labelName: string) => {
     }
 };
 
-const translationWithError = (instruction: Instruction): GeneratedCode => {
+const translationWithError = (line: Line): GeneratedCode => {
     try {
-        return translate(instruction);
+        return translate(line);
     } catch (error) {
         if (!ignoreErrors() && error instanceof Error) {
             errorMessages.push(`${error.name}: ${error.message}`);
@@ -46,23 +46,22 @@ const codeBlock = (
     return result;
 }
 
-export const process = function* (line: string): ProcessGenerator {
+export const process = function* (line: Line): ProcessGenerator {
     errorMessages = [];
     // Remember that labels must be processed before pokes!
-    const [label, mnemonic, operands] = lineTokens(line);
-    labelWithError(label);
+    labelWithError(line.label);
     for (const block of peek()) {
         yield codeBlock(block, []);
     }
     yield codeBlock(
-        translationWithError([mnemonic, operands]),
+        translationWithError(line),
         errorMessages
     );
-    for (const [label, mnemonic, operands] of macroLines()) {
+    for (const macroLine of macroLines()) {
         errorMessages = [];
-        labelWithError(label);
+        labelWithError(macroLine.label);
         yield codeBlock(
-            translationWithError([mnemonic, operands]),
+            translationWithError(macroLine),
             errorMessages
         );
     }

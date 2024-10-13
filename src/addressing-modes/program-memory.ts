@@ -4,7 +4,7 @@ import {
     numericOperand,
     symbolicOperand,
 } from "../operands/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import type { Line } from "../source-code/mod.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM", "1001_0101 111b_1000"], //     Implied Z OR explicit Z+
@@ -30,28 +30,27 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
     }
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | undefined => {
-    const [ mnemonic, operands ] = instruction;
-    if (!mapping.has(mnemonic)) {
+export const encode = (line: Line): GeneratedCode | undefined => {
+    if (!mapping.has(line.mnemonic)) {
         return undefined;
     }
-    const isStore = mnemonic == "SPM";
-    validIndexOperand(isStore, operands);
+    const isStore = line.mnemonic == "SPM";
+    validIndexOperand(isStore, line.operands);
     const register =
-        !isStore && operands.length == 2
-            ? numericOperand("register", operands[0]!)
+        !isStore && line.operands.length == 2
+            ? numericOperand("register", line.operands[0]!)
             : undefined;
     if (isStore) {
-        return template(mapping.get(mnemonic)!, [
-            ["b", operands[0] == "Z+" ? 1 : 0]
+        return template(mapping.get(line.mnemonic)!, [
+            ["b", line.operands[0] == "Z+" ? 1 : 0]
         ]);
     }
     if (register == undefined) {
-        return template(mapping.get(mnemonic)!, []);
+        return template(mapping.get(line.mnemonic)!, []);
     }
     // This is still a bit horrible and needs more work
-    const index = symbolicOperand(operands[1]!);
-    return template(mapping.get(`${mnemonic}.${index}`)!, [
+    const index = symbolicOperand(line.operands[1]!);
+    return template(mapping.get(`${line.mnemonic}.${index}`)!, [
         ["d", register]
     ]);
 };

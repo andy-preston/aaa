@@ -1,11 +1,11 @@
-import type { Tokens } from "./tokens.ts";
+import { newLine, type Line } from "./line.ts";
 
 const activeMacro = false;
 
 export const macroLines =
-    function* (): Generator<Tokens, undefined, undefined> {
+    function* (): Generator<Line, undefined, undefined> {
         if (activeMacro) {
-            yield ["", "MOV", ["R1", "R2"]];
+            yield newLine("", 0, "");
         }
         return;
     };

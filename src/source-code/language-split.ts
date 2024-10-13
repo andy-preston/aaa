@@ -1,4 +1,4 @@
-import { Line } from "./line.ts";
+import type { Line } from "./line.ts";
 import { inContext } from "../context/mod.ts";
 import { InternalError } from "../errors/errors.ts";
 
@@ -53,5 +53,5 @@ const scriptDelimiter = /({{|}})/;
 
 export const languageSplit = (line: Line) => {
     line.rawLine.split(scriptDelimiter).forEach(usePart);
-    line.rawLine = contentsOf("assembler");
+    line.assemblyLine = contentsOf("assembler");
 };

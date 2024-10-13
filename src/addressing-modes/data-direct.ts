@@ -6,19 +6,19 @@ import {
     checkOperandCount,
     numericOperand
 } from "../operands/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import type { Line } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["LDS", ["0", 0, 1]],
     ["STS", ["1", 1, 0]]
 ]);
 
-export const encode = (instruction: Instruction): GeneratedCode | undefined => {
-    const [ mnemonic, operands ] = instruction;
-    if (!mapping.has(mnemonic)) {
+export const encode = (line: Line): GeneratedCode | undefined => {
+    if (!mapping.has(line.mnemonic)) {
         return undefined;
     }
-    const [operationBit, registerIndex, addressIndex] = mapping.get(mnemonic)!;
+    const [operationBit, registerIndex, addressIndex] =
+        mapping.get(line.mnemonic)!;
 
     const registerType: TypeName = hasReducedCore()
         ? "immediateRegister" : "register";
@@ -29,13 +29,13 @@ export const encode = (instruction: Instruction): GeneratedCode | undefined => {
         ? "kkk dddd_kkkk" : "d dddd_0000 kkkk_kkkk kkkk_kkkk";
 
     checkOperandCount(
-        operands,
+        line.operands,
         registerIndex == 0
             ? [registerType, addressType]
             : [addressType, registerType]
     );
     return template(`${prefix}${operationBit}${suffix}`, [
-        ["d", numericOperand(registerType, operands[registerIndex]!)],
-        ["k", numericOperand(addressType, operands[addressIndex]!)]
+        ["d", numericOperand(registerType, line.operands[registerIndex]!)],
+        ["k", numericOperand(addressType, line.operands[addressIndex]!)]
     ]);
 };

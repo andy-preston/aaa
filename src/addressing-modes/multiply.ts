@@ -4,7 +4,7 @@ import {
     checkOperandCount,
     numericOperand
 } from "../operands/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import type { Line } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["FMUL", ["1 0", "1"]],
@@ -14,17 +14,17 @@ const mapping: Map<string, [string, string]> = new Map([
     ["MULS", ["0 d", "r"]]
 ]);
 
-export const encode = (instruction: Instruction): GeneratedCode | undefined => {
-    const [ mnemonic, operands ] = instruction;
-    if (!mapping.has(mnemonic)) {
+export const encode = (line: Line): GeneratedCode | undefined => {
+    if (!mapping.has(line.mnemonic)) {
         return undefined;
     }
-    const registerType: TypeName =
-        mnemonic == "MULS" ? "immediateRegister" : "multiplyRegister";
-    checkOperandCount(operands, [registerType, registerType]);
-    const [firstOperation, secondOperation] = mapping.get(mnemonic)!;
+    const registerType: TypeName = line.mnemonic == "MULS"
+        ? "immediateRegister"
+        : "multiplyRegister";
+    checkOperandCount(line.operands, [registerType, registerType]);
+    const [firstOperation, secondOperation] = mapping.get(line.mnemonic)!;
     return template(`0000_001${firstOperation}ddd_${secondOperation}rrr`, [
-        ["d", numericOperand(registerType, operands[0]!)],
-        ["r", numericOperand(registerType, operands[1]!)]
+        ["d", numericOperand(registerType, line.operands[0]!)],
+        ["r", numericOperand(registerType, line.operands[1]!)]
     ]);
 };

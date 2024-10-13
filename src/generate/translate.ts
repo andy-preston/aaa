@@ -1,7 +1,7 @@
 import { addressingModes } from "../addressing-modes/mod.ts";
 import { deviceName } from "../context/mod.ts";
 import { InternalError } from "../errors/errors.ts";
-import type { Instruction, Mnemonic } from "../source-code/mod.ts";
+import type { Line, Mnemonic } from "../source-code/mod.ts";
 
 export type GeneratedCode =
     | []
@@ -35,20 +35,19 @@ export const setUnsupportedInstructions = (groups: Array<string>) => {
 
 };
 
-export const translate = (instruction: Instruction): GeneratedCode => {
-    const mnemonic = instruction[0];
-    if (mnemonic == "") {
+export const translate = (line: Line): GeneratedCode => {
+    if (line.mnemonic == "") {
         return [];
     }
     const device = deviceName("determine which instructions are available");
-    if (unsupportedInstructions.includes(mnemonic)) {
-        throw new Error(`${mnemonic} is not available on ${device}`);
+    if (unsupportedInstructions.includes(line.mnemonic)) {
+        throw new Error(`${line.mnemonic} is not available on ${device}`);
     }
     for (const addressingMode of addressingModes) {
-        const generatedCode = addressingMode(instruction);
+        const generatedCode = addressingMode(line);
         if (generatedCode != null) {
             return generatedCode;
         }
     }
-    throw new SyntaxError(`unknown instruction ${mnemonic}`);
+    throw new SyntaxError(`unknown instruction ${line.mnemonic}`);
 };

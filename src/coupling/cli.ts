@@ -1,11 +1,7 @@
 import { passes, process, startPass } from "../process/mod.ts";
-
 import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
-
-import {
-    type FileName,
-    languageSplit, sourceLines, splitterCheck
-} from "../source-code/mod.ts";
+import { sourceLines, sourceCheck } from "../source-code/mod.ts";
+import type { FileName } from "./coupling.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
     for (const pass of passes) {
@@ -16,8 +12,7 @@ export const cli = (commandLineSourceFile: FileName) => {
         if (pass == 2) {
             newOutput(commandLineSourceFile);
         }
-        const eachLine = sourceLines(pass, commandLineSourceFile);
-        for (const line of eachLine()) {
+        for (const line of sourceLines(commandLineSourceFile)) {
             if (pass == 2) {
                 listSource(
                     line.filename,
@@ -25,8 +20,7 @@ export const cli = (commandLineSourceFile: FileName) => {
                     line.rawLine
                 );
             }
-            languageSplit(line);
-            for (const [address, code, errorMessages] of process(line.rawLine)) {
+            for (const [address, code, errorMessages] of process(line)) {
                 if (pass == 2) {
                     output(address, code, errorMessages);
                 }
@@ -35,6 +29,6 @@ export const cli = (commandLineSourceFile: FileName) => {
         if (pass == 2) {
             closeOutput();
         }
-        splitterCheck();
+        sourceCheck();
     }
 };

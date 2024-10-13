@@ -1,12 +1,5 @@
 import type { SymbolicOperands } from "../operands/mod.ts";
-
-export type Mnemonic = string;
-
-type Label = string;
-
-export type Tokens = [Label, Mnemonic, SymbolicOperands];
-
-export type Instruction = [Mnemonic, SymbolicOperands]
+import type { Line } from "./line.ts";
 
 const stripComment = (raw: string): string => {
     const semicolon = raw.indexOf(";");
@@ -60,14 +53,16 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
     }
 };
 
-export const lineTokens = (theLine: string): Tokens => {
-    const cleaned = clean(theLine);
+export const lineTokens = (theLine: Line): void => {
+    const cleaned = clean(theLine.assemblyLine);
     const [label, withoutLabel] = split("after", ":", cleaned);
     forbidWhitespace(label);
+    theLine.label = label;
     const [mnemonic, operandsText] = split("before", " ", withoutLabel);
+    theLine.mnemonic = mnemonic.toUpperCase();
     const operandsList = split("before", ",", operandsText).filter(
         (operand: string) => operand != ""
     );
     expandIndexOffsetOperands(operandsList);
-    return [label, mnemonic.toUpperCase(), operandsList as SymbolicOperands];
+    theLine.operands = operandsList as SymbolicOperands;
 };

@@ -1,6 +1,6 @@
 import { type GeneratedCode, template } from "../generate/mod.ts";
 import { checkOperandCount, numericOperand } from "../operands/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import type { Line } from "../source-code/mod.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["POP", ["00", "1111"]],
@@ -19,21 +19,20 @@ const mapping: Map<string, [string, string]> = new Map([
     ["PUSH", ["01", "1111"]]
 ]);
 
-export const encode = (instruction: Instruction): GeneratedCode | undefined => {
-    const [ mnemonic, operands ] = instruction;
-    if (!mapping.has(mnemonic)) {
+export const encode = (line: Line): GeneratedCode | undefined => {
+    if (!mapping.has(line.mnemonic)) {
         return undefined;
     }
-    const usesZ = ["LAC", "LAS", "LAT", "XCH"].includes(mnemonic);
-    checkOperandCount(operands, usesZ ? ["z", "register"] : ["register"]);
+    const usesZ = ["LAC", "LAS", "LAT", "XCH"].includes(line.mnemonic);
+    checkOperandCount(line.operands, usesZ ? ["z", "register"] : ["register"]);
     if (usesZ) {
-        const _ = numericOperand("z", operands[0]!);
+        const _ = numericOperand("z", line.operands[0]!);
     }
-    const [operationBits, suffix] = mapping.get(mnemonic)!;
+    const [operationBits, suffix] = mapping.get(line.mnemonic)!;
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
     return template(`1001_0${operationBits}d dddd_${suffix}`, [
-        ["d", numericOperand("register", operands[usesZ ? 1 : 0]!)]
+        ["d", numericOperand("register", line.operands[usesZ ? 1 : 0]!)]
     ]);
 };

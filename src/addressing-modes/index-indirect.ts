@@ -5,7 +5,7 @@ import {
     numericOperand,
     operandRangeError
 } from "../operands/mod.ts";
-import type { Instruction } from "../source-code/mod.ts";
+import type { Line } from "../source-code/mod.ts";
 
 const mapping: Map<string, [OperandIndex, OperandIndex, string]> = new Map([
     ["LD", [0, 1, "0"]],
@@ -26,19 +26,18 @@ const indexMapping: Map<string, [string, string]> = new Map([
 
 const indexDesc = Array.from(indexMapping.keys()).join(", ");
 
-export const encode = (instruction: Instruction): GeneratedCode | undefined => {
-    const [ mnemonic, operands ] = instruction;
-    if (!mapping.has(mnemonic)) {
+export const encode = (line: Line): GeneratedCode | undefined => {
+    if (!mapping.has(line.mnemonic)) {
         return undefined;
     }
     const [registerIndex, indexIndex, secondOperationBit] =
-        mapping.get(mnemonic)!;
+        mapping.get(line.mnemonic)!;
     checkOperandCount(
-        operands,
+        line.operands,
         registerIndex == 0 ? ["register", "symbolic"] : ["symbolic", "register"]
     );
-    const register = numericOperand("register", operands[registerIndex]!);
-    const index = operands[indexIndex]!;
+    const register = numericOperand("register", line.operands[registerIndex]!);
+    const index = line.operands[indexIndex]!;
     if (!indexMapping.has(index)) {
         operandRangeError("index register", indexDesc, index);
     }

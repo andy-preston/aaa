@@ -4,17 +4,20 @@ import { blankSlate } from "../coupling/coupling.ts";
 import type { Line, RawSource } from "./line.ts";
 
 const testLine = (rawLine: RawSource): Line => ({
-    "pass": 2,
-    "filename": "dummy.asm",
-    "lineNumber": 1,
-    "rawLine": rawLine
+    "filename": "",
+    "lineNumber": 0,
+    "rawLine": rawLine,
+    "assemblyLine": "",
+    "label": "",
+    "mnemonic": "",
+    "operands": []
 });
 
 Deno.test("JS can be delimited with moustaches on the same line", () => {
     blankSlate();
     const line = testLine("MOV {{ this.test = 27; return this.test; }}, R2");
     languageSplit(line);
-    assertEquals(line.rawLine, "MOV 27, R2");
+    assertEquals(line.assemblyLine, "MOV 27, R2");
     splitterCheck();
 });
 
@@ -22,7 +25,7 @@ Deno.test("JS can use registers from the context", () => {
     blankSlate();
     const line = testLine("MOV {{ R6 }}, R2");
     languageSplit(line);
-    assertEquals(line.rawLine, "MOV 6, R2");
+    assertEquals(line.assemblyLine, "MOV 6, R2");
     splitterCheck();
 });
 
@@ -33,10 +36,10 @@ Deno.test("JS can be delimited by moustaches across several lines", () => {
     const line3 = testLine("return this.andThat; }} matey!")
 
     languageSplit(line1);
-    assertEquals(line1.rawLine, "some ordinary stuff");
+    assertEquals(line1.assemblyLine, "some ordinary stuff");
     languageSplit(line2);
-    assertEquals(line2.rawLine, "");
+    assertEquals(line2.assemblyLine, "");
     languageSplit(line3);
-    assertEquals(line3.rawLine, "hello matey!");
+    assertEquals(line3.assemblyLine, "hello matey!");
     splitterCheck();
 });
