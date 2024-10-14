@@ -1,7 +1,6 @@
 import { assert, assertEquals } from "assert";
-import type { GeneratedCode } from "../translate/mod.ts";
-import { codeForHex, newHexFile } from "./hex.ts";
-import { saveHexFile } from "./hex.ts";
+import type { CodeBlock, GeneratedCode } from "../translate/mod.ts";
+import { newHexFile } from "./hex.ts";
 
 const recordLength = (dataBytes: number): number => {
     // specification from https://en.wikipedia.org/wiki/Intel_HEX
@@ -19,12 +18,14 @@ const recordLength = (dataBytes: number): number => {
 const mockFile = () => {
     const lines: Array<string> = [];
     return {
-        "writeLine": (text: string) => lines.push(text),
+        "write": (text: string) => lines.push(text),
         "lines": lines
     };
 };
 
-const testCode: Array<[number, GeneratedCode]> = [
+type TestBlock = [number, GeneratedCode];
+
+const testCode: Array<TestBlock> = [
     // As ever, obtained from my last, treasured version of GAVRASM
     [0x000000, [0x2c, 0x24]], //            MOV R2, R4
     [0x000001, [0x94, 0x53]], //            INC R5
@@ -38,6 +39,12 @@ const testCode: Array<[number, GeneratedCode]> = [
     [0x000009, [0x94, 0x0c, 0x00, 0x14]] // JMP 20
 ];
 
+const aCodeBlock = (test: TestBlock): CodeBlock => ({
+    "address": test[0],
+    "code": test[1],
+    "errors": []
+});
+
 Deno.test("Test data comes out the same as GAVRASM .HEX file", () => {
     const expectedResults = [
         ":020000020000FC",
@@ -46,11 +53,11 @@ Deno.test("Test data comes out the same as GAVRASM .HEX file", () => {
         ":00000001FF"
     ];
     const file = mockFile();
-    newHexFile();
-    for (const [address, code] of testCode) {
-        codeForHex(address, code);
+    const hex = newHexFile();
+    for (const test of testCode) {
+        hex.codeBlock(aCodeBlock(test));
     }
-    saveHexFile(file.writeLine);
+    hex.save(file.write);
     for (const [index, line] of file.lines.entries()) {
         assertEquals(line, expectedResults[index]);
     }
@@ -58,25 +65,23 @@ Deno.test("Test data comes out the same as GAVRASM .HEX file", () => {
 
 Deno.test("Every file starts with an extended segment address of zero", () => {
     const file = mockFile();
-    newHexFile();
-    saveHexFile(file.writeLine);
+    newHexFile().save(file.write);
     assertEquals(":020000020000FC", file.lines[0]);
 });
 
 Deno.test("Every file ends with an end-of-file marker", () => {
     const file = mockFile();
-    newHexFile();
-    saveHexFile(file.writeLine);
+    newHexFile().save(file.write);
     assertEquals(":00000001FF", file.lines.pop());
 });
 
 Deno.test("Each record begins with a start code", () => {
     const file = mockFile();
-    newHexFile();
-    for (const [address, code] of testCode) {
-        codeForHex(address, code);
+    const hex = newHexFile();
+    for (const test of testCode) {
+        hex.codeBlock(aCodeBlock(test));
     }
-    saveHexFile(file.writeLine);
+    hex.save(file.write);
     for (const line of file.lines) {
         assert(line.startsWith(":"));
     }
@@ -84,11 +89,11 @@ Deno.test("Each record begins with a start code", () => {
 
 Deno.test("Each record contains a maximum of 0x10 bytes", () => {
     const file = mockFile();
-    newHexFile();
-    for (const [address, code] of testCode) {
-        codeForHex(address, code);
+    const hex = newHexFile();
+    for (const test of testCode) {
+        hex.codeBlock(aCodeBlock(test));
     }
-    saveHexFile(file.writeLine);
+    hex.save(file.write);
     const firstRecord = file.lines[1]!;
     assertEquals("10", firstRecord.substring(1, 3));
     assertEquals(recordLength(16), firstRecord.length);
@@ -96,11 +101,11 @@ Deno.test("Each record contains a maximum of 0x10 bytes", () => {
 
 Deno.test("The remainder of the bytes form the last record", () => {
     const file = mockFile();
-    newHexFile();
-    for (const [address, code] of testCode) {
-        codeForHex(address, code);
+    const hex = newHexFile();
+    for (const test of testCode) {
+        hex.codeBlock(aCodeBlock(test));
     }
-    saveHexFile(file.writeLine);
+    hex.save(file.write);
     const lastRecord = file.lines[2]!;
     assertEquals("06", lastRecord.substring(1, 3));
     assertEquals(recordLength(6), lastRecord.length);
@@ -108,38 +113,35 @@ Deno.test("The remainder of the bytes form the last record", () => {
 
 Deno.test("If the address jumps out of sequence, a new record starts", () => {
     const file = mockFile();
-    newHexFile();
-    codeForHex(0x000000, [0x02, 0x01]);
-    codeForHex(0x000001, [0x04, 0x03]);
-    codeForHex(0x000010, [0x06, 0x05]);
-    codeForHex(0x000011, [0x08, 0x07]);
-    saveHexFile(file.writeLine);
+    const hex = newHexFile();
+    hex.codeBlock(aCodeBlock([0x000000, [0x02, 0x01]]));
+    hex.codeBlock(aCodeBlock([0x000001, [0x04, 0x03]]));
+    hex.codeBlock(aCodeBlock([0x000010, [0x06, 0x05]]));
+    hex.codeBlock(aCodeBlock([0x000011, [0x08, 0x07]]));
+    hex.save(file.write);
     assertEquals(file.lines[1], ":04" + "0000" + "00" + "01020304" + "F2");
     assertEquals(file.lines[2], ":04" + "0020" + "00" + "05060708" + "C2");
 });
 
 Deno.test("Long strings of bytes are stored in multiple records", () => {
     const file = mockFile();
-    newHexFile();
+    const hex = newHexFile();
+    hex.codeBlock(aCodeBlock([0x000000, [1, 0, 3, 2]]));
+    hex.codeBlock(aCodeBlock([0x000002, [5, 4, 7, 6]]));
+    hex.codeBlock(aCodeBlock([0x000004, [9, 8, 11, 10]]));
+    hex.codeBlock(aCodeBlock([0x000006, [13, 12, 15, 14]]));
 
-    codeForHex(0x000000, [1, 0, 3, 2]);
-    codeForHex(0x000002, [5, 4, 7, 6]);
-    codeForHex(0x000004, [9, 8, 11, 10]);
-    codeForHex(0x000006, [13, 12, 15, 14]);
+    hex.codeBlock(aCodeBlock([0x000008, [14, 15, 12, 13]]));
+    hex.codeBlock(aCodeBlock([0x00000a, [10, 11, 8, 9]]));
+    hex.codeBlock(aCodeBlock([0x00000c, [6, 7, 4, 5]]));
+    hex.codeBlock(aCodeBlock([0x00000e, [2, 3, 0, 1]]));
 
-    codeForHex(0x000008, [14, 15, 12, 13]);
-    codeForHex(0x00000a, [10, 11, 8, 9]);
-    codeForHex(0x00000c, [6, 7, 4, 5]);
-    codeForHex(0x00000e, [2, 3, 0, 1]);
-
-    codeForHex(0x000010, [0x45, 0x48, 0x4C, 0x4C]);
-    codeForHex(0x000012, [0x20, 0x4F, 0x4F, 0x48]);
-    codeForHex(0x000014, [0x4B, 0x4E, 0x20, 0x59]);
-    codeForHex(0x000016, [0x4F, 0x54, 0x4B, 0x4E]);
-    codeForHex(0x000018, [0x21, 0x53]);
-
-    saveHexFile(file.writeLine);
-
+    hex.codeBlock(aCodeBlock([0x000010, [0x45, 0x48, 0x4C, 0x4C]]));
+    hex.codeBlock(aCodeBlock([0x000012, [0x20, 0x4F, 0x4F, 0x48]]));
+    hex.codeBlock(aCodeBlock([0x000014, [0x4B, 0x4E, 0x20, 0x59]]));
+    hex.codeBlock(aCodeBlock([0x000016, [0x4F, 0x54, 0x4B, 0x4E]]));
+    hex.codeBlock(aCodeBlock([0x000018, [0x21, 0x53]]));
+    hex.save(file.write);
     assertEquals(
         file.lines[1],
         [

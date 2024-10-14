@@ -1,30 +1,27 @@
 import { process } from "../translate/mod.ts";
-import { closeOutput, newOutput, output, listSource } from "../output/mod.ts";
+import { openOutput } from "../output/mod.ts";
 import { passes, startPass } from "../state/mod.ts";
 import { sourceLines, sourceCheck } from "../source-code/mod.ts";
 import type { FileName } from "./coupling.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
     for (const pass of passes) {
-        // TODO: pass should not be stateful
-        // pass is going to be part of the line object
         startPass(pass);
-
-        if (pass == 2) {
-            newOutput(commandLineSourceFile);
-        }
+        const output = pass == 2
+            ? openOutput(commandLineSourceFile)
+            : undefined;
         for (const line of sourceLines(commandLineSourceFile)) {
-            if (pass == 2) {
-                listSource(line);
+            if (output) {
+                output.source(line);
             }
-            for (const processed of process(line)) {
-                if (pass == 2) {
-                    output(processed);
+            for (const codeBlock of process(line)) {
+                if (output) {
+                    output.codeBlock(codeBlock);
                 }
             }
         }
-        if (pass == 2) {
-            closeOutput();
+        if (output) {
+            output.close();
         }
         sourceCheck();
     }

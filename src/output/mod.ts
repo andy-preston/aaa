@@ -1,38 +1,40 @@
 import type { FileName } from "../coupling/coupling.ts";
 import type { CodeBlock } from "../translate/mod.ts";
-import { closeFile, openFile, writeFile } from "./file.ts";
-import { codeForHex, newHexFile, saveHexFile } from "./hex.ts";
-import { listCode, listError, newListing } from "./listing.ts";
+import { file } from "./file.ts";
+import { newHexFile } from "./hex.ts";
+import { openListing } from "./listing.ts";
 
-export { listSource } from "./listing.ts";
+export const openOutput = (topFileName: FileName) => {
+    let anyErrors = false;
+    const listingFile = file(topFileName, ".lst");
+    const listing = openListing(listingFile);
+    const hex = newHexFile();
 
-let baseName: string;
-let anyErrors: boolean;
+    const codeBlock = (block: CodeBlock) => {
+        listing.codeBlock(block);
+        for (const message of block.errors) {
+            listing.error(message);
+            anyErrors = true;
+        }
+        if (!anyErrors) {
+            hex.codeBlock(block);
+        }
+    };
 
-export const newOutput = (topFileName: FileName) => {
-    baseName = topFileName;
-    openFile(baseName, ".lst");
-    newListing(writeFile);
-    newHexFile();
-    anyErrors = false;
+    const close = () => {
+        listingFile.close();
+        if (!anyErrors) {
+            const hexFile = file(topFileName, ".hex");
+            hex.save(hexFile.write);
+            hexFile.close();
+        }
+    };
+
+    return {
+        "source": listing.source,
+        "codeBlock": codeBlock,
+        "close": close
+    };
 };
 
-export const output = (block: CodeBlock) => {
-    listCode(block.address, block.code);
-    for (const message of block.errors) {
-        listError(message);
-        anyErrors = true;
-    }
-    if (!anyErrors) {
-        codeForHex(block.address, block.code);
-    }
-};
-
-export const closeOutput = () => {
-    closeFile();
-    if (!anyErrors) {
-        openFile(baseName, ".hex");
-        saveHexFile(writeFile);
-        closeFile();
-    }
-};
+export type Output = ReturnType<typeof openOutput>;
