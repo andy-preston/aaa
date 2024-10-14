@@ -1,4 +1,5 @@
 _deno
+_coverage
 deno.lock
 graph.*
 test.asm

@@ -17,6 +17,8 @@ check)
     deno run -A npm:@biomejs/biome check --javascript-formatter-enabled=false
     ;;
 report)
+    deno test --allow-read --coverage=_coverage
+    deno coverage _coverage
     deno run -A ./analysis/import-graph.ts
     d2 --scale 1 graph.d2 graph.svg
     ;;
@@ -24,7 +26,7 @@ biome)
     deno run -A npm:@biomejs/biome check
     ;;
 *)
-    echo "./run [check|biome|run|report]"
+    echo "./run [check|biome|report|run]"
     exit 1
     ;;
 esac
