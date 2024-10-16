@@ -50,21 +50,16 @@ type CodeGenerator = Generator<CodeBlock, void, undefined>;
 
 export const codeBlocksFrom = function* (line: Line): CodeGenerator {
     errorMessages = [];
-    // Remember that labels must be processed before pokes!
+    // Labels are processed before pokes because the label may refer to the poke
     labelWithError(line.label);
-    for (const block of peek()) {
-        yield codeBlock(block, []);
-    }
-    yield codeBlock(
-        translationWithError(line),
-        errorMessages
-    );
-    for (const macroLine of macroLines()) {
+    yield* peek().map(code => codeBlock(code, []));
+    yield codeBlock(translationWithError(line), errorMessages);
+    yield* macroLines().map(macroLine => {
         errorMessages = [];
         labelWithError(macroLine.label);
-        yield codeBlock(
+        return codeBlock(
             translationWithError(macroLine),
             errorMessages
         );
-    }
+    });
 };
