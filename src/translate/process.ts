@@ -5,10 +5,9 @@ import {
 } from "../state/mod.ts";
 import { type GeneratedCode, translate } from "./translate.ts";
 
-type Address = number;
 type ErrorMessages = Array<string>;
 
-let errorMessages: Array<string>;
+let errorMessages: ErrorMessages;
 
 const labelWithError = (labelName: string) => {
     if (labelName == "") {
@@ -49,7 +48,7 @@ export type CodeBlock = ReturnType<typeof codeBlock>;
 
 type CodeGenerator = Generator<CodeBlock, void, undefined>;
 
-export const process = function* (line: Line): CodeGenerator {
+export const codeBlocksFrom = function* (line: Line): CodeGenerator {
     errorMessages = [];
     // Remember that labels must be processed before pokes!
     labelWithError(line.label);
