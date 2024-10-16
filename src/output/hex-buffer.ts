@@ -13,8 +13,8 @@ export const hexBuffer = () => {
     };
 
     const pairs = function*(): Generator<PairOfBytes, void, unknown>  {
-        const pairsToDeliver = Math.min(16, buffer.length) / 2;
-        for (let pair = 0; pair < pairsToDeliver; pair++) {
+        let pairsToDeliver = Math.min(16, buffer.length) / 2;
+        while (pairsToDeliver--) {
             byteAddress += 2;
             yield [buffer.shift()!, buffer.shift()!];
         }
