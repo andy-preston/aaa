@@ -56,7 +56,9 @@ import {
     encode as wordImmediate
 } from "./addressing-modes/word-immediate.ts";
 
-export const addressingModes = [
+import type { AddressingMode } from "./translate.ts";
+
+export const addressingModes : Array<AddressingMode> = [
     branchOnStatus,
     byteImmediate,
     dataDirect,

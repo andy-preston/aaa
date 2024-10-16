@@ -3,6 +3,8 @@ import { deviceName } from "../context/mod.ts";
 import { InternalError } from "../errors/errors.ts";
 import type { Line, Mnemonic } from "../source-code/mod.ts";
 
+export type AddressingMode = (line: Line) => GeneratedCode | undefined;
+
 export type GeneratedCode =
     | []
     | [number, number]
@@ -32,7 +34,6 @@ export const setUnsupportedInstructions = (groups: Array<string>) => {
         }
         return unsupportedInstructionGroups.get(group)!;
     });
-
 };
 
 export const translate = (line: Line): GeneratedCode => {
@@ -43,11 +44,13 @@ export const translate = (line: Line): GeneratedCode => {
     if (unsupportedInstructions.includes(line.mnemonic)) {
         throw new Error(`${line.mnemonic} is not available on ${device}`);
     }
-    for (const addressingMode of addressingModes) {
-        const generatedCode = addressingMode(line);
-        if (generatedCode != null) {
-            return generatedCode;
-        }
+    let code: GeneratedCode | undefined;
+    addressingModes.find(addressingMode => {
+        code = addressingMode(line);
+        return code != undefined
+    });
+    if (code == undefined) {
+        throw new SyntaxError(`unknown instruction ${line.mnemonic}`);
     }
-    throw new SyntaxError(`unknown instruction ${line.mnemonic}`);
+    return code;
 };
