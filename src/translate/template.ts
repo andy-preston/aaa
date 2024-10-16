@@ -1,6 +1,19 @@
 import type { GeneratedCode } from "./translate.ts";
 
-type TemplateOperandKey =
+type BinaryDigit = "0" | "1";
+type Binary = Array<BinaryDigit>;
+
+const bitSource = (decimal: number) => {
+    // As we don't really know how many bits we're going to need or use,
+    // we don't know how much to pad the binary string with leading zeros.
+    // So this process is done "in reverse" with the least significant bits
+    // first and emitting the leading zeros at the end until no more bits are
+    // needed.
+    const bits = decimal.toString(2).split("").reverse() as Binary;
+    return (): BinaryDigit => (bits.length > 0 ? bits.shift()! : "0");
+};
+
+type TemplateOperand =
     | "A"
     | "b"
     | "d"
@@ -14,40 +27,33 @@ type TemplateOperandKey =
     | "s"
     | "q";
 
-type BinaryDigit = "0" | "1";
-type Binary = Array<BinaryDigit>;
+type TemplateDigit = TemplateOperand | BinaryDigit;
+type Substitution = [TemplateOperand, number];
+type Substitutions = Array<Substitution>;
 
-const bitsWithLeadingZeros = (operand: number) => {
-    const bits = operand.toString(2).split("").reverse() as Binary;
-    return (): BinaryDigit => (bits.length > 0 ? bits.shift()! : "0");
-};
-
-const substitutionMap = (operands: Array<[TemplateOperandKey, number]>) => {
+const substitutionMap = (substitutions: Substitutions) => {
     const bitSources = new Map(
-        operands.map((operand) => [
-            operand[0] as string,
-            bitsWithLeadingZeros(operand[1])
+        substitutions.map(substitution => [
+            substitution[0] as TemplateDigit,
+            bitSource(substitution[1])
         ])
     );
-    return (templateDigit: string) =>
-        bitSources.has(templateDigit)
-            ? bitSources.get(templateDigit)!()
-            : templateDigit;
+    return (digit: TemplateDigit) =>
+        bitSources.has(digit) ? bitSources.get(digit)!() : digit;
 };
 
 export const template = (
     templateString: string, // format: "0101_011d dddd_0qqq"
-    operands: Array<[TemplateOperandKey, number]>
+    substitutions: Substitutions
 ): GeneratedCode => {
-    const substitutions = substitutionMap(operands);
-    const instructionBytes = templateString
-        .replaceAll("_", "")
-        .split("")
-        .reverse()
-        .map((digit) => substitutions(digit))
-        .reverse()
-        .join("")
-        .split(" ")
-        .map((byte) => Number.parseInt(byte, 2));
-    return instructionBytes as GeneratedCode;
+    const map = substitutionMap(substitutions);
+    return templateString
+        .replaceAll("_", "") // underscores are for convenience
+        .split("")           // a list of bits and spaces
+        .reverse()           // bits are processed least significant first
+        .map(digit => map(digit as TemplateDigit))
+        .reverse()           // bits are written most significant first
+        .join("")            // stick 'em back together prior to...
+        .split(" ")          // splitting them into bytes this time
+        .map(byte => Number.parseInt(byte, 2)) as GeneratedCode;
 };
