@@ -7,7 +7,7 @@ import {
     programMemoryOrigin,
     startPass
 } from "../state/mod.ts";
-import { type CodeBlock, codeBlocksFrom } from "./process.ts";
+import { type CodeBlock, codeBlocksFrom } from "./code-block.ts";
 
 const ignoredBlock = (_ : CodeBlock) => {};
 

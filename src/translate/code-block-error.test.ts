@@ -3,7 +3,7 @@ import { chooseDevice } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import { tokenLine } from "../source-code/testing.ts";
 import { startPass } from "../state/mod.ts";
-import { codeBlocksFrom } from "./process.ts";
+import { codeBlocksFrom } from "./code-block.ts";
 
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
     blankSlate();
