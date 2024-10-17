@@ -1,18 +1,22 @@
-import { resetDataMemory } from "./data-memory.ts";
-import { programMemoryOrigin } from "./program-memory.ts";
-
 export const passes = [1, 2] as const;
+type Pass = typeof passes[number];
 
-export type Pass = typeof passes[number];
+type ResetStateCallback = () => void;
 
-let currentPass: Pass;
+export const newPass = (resetStateCallback: ResetStateCallback) => {
+    let current: Pass;
 
-export const startPass = (pass: Pass) => {
-    programMemoryOrigin(0);
-    resetDataMemory();
-    currentPass = pass;
-}
+    const start = (pass: Pass) => {
+        current = pass;
+        resetStateCallback();
+    };
 
-export const ignoreErrors = () => currentPass == 1;
+    const showErrors = () => current == 2;
+    const ignoreErrors = () => current == 1;
 
-export const noSideEffects = () => currentPass == 2;
+    return {
+        "start": start,
+        "ignoreErrors": ignoreErrors,
+        "showErrors": showErrors
+    };
+};
