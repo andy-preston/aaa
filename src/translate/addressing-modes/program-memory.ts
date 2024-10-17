@@ -1,11 +1,7 @@
-import {
-    type SymbolicOperands,
-    numericOperand,
-    symbolicOperand,
-} from "../../operands/mod.ts";
+import type { OperandConverter, SymbolicOperands } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
+import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
-import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM", "1001_0101 111b_1000"], //     Implied Z OR explicit Z+
@@ -31,27 +27,28 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
     }
 };
 
-export const encode = (line: Line): GeneratedCode | undefined => {
-    if (!mapping.has(line.mnemonic)) {
-        return undefined;
-    }
-    const isStore = line.mnemonic == "SPM";
-    validIndexOperand(isStore, line.operands);
-    const register =
-        !isStore && line.operands.length == 2
-            ? numericOperand("register", line.operands[0]!)
-            : undefined;
-    if (isStore) {
-        return template(mapping.get(line.mnemonic)!, [
-            ["b", line.operands[0] == "Z+" ? 1 : 0]
+export const encode = (operands: OperandConverter) =>
+    (line: Line): OptionalCode => {
+        if (!mapping.has(line.mnemonic)) {
+            return undefined;
+        }
+        const isStore = line.mnemonic == "SPM";
+        validIndexOperand(isStore, line.operands);
+        const register =
+            !isStore && line.operands.length == 2
+                ? operands.numeric("register", line.operands[0]!)
+                : undefined;
+        if (isStore) {
+            return template(mapping.get(line.mnemonic)!, [
+                ["b", line.operands[0] == "Z+" ? 1 : 0]
+            ]);
+        }
+        if (register == undefined) {
+            return template(mapping.get(line.mnemonic)!, []);
+        }
+        // This is still a bit horrible and needs more work
+        const index = operands.symbolic(line.operands[1]!);
+        return template(mapping.get(`${line.mnemonic}.${index}`)!, [
+            ["d", register]
         ]);
-    }
-    if (register == undefined) {
-        return template(mapping.get(line.mnemonic)!, []);
-    }
-    // This is still a bit horrible and needs more work
-    const index = symbolicOperand(line.operands[1]!);
-    return template(mapping.get(`${line.mnemonic}.${index}`)!, [
-        ["d", register]
-    ]);
-};
+    };

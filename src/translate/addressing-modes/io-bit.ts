@@ -1,7 +1,7 @@
-import { checkOperandCount, numericOperand } from "../../operands/mod.ts";
+import type { OperandConverter } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
+import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
-import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SBI", "10"],
@@ -10,14 +10,15 @@ const mapping: Map<string, string> = new Map([
     ["CBI", "00"]
 ]);
 
-export const encode = (line: Line): GeneratedCode | undefined => {
-    if (!mapping.has(line.mnemonic)) {
-        return undefined;
-    }
-    checkOperandCount(line.operands, ["port", "bitIndex"]);
-    const operationBits = mapping.get(line.mnemonic)!;
-    return template(`1001_10${operationBits} AAAA_Abbb`, [
-        ["A", numericOperand("port", line.operands[0]!)],
-        ["b", numericOperand("bitIndex", line.operands[1]!)]
-    ]);
-};
+export const encode = (operands: OperandConverter) =>
+    (line: Line): OptionalCode => {
+        if (!mapping.has(line.mnemonic)) {
+            return undefined;
+        }
+        operands.checkCount(line.operands, ["port", "bitIndex"]);
+        const operationBits = mapping.get(line.mnemonic)!;
+        return template(`1001_10${operationBits} AAAA_Abbb`, [
+            ["A", operands.numeric("port", line.operands[0]!)],
+            ["b", operands.numeric("bitIndex", line.operands[1]!)]
+        ]);
+    };

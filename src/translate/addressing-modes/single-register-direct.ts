@@ -1,7 +1,7 @@
-import { checkOperandCount, numericOperand } from "../../operands/mod.ts";
+import type { OperandConverter } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
+import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
-import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [string, string]> = new Map([
     ["POP", ["00", "1111"]],
@@ -20,20 +20,24 @@ const mapping: Map<string, [string, string]> = new Map([
     ["PUSH", ["01", "1111"]]
 ]);
 
-export const encode = (line: Line): GeneratedCode | undefined => {
-    if (!mapping.has(line.mnemonic)) {
-        return undefined;
-    }
-    const usesZ = ["LAC", "LAS", "LAT", "XCH"].includes(line.mnemonic);
-    checkOperandCount(line.operands, usesZ ? ["z", "register"] : ["register"]);
-    if (usesZ) {
-        const _ = numericOperand("z", line.operands[0]!);
-    }
-    const [operationBits, suffix] = mapping.get(line.mnemonic)!;
-    // In the official documentation, some of these have
-    // "#### ###r rrrr ####" as their template rather than "d dddd".
-    // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
-    return template(`1001_0${operationBits}d dddd_${suffix}`, [
-        ["d", numericOperand("register", line.operands[usesZ ? 1 : 0]!)]
-    ]);
-};
+export const encode = (operands: OperandConverter) =>
+    (line: Line): OptionalCode => {
+        if (!mapping.has(line.mnemonic)) {
+            return undefined;
+        }
+        const usesZ = ["LAC", "LAS", "LAT", "XCH"].includes(line.mnemonic);
+        operands.checkCount(
+            line.operands,
+            usesZ ? ["z", "register"] : ["register"]
+        );
+        if (usesZ) {
+            const _ = operands.numeric("z", line.operands[0]!);
+        }
+        const [operationBits, suffix] = mapping.get(line.mnemonic)!;
+        // In the official documentation, some of these have
+        // "#### ###r rrrr ####" as their template rather than "d dddd".
+        // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
+        return template(`1001_0${operationBits}d dddd_${suffix}`, [
+            ["d", operands.numeric("register", line.operands[usesZ ? 1 : 0]!)]
+        ]);
+    };

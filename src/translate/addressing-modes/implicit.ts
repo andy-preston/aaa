@@ -1,7 +1,7 @@
-import { checkOperandCount } from "../../operands/mod.ts";
+import type { OperandConverter } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
+import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
-import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["BREAK", "1001_0101 1001_1000"],
@@ -17,10 +17,11 @@ const mapping: Map<string, string> = new Map([
     ["EICALL", "1001_0101 0001_1001"]
 ]);
 
-export const encode = (line: Line): GeneratedCode | undefined => {
-    if (!mapping.has(line.mnemonic)) {
-        return undefined;
-    }
-    checkOperandCount(line.operands, []);
-    return template(mapping.get(line.mnemonic)!, []);
-};
+export const encode = (operands: OperandConverter) =>
+    (line: Line): OptionalCode => {
+        if (!mapping.has(line.mnemonic)) {
+            return undefined;
+        }
+        operands.checkCount(line.operands, []);
+        return template(mapping.get(line.mnemonic)!, []);
+    };

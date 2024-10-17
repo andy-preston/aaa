@@ -1,11 +1,7 @@
-import {
-    type SymbolicOperand,
-    checkOperandCount,
-    numericOperand
-} from "../../operands/mod.ts";
-import type { Line } from "../../source-code/mod.ts";
+import type { OperandConverter, SymbolicOperand } from "../../operands/mod.ts";
+import type { Line, Mnemonic } from "../../source-code/mod.ts";
+import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
-import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["CPI", "0011"],
@@ -19,12 +15,12 @@ const mapping: Map<string, string> = new Map([
     ["SER", "1110"] //  LDI are ALMOST the same instruction
 ]);
 
-export const encode = (line: Line): GeneratedCode | undefined => {
-    const immediate = (operand: SymbolicOperand) => {
-        const numeric = line.mnemonic != "SER"
-            ? numericOperand("byte", operand)
+export const encode = (operands: OperandConverter) => {
+    const immediate = (mnemonic: Mnemonic, operand: SymbolicOperand) => {
+        const numeric = mnemonic != "SER"
+            ? operands.numeric("byte", operand)
             : 0;
-        switch (line.mnemonic) {
+        switch (mnemonic) {
             // Clear bits in register is an AND with the inverse of the operand
             case "CBR": // Set all bits is basically an LDI with FF
                 return 0xff - numeric;
@@ -35,18 +31,20 @@ export const encode = (line: Line): GeneratedCode | undefined => {
         }
     };
 
-    if (!mapping.has(line.mnemonic)) {
-        return undefined;
-    }
-    checkOperandCount(
-        line.operands,
-        line.mnemonic != "SER"
-            ? ["immediateRegister", "byte"]
-            : ["immediateRegister"]
-    );
-    const prefix = mapping.get(line.mnemonic)!;
-    return template(`${prefix}_KKKK dddd_KKKK`, [
-        ["d", numericOperand("immediateRegister", line.operands[0]!)],
-        ["K", immediate(line.operands[1]!)]
-    ]);
+    return (line: Line): OptionalCode => {
+        if (!mapping.has(line.mnemonic)) {
+            return undefined;
+        }
+        operands.checkCount(
+            line.operands,
+            line.mnemonic != "SER"
+                ? ["immediateRegister", "byte"]
+                : ["immediateRegister"]
+        );
+        const prefix = mapping.get(line.mnemonic)!;
+        return template(`${prefix}_KKKK dddd_KKKK`, [
+            ["d", operands.numeric("immediateRegister", line.operands[0]!)],
+            ["K", immediate(line.mnemonic, line.operands[1]!)]
+        ]);
+    };
 };
