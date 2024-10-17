@@ -1,9 +1,9 @@
-import { addressingModes } from "./addressing-modes.ts";
 import { deviceName } from "../context/mod.ts";
 import { InternalError } from "../errors/errors.ts";
+import { operandConverter } from "../operands/converter.ts";
 import type { Line, Mnemonic } from "../source-code/mod.ts";
-
-export type AddressingMode = (line: Line) => GeneratedCode | undefined;
+import type { State } from "../state/mod.ts";
+import { addressingModeList } from "./addressing-modes.ts";
 
 export type GeneratedCode =
     | []
@@ -36,21 +36,25 @@ export const setUnsupportedInstructions = (groups: Array<string>) => {
     });
 };
 
-export const translate = (line: Line): GeneratedCode => {
-    if (line.mnemonic == "") {
-        return [];
-    }
-    const device = deviceName("determine which instructions are available");
-    if (unsupportedInstructions.includes(line.mnemonic)) {
-        throw new Error(`${line.mnemonic} is not available on ${device}`);
-    }
-    let code: GeneratedCode | undefined;
-    addressingModes.find(addressingMode => {
-        code = addressingMode(line);
-        return code != undefined
-    });
-    if (code == undefined) {
-        throw new SyntaxError(`unknown instruction ${line.mnemonic}`);
-    }
-    return code;
+export const translator = (state: State) => {
+    const addressingModes = addressingModeList(operandConverter(state));
+
+    return (line: Line): GeneratedCode => {
+        if (line.mnemonic == "") {
+            return [];
+        }
+        const device = deviceName("determine which instructions are available");
+        if (unsupportedInstructions.includes(line.mnemonic)) {
+            throw new Error(`${line.mnemonic} is not available on ${device}`);
+        }
+        let code: GeneratedCode | undefined;
+        addressingModes.find(addressingMode => {
+            code = addressingMode(line);
+            return code != undefined
+        });
+        if (code == undefined) {
+            throw new SyntaxError(`unknown instruction ${line.mnemonic}`);
+        }
+        return code;
+    };
 };

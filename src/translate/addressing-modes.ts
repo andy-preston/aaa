@@ -56,26 +56,32 @@ import {
     encode as wordImmediate
 } from "./addressing-modes/word-immediate.ts";
 
-import type { AddressingMode } from "./translate.ts";
+import type { Line } from "../source-code/mod.ts";
+import type { GeneratedCode } from "./mod.ts";
+import type { OperandConverter } from "../operands/converter.ts";
 
-export const addressingModes : Array<AddressingMode> = [
-    branchOnStatus,
-    byteImmediate,
-    dataDirect,
-    des,
-    directProgram,
-    implicit,
-    indexIndirectOffset,
-    indexIndirect,
-    ioBit,
-    ioByte,
-    multiply,
-    programMemory,
-    relativeProgram,
-    singleRegisterBit,
-    singleRegisterDirect,
-    statusManipulation,
-    twoRegisterDirect,
-    wordDirect,
-    wordImmediate
-] as const;
+export type OptionalCode = GeneratedCode | undefined;
+type AddressingMode = (line: Line) => OptionalCode;
+
+export const addressingModeList =
+    (converter: OperandConverter) : Array<AddressingMode> => [
+        branchOnStatus(converter),
+        byteImmediate(converter),
+        dataDirect(converter),
+        des(converter),
+        directProgram(converter),
+        implicit(converter),
+        indexIndirectOffset(converter),
+        indexIndirect(converter),
+        ioBit(converter),
+        ioByte(converter),
+        multiply(converter),
+        programMemory(converter),
+        relativeProgram(converter),
+        singleRegisterBit(converter),
+        singleRegisterDirect(converter),
+        statusManipulation(converter),
+        twoRegisterDirect(converter),
+        wordDirect(converter),
+        wordImmediate(converter)
+    ] as const;
