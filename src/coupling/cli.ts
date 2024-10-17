@@ -1,12 +1,14 @@
-import { codeBlocksFrom } from "../translate/mod.ts";
 import { openOutput } from "../output/mod.ts";
-import { passes, startPass } from "../state/mod.ts";
+import { newState, passes } from "../state/mod.ts";
 import { sourceLines, sourceCheck } from "../source-code/mod.ts";
 import type { FileName } from "./coupling.ts";
+import { codeBlockGenerator } from "../translate/mod.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
+    const state = newState();
+    const codeBlocksFrom = codeBlockGenerator(state);
     passes.forEach(pass => {
-        startPass(pass);
+        state.pass.start(pass);
         const output = pass == 2
             ? openOutput(commandLineSourceFile)
             : undefined;
