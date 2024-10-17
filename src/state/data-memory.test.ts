@@ -2,7 +2,9 @@ import { assertEquals, assertThrows } from "assert";
 import { blankSlate } from "../coupling/coupling.ts";
 import { alloc, allocStack } from "./data-memory.ts";
 import { chooseDevice } from "../context/mod.ts";
-import { startPass } from "./pass.ts";
+import { newState } from "./mod.ts";
+
+const state = newState();
 
 Deno.test("A device must be selected before SRAM can be allocated", () => {
     blankSlate();
@@ -56,10 +58,10 @@ Deno.test("Stack and memory allocations both decrease the available SRAM", () =>
 Deno.test("Allocations don't get repeated on the second pass", () => {
     blankSlate();
     chooseDevice("dummy", { "ramEnd": 50 });
-    startPass(1);
+    state.pass.start(1);
     assertEquals(alloc(25), 0);
     assertEquals(alloc(25), 25);
-    startPass(2);
+    state.pass.start(2);
     assertEquals(alloc(25), 0);
     assertEquals(alloc(25), 25);
 });

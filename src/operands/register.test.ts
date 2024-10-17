@@ -1,23 +1,26 @@
 import { assertEquals, assertThrows } from "assert";
-import { numericOperand } from "./converter.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { startPass } from "../state/mod.ts";
+import { newState } from "../state/mod.ts";
+import { operandConverter } from "./converter.ts";
+
+const state = newState();
+const operands = operandConverter(state);
 
 Deno.test("A register should be between zero and 31", () => {
     blankSlate();
-    startPass(2);
-    assertEquals(numericOperand("register", "R0"), 0);
-    assertEquals(numericOperand("register", "6"), 6);
-    assertEquals(numericOperand("register", "Z"), 30);
-    assertEquals(numericOperand("register", "R31"), 31);
-    assertEquals(numericOperand("register", "31"), 31);
+    state.pass.start(2);
+    assertEquals(operands.numeric("register", "R0"), 0);
+    assertEquals(operands.numeric("register", "6"), 6);
+    assertEquals(operands.numeric("register", "Z"), 30);
+    assertEquals(operands.numeric("register", "R31"), 31);
+    assertEquals(operands.numeric("register", "31"), 31);
     assertThrows(
-        () => numericOperand("register", "-10"),
+        () => operands.numeric("register", "-10"),
         RangeError,
         "Operand out of range: should be register (R0 - R31) not -10"
     );
     assertThrows(
-        () => numericOperand("register", "42"),
+        () => operands.numeric("register", "42"),
         RangeError,
         "Operand out of range: should be register (R0 - R31) not 42"
     );
@@ -25,17 +28,17 @@ Deno.test("A register should be between zero and 31", () => {
 
 Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
     blankSlate();
-    startPass(2);
-    assertEquals(numericOperand("immediateRegister", "Z"), 14);
-    assertEquals(numericOperand("immediateRegister", "R31"), 15);
-    assertEquals(numericOperand("immediateRegister", "31"), 15);
+    state.pass.start(2);
+    assertEquals(operands.numeric("immediateRegister", "Z"), 14);
+    assertEquals(operands.numeric("immediateRegister", "R31"), 15);
+    assertEquals(operands.numeric("immediateRegister", "31"), 15);
     assertThrows(
-        () => numericOperand("immediateRegister", "R0"),
+        () => operands.numeric("immediateRegister", "R0"),
         RangeError,
         "Operand out of range: should be immediate register (R16 - R31) not R0"
     );
     assertThrows(
-        () => numericOperand("immediateRegister", "42"),
+        () => operands.numeric("immediateRegister", "42"),
         RangeError,
         "Operand out of range: should be immediate register (R16 - R31) not 42"
     );
@@ -43,16 +46,16 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
 
 Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
     blankSlate();
-    startPass(2);
-    assertEquals(numericOperand("multiplyRegister", "R20"), 4);
-    assertEquals(numericOperand("multiplyRegister", "22"), 6);
+    state.pass.start(2);
+    assertEquals(operands.numeric("multiplyRegister", "R20"), 4);
+    assertEquals(operands.numeric("multiplyRegister", "22"), 6);
     assertThrows(
-        () => numericOperand("multiplyRegister", "R24"),
+        () => operands.numeric("multiplyRegister", "R24"),
         RangeError,
         "Operand out of range: should be multiply register (R16 - R23) not R24"
     );
     assertThrows(
-        () => numericOperand("multiplyRegister", "15"),
+        () => operands.numeric("multiplyRegister", "15"),
         RangeError,
         "Operand out of range: should be multiply register (R16 - R23) not 15"
     );
@@ -60,18 +63,18 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
 
 Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
     blankSlate();
-    startPass(2);
-    assertEquals(numericOperand("registerPair", "R24"), 0);
-    assertEquals(numericOperand("registerPair", "X"), 1);
-    assertEquals(numericOperand("registerPair", "Y"), 2);
-    assertEquals(numericOperand("registerPair", "Z"), 3);
+    state.pass.start(2);
+    assertEquals(operands.numeric("registerPair", "R24"), 0);
+    assertEquals(operands.numeric("registerPair", "X"), 1);
+    assertEquals(operands.numeric("registerPair", "Y"), 2);
+    assertEquals(operands.numeric("registerPair", "Z"), 3);
     assertThrows(
-        () => numericOperand("registerPair", "R20"),
+        () => operands.numeric("registerPair", "R20"),
         RangeError,
         "Operand out of range: should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not R20"
     );
     assertThrows(
-        () => numericOperand("registerPair", "200"),
+        () => operands.numeric("registerPair", "200"),
         RangeError,
         "Operand out of range: should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not 200"
     );
@@ -79,20 +82,20 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
 
 Deno.test("Any register pair is any even numbered register", () => {
     blankSlate();
-    startPass(2);
-    assertEquals(numericOperand("anyRegisterPair", "R0"), 0);
-    assertEquals(numericOperand("anyRegisterPair", "R2"), 1);
-    assertEquals(numericOperand("anyRegisterPair", "R4"), 2);
-    assertEquals(numericOperand("anyRegisterPair", "R10"), 5);
-    assertEquals(numericOperand("anyRegisterPair", "R20"), 10);
-    assertEquals(numericOperand("anyRegisterPair", "R30"), 15);
+    state.pass.start(2);
+    assertEquals(operands.numeric("anyRegisterPair", "R0"), 0);
+    assertEquals(operands.numeric("anyRegisterPair", "R2"), 1);
+    assertEquals(operands.numeric("anyRegisterPair", "R4"), 2);
+    assertEquals(operands.numeric("anyRegisterPair", "R10"), 5);
+    assertEquals(operands.numeric("anyRegisterPair", "R20"), 10);
+    assertEquals(operands.numeric("anyRegisterPair", "R30"), 15);
     assertThrows(
-        () => numericOperand("anyRegisterPair", "R31"),
+        () => operands.numeric("anyRegisterPair", "R31"),
         RangeError,
         "Operand out of range: should be any register pair (R0:R1 - R30:R31) not R31"
     );
     assertThrows(
-        () => numericOperand("anyRegisterPair", "32"),
+        () => operands.numeric("anyRegisterPair", "32"),
         RangeError,
         "Operand out of range: should be any register pair (R0:R1 - R30:R31) not 32"
     );
@@ -100,22 +103,22 @@ Deno.test("Any register pair is any even numbered register", () => {
 
 Deno.test("Some instructions require Z and no other register", () => {
     blankSlate();
-    startPass(2);
-    assertEquals(numericOperand("z", "R30"), 30);
-    assertEquals(numericOperand("z", "Z"), 30);
-    assertEquals(numericOperand("z", "30"), 30);
+    state.pass.start(2);
+    assertEquals(operands.numeric("z", "R30"), 30);
+    assertEquals(operands.numeric("z", "Z"), 30);
+    assertEquals(operands.numeric("z", "30"), 30);
     assertThrows(
-        () => numericOperand("z", "R31"),
+        () => operands.numeric("z", "R31"),
         RangeError,
         "Operand out of range: should be Z Register only (R30:R31) not R31"
     );
     assertThrows(
-        () => numericOperand("z", "ZH"),
+        () => operands.numeric("z", "ZH"),
         RangeError,
         "Operand out of range: should be Z Register only (R30:R31) not ZH"
     );
     assertThrows(
-        () => numericOperand("z", "X"),
+        () => operands.numeric("z", "X"),
         RangeError,
         "Operand out of range: should be Z Register only (R30:R31) not X"
     );

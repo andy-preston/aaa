@@ -1,28 +1,31 @@
 import { assertEquals, assertThrows } from "assert";
-import { startPass } from "../state/mod.ts";
-import { checkOperandCount, numericOperand } from "./converter.ts";
+import { newState } from "../state/mod.ts";
 import { InternalError } from "../errors/errors.ts";
 import { blankSlate } from "../coupling/coupling.ts";
+import { operandConverter } from "./converter.ts";
+
+const state = newState();
+const operands = operandConverter(state);
 
 Deno.test("Symbolic is only used for Check Count", () => {
     blankSlate();
-    startPass(2);
+    state.pass.start(2);
     assertThrows(
-        () => numericOperand("symbolic", "anything"),
+        () => operands.numeric("symbolic", "anything"),
         InternalError,
         "symbolic is only for checkCount"
     );
-    checkOperandCount(["A", "B"], ["symbolic", "symbolic"]);
+    operands.checkCount(["A", "B"], ["symbolic", "symbolic"]);
 });
 
 Deno.test("Operands must be defined, at least on the second pass", () => {
     blankSlate();
-    startPass(2);
+    state.pass.start(2);
     assertThrows(
-        () => numericOperand("byte", "notDefined"),
+        () => operands.numeric("byte", "notDefined"),
         ReferenceError,
         "notDefined is not defined"
     );
-    startPass(1);
-    assertEquals(0, numericOperand("byte", "notDefined"));
+    state.pass.start(1);
+    assertEquals(0, operands.numeric("byte", "notDefined"));
 });

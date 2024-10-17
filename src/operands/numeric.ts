@@ -1,39 +1,16 @@
-import { inContext } from "../context/mod.ts";
-import { ignoreErrors } from "../state/mod.ts";
-import {
-    type NumericOperand, type SymbolicOperand,
-    type Description, type Scaler, operandRangeError
-} from "./operands.ts";
+import type { State } from "../state/mod.ts";
+import type { SymbolicOperand } from "./symbolic.ts";
 
-const operandValue = (operand: SymbolicOperand): string => {
-    try {
-        return inContext(operand).trim();
-    }
-    catch (error) {
-        if (ignoreErrors() && error instanceof ReferenceError) {
-            return "0";
-        }
-        throw error;
-    }
-};
+export type NumericOperand = number;
 
-export const numeric = (operand: SymbolicOperand): NumericOperand => {
-    const result = operandValue(operand);
+export const numericValue = (
+    state: State,
+    operand: SymbolicOperand
+): NumericOperand => {
+    const result = state.contextValue(operand);
     const intResult = Number.parseInt(result);
-    if (`${intResult}` != result) {
+    if (`${intResult}` != result && state.pass.showErrors()) {
         throw new TypeError(`Operand type: ${operand} is not an integer`);
     }
     return intResult;
 };
-
-export const signedOrUnsignedByte = (value: NumericOperand) =>
-    value < 0 ? 0x0100 + value : value;
-
-export const scaledNumeric = (min: number, max: number, scaler: Scaler) =>
-    (symbolic: SymbolicOperand, expectation: Description) => {
-        const value = numeric(symbolic);
-        if (value < min || value > max) {
-            operandRangeError("", expectation, symbolic);
-        }
-        return scaler(value);
-    };
