@@ -26,7 +26,6 @@ export const scaledNumericTypes = (
 ) => {
     const scaledNumeric = (min: number, max: number, scaler: Scaler) =>
         (symbolic: SymbolicOperand, expectation: Description) => {
-            // TODO: we still need to get state (and context) to numericValue
             const value = numericValue(state, symbolic);
             if (value < min || value > max) {
                 operandRangeError("", expectation, symbolic);

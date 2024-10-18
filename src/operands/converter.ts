@@ -60,7 +60,6 @@ const convertNumeric = (
 
 export const operandConverter = (state: State) => {
     symbolicTypes(types);
-    // TODO: we still need to get state down to numeric.ts
     scaledNumericTypes(types, state);
     registerPairTypes(types, state);
     programMemoryTypes(types, state);
