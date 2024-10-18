@@ -1,4 +1,5 @@
 import type { State } from "../state/mod.ts";
+import { dataMemoryTypes } from "./data-memory.ts";
 import type { NumericOperand } from "./numeric.ts";
 import { programMemoryTypes } from "./program-memory.ts";
 import { registerPairTypes } from "./register-pairs.ts";
@@ -63,6 +64,7 @@ export const operandConverter = (state: State) => {
     scaledNumericTypes(types, state);
     registerPairTypes(types, state);
     programMemoryTypes(types, state);
+    dataMemoryTypes(types, state);
 
     return {
         "checkCount": checkCount,

@@ -24,7 +24,7 @@ const reducedCoreTests: Tests = [
 
 Deno.test("Data Direct code generation", () => {
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096});
+    chooseDevice("dummy", { "programEnd": 4096, "ramEnd": 4096 });
     state.pass.start(2);
     for (const test of tests) {
         const line = tokenLine(...test[0]);
@@ -34,7 +34,11 @@ Deno.test("Data Direct code generation", () => {
 
 Deno.test("Data Direct (Reduced Core) code generation", () => {
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096, "reducedCore": true });
+    chooseDevice("dummy", {
+        "programEnd": 4096,
+        "ramEnd": 128,
+        "reducedCore": true
+    });
     state.pass.start(2);
     for (const test of reducedCoreTests) {
         const line = tokenLine(...test[0]);

@@ -17,9 +17,6 @@ const immediateScaler = (numeric: NumericOperand) =>
 const signedOrUnsignedByte = (value: NumericOperand) =>
     value < 0 ? 0x0100 + value : value;
 
-export const portMapper = (dataSpace: NumericOperand) =>
-    dataSpace - 0x20;
-
 export const scaledNumericTypes = (
     types: OperandTypes,
     state: State
@@ -32,7 +29,7 @@ export const scaledNumericTypes = (
             }
             return scaler(value);
         };
-    // TODO: On reduced core ALL registers are immediateRegister
+
     types.set("register", [
         "register (R0 - R31)",
         scaledNumeric(0, 31, noScaler)
@@ -64,21 +61,5 @@ export const scaledNumericTypes = (
     types.set("nybble", [
         "nybble (0 - 0x0F)",
         scaledNumeric(0, 0x0f, noScaler)
-    ]);
-    // TODO RAM addresses need a check like the program memory check
-    // LDS/STS uses RAMPD to access memory above 64KB
-    // none of "my" parts have > 16K
-    // context.ramStart context.ramEnd
-    types.set("dataAddress16Bit", [
-        "16 bit Data Memory address (0 - 0xFFFF) (64 K)",
-        scaledNumeric(0, 0xffff, noScaler)
-    ]);
-    types.set("dataAddress7Bit", [
-        "7 bit Data Memory address (0 - 0x7F) (127 Bytes)",
-        scaledNumeric(0, 0x7f, noScaler)
-    ]);
-    types.set("port", [
-        "Data Memory mapped into IO space (0x20 - 0x5F)",
-        scaledNumeric(0x20, 0x5f, portMapper)
     ]);
 };
