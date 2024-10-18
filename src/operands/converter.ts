@@ -8,19 +8,6 @@ import {
     convertSymbolic, symbolicTypes
 } from "./symbolic.ts";
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// TODO: If we had special exceptions instead of the built-in ones we could
-// do things like is a port is outside of IO range in an IO space instruction
-// we could hint that they should be using a data-space instruction instead
-//
-////////////////////////////////////////////////////////////////////////////////
-//
-// TODO: Like program memory instructions check if an operand is in PM bounds
-// RAM/Data-memory operands should do the same.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 export type OperandIndex = 0 | 1 | 2;
 
 export type Description = string;

@@ -17,8 +17,6 @@ const immediateScaler = (numeric: NumericOperand) =>
 const signedOrUnsignedByte = (value: NumericOperand) =>
     value < 0 ? 0x0100 + value : value;
 
-// TODO: Error needs hint about use D.M. instruction instead of I.O.
-// TODO: Should move to a specific data memory type (like program memory)
 export const portMapper = (dataSpace: NumericOperand) =>
     dataSpace - 0x20;
 
