@@ -1,12 +1,12 @@
 export const passes = [1, 2] as const;
-type Pass = typeof passes[number];
+type PassNumber = typeof passes[number];
 
 type ResetStateCallback = () => void;
 
 export const newPass = (resetStateCallback: ResetStateCallback) => {
-    let current: Pass;
+    let current: PassNumber;
 
-    const start = (pass: Pass) => {
+    const start = (pass: PassNumber) => {
         current = pass;
         resetStateCallback();
     };
@@ -20,3 +20,5 @@ export const newPass = (resetStateCallback: ResetStateCallback) => {
         "showErrors": showErrors
     };
 };
+
+export type Pass = ReturnType<typeof newPass>;
