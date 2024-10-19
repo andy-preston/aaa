@@ -1,4 +1,3 @@
-import { ramEnd } from "../state/data-memory.ts";
 import type { State } from "../state/mod.ts";
 import {
     type Description, type OperandTypes, operandRangeError
@@ -10,7 +9,7 @@ export const dataMemoryTypes = (types: OperandTypes, state: State) => {
     const dataMemoryCheck = (address: NumericOperand) => {
         // We're not looking at ramStart here as data memory instructions
         // are allowed to access registers, IO and SRAM, not just SRAM
-        const end = ramEnd();
+        const end = state.dataMemory.ramEnd();
         if (address > end) {
             operandRangeError(
                 "",

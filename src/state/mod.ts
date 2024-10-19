@@ -3,8 +3,6 @@ export { type ProgramMemory, programMemoryBytes } from "./program-memory.ts";
 export { passes } from "./pass.ts";
 
 import { contextValue } from "./context-value.ts";
-import { inContext } from "../context/context.ts";
-import type { SymbolicOperand } from "../operands/mod.ts";
 import { dataMemory } from "./data-memory.ts";
 import { newPass } from "./pass.ts";
 import { pokeBuffer } from "./poke-peek.ts";
