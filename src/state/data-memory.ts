@@ -63,8 +63,8 @@ export const dataMemory = () => {
     return {
         "reset": reset,
         "public": {
-            "ramStart": ramStart,
-            "ramEnd": ramEnd,
+            "ramStart": () => ramStart,
+            "ramEnd": () => ramEnd,
             "allocStack": allocStack,
             "alloc": alloc
         }

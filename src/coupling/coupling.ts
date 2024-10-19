@@ -30,7 +30,7 @@ export const coupling = () => {
     directive("allocStack", state.dataMemory.allocStack);
     directive("alloc", state.dataMemory.alloc);
     coupledProperty("progmemEnd", programMemoryEnd);
-    coupledProperty("ramStart", () => state.dataMemory.ramStart);
-    coupledProperty("ramEnd", () => state.dataMemory.ramEnd);
+    coupledProperty("ramStart", state.dataMemory.ramStart);
+    coupledProperty("ramEnd", state.dataMemory.ramEnd);
     return state;
 };
