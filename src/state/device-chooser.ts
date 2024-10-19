@@ -1,6 +1,6 @@
-import { property } from "../context/mod.ts";
 import { InternalError } from "../errors/errors.ts";
 import { setUnsupportedInstructions } from "../translate/translate.ts";
+import type { Context } from "./context.ts";
 import type { DataMemory } from "./data-memory.ts";
 import type { DeviceProperties } from "./device-properties.ts";
 import type { ProgramMemory } from "./program-memory.ts";
@@ -14,7 +14,8 @@ type DeviceSpec = { "family"? : string, "spec": RawItems };
 export const deviceChooser = (
     properties: DeviceProperties,
     program: ProgramMemory,
-    data: DataMemory
+    data: DataMemory,
+    context: Context
 ) => {
     const loadJsonFile = (name: string) => {
         const json = Deno.readTextFileSync(name);
@@ -28,6 +29,27 @@ export const deviceChooser = (
             throw new InternalError(`expected ${value} to be a hex number`);
         }
         return asNumber;
+    };
+
+    const addRegisters = (reducedCore: boolean) => {
+        let register = reducedCore ? 16 : 0;
+        while (register < 32) {
+            context.property(`R${register}`, register++);
+        }
+        const specialRegisters: Array<[string, number]> = [
+            ["X", 26],
+            ["XL", 26],
+            ["XH", 27],
+            ["Y", 28],
+            ["YL", 28],
+            ["YH", 29],
+            ["Z", 30],
+            ["ZL", 30],
+            ["ZH", 31]
+        ];
+        for (const [name, value] of specialRegisters) {
+            context.property(name, value);
+        }
     };
 
     const choose = (deviceName: string, fullSpec: FullSpec) => {
@@ -46,9 +68,9 @@ export const deviceChooser = (
                     break;
                 case "reducedCore":
                     properties.reducedCore(value as boolean);
+                    addRegisters(value as boolean);
                     break;
                 case "programEnd":
-                    console.log("choose programEnd", value);
                     program.bytes(value as number);
                     break;
                 case "ramStart":
@@ -58,7 +80,7 @@ export const deviceChooser = (
                     data.ramEnd(value as number);
                     break;
                 default:
-                    property(key, value as number);
+                    context.property(key, value as number);
                     break;
             }
         }

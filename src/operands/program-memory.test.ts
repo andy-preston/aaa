@@ -1,12 +1,10 @@
 import { assertEquals, assertThrows } from "assert";
 import { newState } from "../state/mod.ts";
-import { blankSlate } from "../coupling/coupling.ts";
 import { operandConverter } from "./converter.ts";
 
 Deno.test("An address is 0 - 0x3FFFFF", () => {
     const state = newState();
     const operands = operandConverter(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 0xf00000 });
     assertEquals(operands.numeric("address", "0"), 0);
@@ -26,7 +24,6 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
 Deno.test("An address is should not exceed program memory", () => {
     const state = newState();
     const operands = operandConverter(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 0x400 });
     assertThrows(
@@ -39,7 +36,6 @@ Deno.test("An address is should not exceed program memory", () => {
 Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     const state = newState();
     const operands = operandConverter(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 8 * 1024 });
 
@@ -67,7 +63,6 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
 Deno.test("A relative jump should not be outside program memory", () => {
     const state = newState();
     const operands = operandConverter(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 32 });
     assertThrows(
@@ -80,7 +75,6 @@ Deno.test("A relative jump should not be outside program memory", () => {
 Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
     const state = newState();
     const operands = operandConverter(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 1024 });
 
@@ -115,7 +109,6 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
 Deno.test("A relative branch should not be outside program memory", () => {
     const state = newState();
     const operands = operandConverter(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 0x20 });
     assertThrows(

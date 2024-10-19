@@ -1,6 +1,4 @@
 import { assertEquals, assertThrows } from "assert";
-import { label } from "../../context/mod.ts";
-import { blankSlate } from "../../coupling/coupling.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -19,12 +17,10 @@ const tests: Tests = [
 Deno.test("Relative Program Code Generation", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 16 * 1024 });
-    label("back", state.programMemory.address());
-    state.programMemory.origin(10);
-    label("forward", state.programMemory.address());
+    state.context.property("back", 0);
+    state.context.property("forward", 10);
     state.programMemory.origin(3);
     for (const test of tests) {
         const line = tokenLine(...test[0]);
@@ -36,7 +32,6 @@ Deno.test("Relative Program Code Generation", () => {
 Deno.test("Absolute address too high on RJMP instruction", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 16 * 1024 });
     assertThrows(
@@ -49,7 +44,6 @@ Deno.test("Absolute address too high on RJMP instruction", () => {
 Deno.test("Absolute address too low on RCALL instruction", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 16 * 1024 });
     state.programMemory.origin(0x2000);

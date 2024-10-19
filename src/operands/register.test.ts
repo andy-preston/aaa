@@ -1,14 +1,12 @@
 import { assertEquals, assertThrows } from "assert";
-import { blankSlate } from "../coupling/coupling.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
-const state = newState();
-const operands = operandConverter(state);
-
 Deno.test("A register should be between zero and 31", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("register", "R0"), 0);
     assertEquals(operands.numeric("register", "6"), 6);
     assertEquals(operands.numeric("register", "Z"), 30);
@@ -27,8 +25,10 @@ Deno.test("A register should be between zero and 31", () => {
 });
 
 Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("immediateRegister", "Z"), 14);
     assertEquals(operands.numeric("immediateRegister", "R31"), 15);
     assertEquals(operands.numeric("immediateRegister", "31"), 15);
@@ -45,8 +45,10 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
 });
 
 Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("multiplyRegister", "R20"), 4);
     assertEquals(operands.numeric("multiplyRegister", "22"), 6);
     assertThrows(
@@ -62,8 +64,10 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
 });
 
 Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("registerPair", "R24"), 0);
     assertEquals(operands.numeric("registerPair", "X"), 1);
     assertEquals(operands.numeric("registerPair", "Y"), 2);
@@ -81,8 +85,10 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
 });
 
 Deno.test("Any register pair is any even numbered register", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("anyRegisterPair", "R0"), 0);
     assertEquals(operands.numeric("anyRegisterPair", "R2"), 1);
     assertEquals(operands.numeric("anyRegisterPair", "R4"), 2);
@@ -102,8 +108,10 @@ Deno.test("Any register pair is any even numbered register", () => {
 });
 
 Deno.test("Some instructions require Z and no other register", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("z", "R30"), 30);
     assertEquals(operands.numeric("z", "Z"), 30);
     assertEquals(operands.numeric("z", "30"), 30);

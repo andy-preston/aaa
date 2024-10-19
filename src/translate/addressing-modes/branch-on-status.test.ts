@@ -1,6 +1,4 @@
 import { assertEquals, assertThrows } from "assert";
-import { property } from "../../context/mod.ts";
-import { blankSlate } from "../../coupling/coupling.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -55,11 +53,10 @@ const tests: Tests = [
 Deno.test("Branch on status code generation", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.device.choose("dummy", { "programEnd": 4096 });
     state.pass.start(2);
-    property("back", 0x0000);
-    property("forward", 0x002e);
+    state.context.property("back", 0x0000);
+    state.context.property("forward", 0x002e);
     state.programMemory.origin(3);
     for (const test of tests) {
         const line = tokenLine(...test[0]);
@@ -71,7 +68,6 @@ Deno.test("Branch on status code generation", () => {
 Deno.test("Absolute address out of relative range on BRNE instruction", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.device.choose("dummy", { "programEnd": 4096 });
     state.pass.start(2);
     state.programMemory.origin(0);
@@ -92,7 +88,6 @@ Deno.test("Absolute address out of relative range on BRNE instruction", () => {
 Deno.test("Absolute address outside available program memory", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 0x40 });
     assertThrows(
@@ -105,7 +100,6 @@ Deno.test("Absolute address outside available program memory", () => {
 Deno.test("Absolute target of branch can't be below 0", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", { "programEnd": 0x40 });
     assertThrows(

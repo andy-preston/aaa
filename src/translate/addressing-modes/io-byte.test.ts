@@ -1,5 +1,4 @@
 import { assertEquals } from "assert";
-import { newContext } from "../../context/mod.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -16,9 +15,8 @@ const tests: Tests = [
 Deno.test("IO Byte Code Generation", () => {
     const state = newState();
     const translate = translator(state);
-    state.device.choose("dummy", { "ramEnd": 123 });
-    newContext();
     state.pass.start(2);
+    state.device.choose("dummy", { "ramEnd": 123, "reducedCore": false });
     for (const test of tests) {
         const line = tokenLine(...test[0]);
         assertEquals(translate(line), test[1], description(test));

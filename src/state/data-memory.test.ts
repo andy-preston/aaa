@@ -1,10 +1,8 @@
 import { assertEquals, assertThrows } from "assert";
-import { blankSlate } from "../coupling/coupling.ts";
 import { newState } from "./mod.ts";
 
 Deno.test("A device must be selected before SRAM can be allocated", () => {
     const state = newState();
-    blankSlate();
     state.pass.start(2);
     assertThrows(
         () => { state.dataMemory.alloc(23); },
@@ -15,7 +13,6 @@ Deno.test("A device must be selected before SRAM can be allocated", () => {
 
 Deno.test("A stack allocation can't be beyond available SRAM", () => {
     const state = newState();
-    blankSlate();
     state.device.choose("dummy", { "ramEnd": 20 });
     state.pass.start(2);
     assertThrows(
@@ -27,7 +24,6 @@ Deno.test("A stack allocation can't be beyond available SRAM", () => {
 
 Deno.test("A memory allocation can't be beyond available SRAM", () => {
     const state = newState();
-    blankSlate();
     state.device.choose("dummy", { "ramEnd": 20 });
     state.pass.start(2);
     assertThrows(
@@ -39,7 +35,6 @@ Deno.test("A memory allocation can't be beyond available SRAM", () => {
 
 Deno.test("Memory allocations start at the top of SRAM and work down", () => {
     const state = newState();
-    blankSlate();
     state.device.choose("dummy", { "ramEnd": 100 });
     state.pass.start(2);
     assertEquals(state.dataMemory.alloc(25), 0);
@@ -49,7 +44,6 @@ Deno.test("Memory allocations start at the top of SRAM and work down", () => {
 
 Deno.test("Stack and memory allocations both decrease the available SRAM", () => {
     const state = newState();
-    blankSlate();
     state.device.choose("dummy", { "ramEnd": 50 });
     state.pass.start(2);
     assertEquals(state.dataMemory.alloc(25), 0);
@@ -63,7 +57,6 @@ Deno.test("Stack and memory allocations both decrease the available SRAM", () =>
 
 Deno.test("Allocations don't get repeated on the second pass", () => {
     const state = newState();
-    blankSlate();
     state.device.choose("dummy", { "ramEnd": 50 });
     state.pass.start(1);
     assertEquals(state.dataMemory.alloc(25), 0);

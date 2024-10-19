@@ -1,4 +1,4 @@
-import type { FileName } from "../coupling/coupling.ts";
+import type { FileName } from "../file-name.ts";
 import type { SymbolicOperands } from "../operands/mod.ts";
 
 export type LineNumber = number;

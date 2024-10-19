@@ -1,4 +1,4 @@
-import type { FileName } from "../coupling/coupling.ts";
+import type { FileName } from "../file-name.ts";
 import type { CodeBlock } from "../translate/mod.ts";
 import { file } from "./file.ts";
 import { type Hex, newHexFile } from "./hex.ts";

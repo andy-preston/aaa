@@ -1,5 +1,4 @@
 import { assertArrayIncludes, assertEquals } from "assert";
-import { blankSlate } from "../coupling/coupling.ts";
 import { tokenLine } from "../source-code/testing.ts";
 import { newState } from "../state/mod.ts";
 import { codeBlockGenerator } from "./code-block.ts";
@@ -7,7 +6,6 @@ import { codeBlockGenerator } from "./code-block.ts";
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
-    blankSlate();
     state.pass.start(2);
     state.device.choose("dummy", {
         "programEnd": 4096,
@@ -24,7 +22,6 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
 Deno.test("no unsupported instruction error on first pass", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
-    blankSlate();
     state.pass.start(1);
     state.device.choose("dummy", {
         "programEnd": 4096,
@@ -39,7 +36,6 @@ Deno.test("no unsupported instruction error on first pass", () => {
 Deno.test("If no device is chosen, warn after the first assembly line", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
-    blankSlate();
     state.pass.start(2);
 
     const blankLine = tokenLine("", "", []);
@@ -59,7 +55,6 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
 Deno.test("no device not chosen on first pass", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
-    blankSlate();
     state.pass.start(1);
     state.device.choose("dummy", {
         "programEnd": 4096,
@@ -73,9 +68,8 @@ Deno.test("no device not chosen on first pass", () => {
 Deno.test("The device selection error is only shown once", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
-    blankSlate();
     state.pass.start(2);
-    const line = tokenLine("", "ADIW", ["R26", "5"]);
+    const line = tokenLine("", "ADIW", ["26", "5"]);
 
     codeBlocksFrom(line).forEach(block => {
         assertArrayIncludes(block.errors, [
@@ -83,17 +77,16 @@ Deno.test("The device selection error is only shown once", () => {
         ]);
     });
     codeBlocksFrom(line).forEach(block => {
-        assertEquals(0, block.errors.length, "repeated device errors");
+        assertEquals(0, block.errors.length, block.errors.join("\n"));
     });
     codeBlocksFrom(line).forEach(block => {
-        assertEquals(0, block.errors.length, "repeated device errors");
+        assertEquals(0, block.errors.length, block.errors.join("\n"));
     });
 });
 
 Deno.test("Translation errors are ignored on first pass", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
-    blankSlate();
     state.device.choose("dummy", {
         "programEnd": 4096,
         "unsupportedInstructions": []

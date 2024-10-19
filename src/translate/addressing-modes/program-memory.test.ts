@@ -1,5 +1,4 @@
 import { assertEquals, assertThrows } from "assert";
-import { newContext } from "../../context/mod.ts";
 import { type TestTokens, tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -23,9 +22,8 @@ const tests: Tests = [
 Deno.test("Program Memory Code Generation", () => {
     const state = newState();
     const translate = translator(state);
-    newContext();
     state.pass.start(2);
-    state.device.choose("dummy", {});
+    state.device.choose("dummy", { "reducedCore": false });
     for (const test of tests) {
         const line = tokenLine(...test[0])
         assertEquals(translate(line), test[1], description(test));
@@ -40,7 +38,6 @@ const failingTests: Array<TestTokens> = [
 Deno.test("Program Memory (Bad Syntax) Code Generation", () => {
     const state = newState();
     const translate = translator(state);
-    newContext();
     state.pass.start(2);
     state.device.choose("dummy", {});
     for (const test of failingTests) {

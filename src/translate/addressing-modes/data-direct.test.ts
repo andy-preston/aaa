@@ -1,5 +1,4 @@
 import { assertEquals } from "assert";
-import { blankSlate } from "../../coupling/coupling.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -21,8 +20,11 @@ const reducedCoreTests: Tests = [
 Deno.test("Data Direct code generation", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
-    state.device.choose("dummy", { "programEnd": 4096, "ramEnd": 4096 });
+    state.device.choose("dummy", {
+        "programEnd": 4096,
+        "ramEnd": 4096,
+        "reducedCore": false
+    });
     state.pass.start(2);
     for (const test of tests) {
         const line = tokenLine(...test[0]);
@@ -33,7 +35,6 @@ Deno.test("Data Direct code generation", () => {
 Deno.test("Data Direct (Reduced Core) code generation", () => {
     const state = newState();
     const translate = translator(state);
-    blankSlate();
     state.device.choose("dummy", {
         "programEnd": 4096,
         "ramEnd": 128,

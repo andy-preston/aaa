@@ -1,5 +1,4 @@
 import { assertEquals, assertThrows } from "assert";
-import { newContext } from "../../context/mod.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -32,9 +31,8 @@ const tests: Tests = [
 Deno.test("Index Indirect Code Generation", () => {
     const state = newState();
     const translate = translator(state);
-    newContext();
     state.pass.start(2);
-    state.device.choose("dummy", {});
+    state.device.choose("dummy", { "reducedCore": false });
     for (const test of tests) {
         const line = tokenLine(...test[0]);
         assertEquals(translate(line), test[1], description(test));
@@ -44,9 +42,8 @@ Deno.test("Index Indirect Code Generation", () => {
 Deno.test("Bad symbolic operand for LD", () => {
     const state = newState();
     const translate = translator(state);
-    newContext();
     state.pass.start(2);
-    state.device.choose("dummy", {});
+    state.device.choose("dummy", { "reducedCore": false });
     assertThrows(
         () => translate(tokenLine("", "LD", ["R15", "-Q"])),
         RangeError,
@@ -57,9 +54,8 @@ Deno.test("Bad symbolic operand for LD", () => {
 Deno.test("Bad symbolic operand for ST", () => {
     const state = newState();
     const translate = translator(state);
-    newContext();
     state.pass.start(2);
-    state.device.choose("dummy", {});
+    state.device.choose("dummy", { "reducedCore": false });
     assertThrows(
         () => translate(tokenLine("", "ST", ["plop", "R16"])),
         RangeError,

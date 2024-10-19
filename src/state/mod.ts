@@ -1,6 +1,6 @@
 export { passes } from "./pass.ts";
 
-import { contextValue } from "./context-value.ts";
+import { newContext } from "./context.ts";
 import { dataMemory } from "./data-memory.ts";
 import { deviceChooser } from "./device-chooser.ts";
 import {
@@ -20,19 +20,20 @@ export const newState = () => {
     const data = dataMemory(device.public);
     const program = programMemory(device.public);
     const poke = pokeBuffer();
-    const chooser = deviceChooser(device, program, data);
     const pass = newPass(() => {
         program.public.origin(0);
         data.reset();
     });
+    const context = newContext(pass);
+    const chooser = deviceChooser(device, program, data, context);
 
     return {
         "pass": pass,
-        "contextValue": contextValue(pass),
         "dataMemory": data.public,
         "programMemory": program.public,
         "poke": poke,
-        "device": {...device.public, ...chooser}
+        "device": {...device.public, ...chooser},
+        "context": context
     };
 };
 

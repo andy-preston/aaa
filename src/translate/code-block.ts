@@ -1,4 +1,3 @@
-import { label } from "../context/mod.ts";
 import { macroLines, type Line } from "../source-code/mod.ts";
 import { type ProgramMemory, type State } from "../state/mod.ts";
 import { type GeneratedCode, translator } from "./translate.ts";
@@ -32,7 +31,7 @@ export const codeBlockGenerator = (state: State) => {
             return;
         }
         try {
-            label(labelName, state.programMemory.address());
+            state.context.property(labelName, state.programMemory.address());
         }
         catch (error) {
             if (state.pass.showErrors() && error instanceof Error) {

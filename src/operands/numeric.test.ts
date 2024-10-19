@@ -1,14 +1,13 @@
 import { assertEquals, assertThrows } from "assert";
-import { blankSlate } from "../coupling/coupling.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
-const state = newState();
-const operands = operandConverter(state);
 
 Deno.test("Numeric operands must be integers", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
+    state.device.choose("dummy", { "reducedCore": false })
     assertEquals(operands.numeric("byte", "R10"), 10);
     assertEquals(operands.numeric("byte", "42"), 42);
     assertThrows(
@@ -24,7 +23,8 @@ Deno.test("Numeric operands must be integers", () => {
 });
 
 Deno.test("6 bits is between 0 and 0x3F", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
     assertEquals(operands.numeric("sixBits", "0b111111"), 0x3f);
     assertEquals(operands.numeric("sixBits", "0x3e"), 0x3e);
@@ -41,7 +41,8 @@ Deno.test("6 bits is between 0 and 0x3F", () => {
 });
 
 Deno.test("A bit index is 0 - 7", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
     assertEquals(operands.numeric("bitIndex", "0"), 0);
     assertEquals(operands.numeric("bitIndex", "4"), 4);
@@ -54,7 +55,8 @@ Deno.test("A bit index is 0 - 7", () => {
 });
 
 Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
     assertEquals(operands.numeric("byte", "-1"), 0xff);
     assertEquals(operands.numeric("byte", "255"), 0xff);
@@ -74,7 +76,8 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
 });
 
 Deno.test("A nybble should be between 0 and 0x0f", () => {
-    blankSlate();
+    const state = newState();
+    const operands = operandConverter(state);
     state.pass.start(2);
     assertEquals(operands.numeric("nybble", "0"), 0);
     assertEquals(operands.numeric("nybble", "6"), 6);
