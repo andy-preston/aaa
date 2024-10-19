@@ -1,5 +1,4 @@
 export { setRamStart, setRamEnd } from "./data-memory.ts";
-export { newPokeBuffer, peek, poke } from "./poke-peek.ts";
 export { type ProgramMemory, programMemoryBytes } from "./program-memory.ts";
 export { passes } from "./pass.ts";
 
@@ -7,11 +6,13 @@ import { inContext } from "../context/context.ts";
 import type { SymbolicOperand } from "../operands/mod.ts";
 import { dataMemory } from "./data-memory.ts";
 import { newPass } from "./pass.ts";
+import { pokeBuffer } from "./poke-peek.ts";
 import { programMemory } from "./program-memory.ts";
 
 export const newState = () => {
     const data = dataMemory();
     const program = programMemory();
+    const poke = pokeBuffer();
     const pass = newPass(() => {
         program.origin(0);
         data.reset();
@@ -33,7 +34,8 @@ export const newState = () => {
         "pass": pass,
         "contextValue": contextValue,
         "dataMemory": data.public,
-        "programMemory": program
+        "programMemory": program,
+        "poke": poke
     };
 };
 

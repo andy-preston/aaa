@@ -1,6 +1,6 @@
 import { label } from "../context/mod.ts";
 import { macroLines, type Line } from "../source-code/mod.ts";
-import { type ProgramMemory, type State, peek } from "../state/mod.ts";
+import { type ProgramMemory, type State } from "../state/mod.ts";
 import { type GeneratedCode, translator } from "./translate.ts";
 
 type ErrorMessages = Array<string>;
@@ -56,7 +56,7 @@ export const codeBlockGenerator = (state: State) => {
         errorMessages = [];
         // Labels are processed before pokes because the label may refer to the poke
         labelWithError(line.label);
-        yield* peek().map(code => codeBlock(
+        yield* state.poke.peek().map(code => codeBlock(
             code,
             [],
             state.programMemory
