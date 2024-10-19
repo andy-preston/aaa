@@ -1,7 +1,4 @@
-export {
-    setRamStart, setRamEnd,
-    newDataMemory, allocStack, alloc, ramStart, ramEnd
-} from "./data-memory.ts";
+export { setRamStart, setRamEnd } from "./data-memory.ts";
 
 export { newPokeBuffer, peek, poke } from "./poke-peek.ts";
 
@@ -14,15 +11,16 @@ export { passes } from "./pass.ts";
 
 import { inContext } from "../context/context.ts";
 import type { SymbolicOperand } from "../operands/mod.ts";
-import { resetDataMemory } from "./data-memory.ts";
+import { dataMemory } from "./data-memory.ts";
 import { newPass } from "./pass.ts";
 import { programMemoryOrigin } from "./program-memory.ts";
 
 export const newState = () => {
+    const data = dataMemory();
     const pass = newPass(
         () => {
             programMemoryOrigin(0);
-            resetDataMemory();
+            data.reset();
         }
     );
 
@@ -40,7 +38,8 @@ export const newState = () => {
 
     return {
         "pass": pass,
-        "contextValue": contextValue
+        "contextValue": contextValue,
+        "dataMemory": data.public
     };
 };
 

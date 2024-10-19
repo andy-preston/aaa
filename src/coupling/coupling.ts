@@ -5,8 +5,8 @@ import {
 } from "../context/mod.ts";
 import {
     programMemoryEnd, programMemoryOrigin,
-    newDataMemory, ramStart, ramEnd, allocStack, alloc,
     newPokeBuffer, poke,
+    newState,
 } from "../state/mod.ts";
 
 import {
@@ -19,17 +19,18 @@ export const blankSlate = () => {
     newContext();
     newPokeBuffer();
     newDeviceChecker();
-    newDataMemory();
 }
 
 export const coupling = () => {
+    const state = newState();
     directive("include", includeFile);
     directive("device", deviceDirective);
     directive("org", programMemoryOrigin);
     directive("poke", poke);
-    directive("allocStack", allocStack);
-    directive("alloc", alloc);
+    directive("allocStack", state.dataMemory.allocStack);
+    directive("alloc", state.dataMemory.alloc);
     coupledProperty("progmemEnd", programMemoryEnd);
-    coupledProperty("ramStart", ramStart);
-    coupledProperty("ramEnd", ramEnd);
+    coupledProperty("ramStart", () => state.dataMemory.ramStart);
+    coupledProperty("ramEnd", () => state.dataMemory.ramEnd);
+    return state;
 };
