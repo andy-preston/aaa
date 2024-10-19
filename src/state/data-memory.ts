@@ -1,21 +1,8 @@
-import { deviceName } from "../context/mod.ts";
+import type { DeviceProperties } from "./mod.ts"; // mod = public
 
-// TODO: once context is properly coupled to state, these can go inside
-// the dataMemory "constructor" function
-let ramStart = 0;
-let ramEnd = 0;
-
-// TODO: once context is properly coupled to state, this becomes irrelevant
-export const setRamStart = (address: number) => {
-    ramStart = address;
-};
-
-// TODO: once context is properly coupled to state, this becomes irrelevant
-export const setRamEnd = (address: number) => {
-    ramEnd = address;
-};
-
-export const dataMemory = () => {
+export const dataMemory = (properties: DeviceProperties) => {
+    let ramStart = 0;
+    let ramEnd = 0;
     let stack = 0;
     let allocated = 0;
 
@@ -28,7 +15,7 @@ export const dataMemory = () => {
         if (bytes < 0) {
             throw new Error("Allocations must be positive");
         }
-        deviceName("determine size of SRAM");
+        properties.name("determine size of SRAM");
         const available = ramAvailable();
         if (bytes > available) {
             throw new Error(
@@ -60,8 +47,18 @@ export const dataMemory = () => {
         return address;
     };
 
+    const setRamStart = (value: number) => {
+        ramStart = value;
+    };
+
+    const setRamEnd = (value: number) => {
+        ramEnd = value;
+    };
+
     return {
         "reset": reset,
+        "ramStart": setRamStart,
+        "ramEnd": setRamEnd,
         "public": {
             "ramStart": () => ramStart,
             "ramEnd": () => ramEnd,
@@ -70,3 +67,5 @@ export const dataMemory = () => {
         }
     };
 };
+
+export type DataMemory = ReturnType<typeof dataMemory>;

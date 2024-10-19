@@ -56,18 +56,20 @@ import {
     encode as wordImmediate
 } from "./addressing-modes/word-immediate.ts";
 
-import type { Line } from "../source-code/mod.ts";
 import type { GeneratedCode } from "./mod.ts";
-import type { OperandConverter } from "../operands/converter.ts";
+import { operandConverter } from "../operands/mod.ts";
+import type { Line } from "../source-code/mod.ts";
+import type { State } from "../state/mod.ts";
 
 export type OptionalCode = GeneratedCode | undefined;
 type AddressingMode = (line: Line) => OptionalCode;
 
-export const addressingModeList =
-    (converter: OperandConverter) : Array<AddressingMode> => [
+export const addressingModeList = (state: State) : Array<AddressingMode> => {
+    const converter = operandConverter(state);
+    return [
         branchOnStatus(converter),
         byteImmediate(converter),
-        dataDirect(converter),
+        dataDirect(converter, state),
         des(converter),
         directProgram(converter),
         implicit(converter),
@@ -85,3 +87,4 @@ export const addressingModeList =
         wordDirect(converter),
         wordImmediate(converter)
     ] as const;
+};

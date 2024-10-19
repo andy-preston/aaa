@@ -2,15 +2,18 @@ import { assertEquals, assertThrows } from "assert";
 import { blankSlate } from "../coupling/coupling.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
-import { chooseDevice } from "../context/mod.ts";
-
-const state = newState();
-const operands = operandConverter(state);
 
 Deno.test("A Data Memory Address is 0 - 0xFFFF", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "ramStart": 0x0000, "ramEnd": 0xffff });
+    state.device.choose("dummy", { "ramStart": 0x0000, "ramEnd": 0xffff });
+
+    assertEquals(state.dataMemory.ramStart(), 0);
+    assertEquals(state.dataMemory.ramEnd(), 0xffff);
+
+
     assertEquals(operands.numeric("dataAddress16Bit", "0"), 0);
     assertEquals(operands.numeric("dataAddress16Bit", "0xFFFF"), 0xffff);
     assertThrows(
@@ -26,8 +29,10 @@ Deno.test("A Data Memory Address is 0 - 0xFFFF", () => {
 });
 
 Deno.test("A Data Memory Address can't exceed available data memory", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
-    chooseDevice("dummy", { "ramStart": 0x0060, "ramEnd": 0x0080 });
+    state.device.choose("dummy", { "ramStart": 0x0060, "ramEnd": 0x0080 });
     state.pass.start(2);
     assertEquals(operands.numeric("dataAddress16Bit", "0x0060"), 0x0060);
     assertEquals(operands.numeric("dataAddress16Bit", "0x0080"), 0x0080);
@@ -39,8 +44,10 @@ Deno.test("A Data Memory Address can't exceed available data memory", () => {
 });
 
 Deno.test("A 7 bit Data Memory Address is 0 - 0x7F", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
-    chooseDevice("dummy", { "ramEnd": 0x0100 });
+    state.device.choose("dummy", { "ramEnd": 0x0100 });
     state.pass.start(2);
     assertEquals(operands.numeric("dataAddress7Bit", "0"), 0);
     assertEquals(operands.numeric("dataAddress7Bit", "0x7F"), 0x7f);
@@ -57,8 +64,10 @@ Deno.test("A 7 bit Data Memory Address is 0 - 0x7F", () => {
 });
 
 Deno.test("A port is between 20 - 5F and is remapped to 00 - 3F", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
-    chooseDevice("dummy", { "ramEnd": 0x0100 });
+    state.device.choose("dummy", { "ramEnd": 0x0100 });
     state.pass.start(2);
     assertEquals(operands.numeric("port", "0x20"), 0);
     assertEquals(operands.numeric("port", "0x5F"), 0x3f);

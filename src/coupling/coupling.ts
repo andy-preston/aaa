@@ -1,8 +1,4 @@
-import {
-    coupledProperty,
-    directive, deviceDirective,
-    newContext, newDeviceChecker
-} from "../context/mod.ts";
+import { coupledProperty, directive, newContext } from "../context/mod.ts";
 import { newState } from "../state/mod.ts";
 
 import {
@@ -13,13 +9,12 @@ export type FileName = string;
 
 export const blankSlate = () => {
     newContext();
-    newDeviceChecker();
 }
 
 export const coupling = () => {
     const state = newState();
     directive("include", includeFile);
-    directive("device", deviceDirective);
+    directive("device", state.device.directive);
     directive("org", state.programMemory.origin);
     directive("poke", state.poke.poke);
     directive("allocStack", state.dataMemory.allocStack);

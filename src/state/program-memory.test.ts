@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { chooseDevice, coupledProperty } from "../context/mod.ts";
+import { coupledProperty } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import { newState } from "./mod.ts";
 
@@ -26,7 +26,7 @@ Deno.test("org addresses can't be less than zero", () => {
 Deno.test("org addresses must be progmem size when a device is chosen", () => {
     const state = newState();
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 100 })
+    state.device.choose("dummy", { "programEnd": 100 })
     assertThrows(
         () => { state.programMemory.origin(92); },
         Error,
@@ -37,7 +37,7 @@ Deno.test("org addresses must be progmem size when a device is chosen", () => {
 Deno.test("programMemoryOrigin directive sets current address", () => {
     const state = newState();
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 100 })
+    state.device.choose("dummy", { "programEnd": 100 })
     coupledProperty("progmemEnd", state.programMemory.end);
     state.programMemory.origin(0);
     assertEquals(0, state.programMemory.address());

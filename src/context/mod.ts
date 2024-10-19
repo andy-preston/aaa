@@ -6,10 +6,3 @@ export {
     label,
     newContext
 } from "./context.ts";
-export {
-    chooseDevice,
-    deviceDirective,
-    deviceName,
-    newDeviceChecker,
-    hasReducedCore
-} from "./device.ts";

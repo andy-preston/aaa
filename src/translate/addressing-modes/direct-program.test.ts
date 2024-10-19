@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
 import { label, newContext } from "../../context/mod.ts";
 import { tokenLine } from "../../source-code/testing.ts";
-import { programMemoryBytes, newState } from "../../state/mod.ts";
+import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
 import { type Tests, description } from "./testing.ts";
 
@@ -18,6 +18,7 @@ Deno.test("Direct Program Code Generation", () => {
     const translate = translator(state);
     newContext();
     state.pass.start(2);
+    state.device.choose("dummy", {});
     label("branch", 0);
     state.programMemory.origin(3);
     for (const test of tests) {
@@ -30,7 +31,8 @@ Deno.test("A jump should not be beyond the end of program memory", () => {
     const state = newState();
     const translate = translator(state);
     newContext();
-    programMemoryBytes(0x2000);
+    state.device.choose("dummy", { "programEnd": 0x2000 });
+    assertEquals(state.programMemory.end(), 0x2000 / 2);
     state.pass.start(2);
     state.programMemory.origin(0);
     assertThrows(

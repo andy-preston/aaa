@@ -1,7 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { newState } from "../state/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
-import { chooseDevice } from "../context/mod.ts";
 import { operandConverter } from "./converter.ts";
 
 Deno.test("An address is 0 - 0x3FFFFF", () => {
@@ -9,7 +8,7 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
     const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 0xf00000 });
+    state.device.choose("dummy", { "programEnd": 0xf00000 });
     assertEquals(operands.numeric("address", "0"), 0);
     assertEquals(operands.numeric("address", "0x3FFFFF"), 0x3fffff);
     assertThrows(
@@ -29,7 +28,7 @@ Deno.test("An address is should not exceed program memory", () => {
     const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 0x400 });
+    state.device.choose("dummy", { "programEnd": 0x400 });
     assertThrows(
         () => operands.numeric("address", "0x400000"),
         RangeError,
@@ -42,7 +41,7 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 8 * 1024 });
+    state.device.choose("dummy", { "programEnd": 8 * 1024 });
 
     state.programMemory.origin(0);
     assertEquals(operands.numeric("relativeJump", "500"), 499);
@@ -70,7 +69,7 @@ Deno.test("A relative jump should not be outside program memory", () => {
     const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 32 });
+    state.device.choose("dummy", { "programEnd": 32 });
     assertThrows(
         () => operands.numeric("relativeJump", "23"),
         RangeError,
@@ -83,7 +82,7 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
     const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 1024 });
+    state.device.choose("dummy", { "programEnd": 1024 });
 
     state.programMemory.origin(0);
     assertEquals(operands.numeric("relativeBranch", "60"), 59);
@@ -118,7 +117,7 @@ Deno.test("A relative branch should not be outside program memory", () => {
     const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 0x20 });
+    state.device.choose("dummy", { "programEnd": 0x20 });
     assertThrows(
         () => operands.numeric("relativeBranch", "0x11"),
         RangeError,

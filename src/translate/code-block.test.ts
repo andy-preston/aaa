@@ -1,5 +1,5 @@
 import { assertEquals } from "assert";
-import { chooseDevice, inContext } from "../context/mod.ts";
+import { inContext } from "../context/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import { tokenLine } from "../source-code/testing.ts";
 import { newState } from "../state/mod.ts";
@@ -7,13 +7,12 @@ import { type CodeBlock, codeBlockGenerator } from "./code-block.ts";
 
 const ignoredBlock = (_ : CodeBlock) => {};
 
-const state = newState();
-const codeBlocksFrom = codeBlockGenerator(state);
-
 Deno.test("As code is generated, the programMemoryPos is incremented", () => {
+    const state = newState();
+    const codeBlocksFrom = codeBlockGenerator(state);
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096 });
     state.pass.start(2);
+    state.device.choose("dummy", { "programEnd": 4096 });
 
     assertEquals(state.programMemory.address(), 0);
     codeBlocksFrom(tokenLine("", "INC", ["R5"])).forEach(ignoredBlock);
@@ -23,9 +22,11 @@ Deno.test("As code is generated, the programMemoryPos is incremented", () => {
 });
 
 Deno.test("programMemoryOrigin can be set from the context i.e. by embedded JS", () => {
+    const state = newState();
+    const codeBlocksFrom = codeBlockGenerator(state);
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096 });
     state.pass.start(2);
+    state.device.choose("dummy", { "programEnd": 4096 });
 
     assertEquals(state.programMemory.address(), 0);
     codeBlocksFrom(tokenLine("", "INC", ["R5"])).forEach(ignoredBlock);
@@ -37,9 +38,11 @@ Deno.test("programMemoryOrigin can be set from the context i.e. by embedded JS",
 });
 
 Deno.test("Labels are saved at the current programMemoryPos", () => {
+    const state = newState();
+    const codeBlocksFrom = codeBlockGenerator(state);
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096 });
     state.pass.start(2);
+    state.device.choose("dummy", { "programEnd": 4096 });
 
     codeBlocksFrom(tokenLine("label1", "INC", ["R5"])).forEach(ignoredBlock);
     assertEquals(inContext("label1"), "0");

@@ -1,6 +1,6 @@
 import { assertEquals } from "assert";
 import { tokenLine } from "../../source-code/testing.ts";
-import { newState, setRamEnd } from "../../state/mod.ts";
+import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
 import { type Tests, description } from "./testing.ts";
 
@@ -17,7 +17,7 @@ const tests: Tests = [
 Deno.test("IO Bit Code Generation", () => {
     const state = newState();
     const translate = translator(state);
-    setRamEnd(123);
+    state.device.choose("dummy", { "ramEnd": 123 });
     state.pass.start(2);
     for (const test of tests) {
         const line = tokenLine(...test[0]);

@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { chooseDevice, property } from "../../context/mod.ts";
+import { property } from "../../context/mod.ts";
 import { blankSlate } from "../../coupling/coupling.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
@@ -56,7 +56,7 @@ Deno.test("Branch on status code generation", () => {
     const state = newState();
     const translate = translator(state);
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096 });
+    state.device.choose("dummy", { "programEnd": 4096 });
     state.pass.start(2);
     property("back", 0x0000);
     property("forward", 0x002e);
@@ -72,7 +72,7 @@ Deno.test("Absolute address out of relative range on BRNE instruction", () => {
     const state = newState();
     const translate = translator(state);
     blankSlate();
-    chooseDevice("dummy", { "programEnd": 4096 });
+    state.device.choose("dummy", { "programEnd": 4096 });
     state.pass.start(2);
     state.programMemory.origin(0);
     assertThrows(
@@ -94,7 +94,7 @@ Deno.test("Absolute address outside available program memory", () => {
     const translate = translator(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 0x40 });
+    state.device.choose("dummy", { "programEnd": 0x40 });
     assertThrows(
         () => translate(tokenLine("", "BRNE", ["0x23"])),
         RangeError,
@@ -107,7 +107,7 @@ Deno.test("Absolute target of branch can't be below 0", () => {
     const translate = translator(state);
     blankSlate();
     state.pass.start(2);
-    chooseDevice("dummy", { "programEnd": 0x40 });
+    state.device.choose("dummy", { "programEnd": 0x40 });
     assertThrows(
         () => translate(tokenLine("", "BREQ", ["-1"])),
         RangeError,
