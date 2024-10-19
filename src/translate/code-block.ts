@@ -1,20 +1,21 @@
 import { label } from "../context/mod.ts";
 import { macroLines, type Line } from "../source-code/mod.ts";
-import {
-    programMemoryAddress, programMemoryStep, peek,
-    type State
-} from "../state/mod.ts";
+import { type ProgramMemory, type State } from "../state/mod.ts";
 import { type GeneratedCode, translator } from "./translate.ts";
 
 type ErrorMessages = Array<string>;
 
-const codeBlock = (block: GeneratedCode, errorMessages: ErrorMessages) => {
+const codeBlock = (
+    block: GeneratedCode,
+    errorMessages: ErrorMessages,
+    programMemory: ProgramMemory
+) => {
     const result = {
-        "address": programMemoryAddress(),
+        "address": programMemory.address(),
         "code": block,
         "errors": errorMessages
     };
-    programMemoryStep(block);
+    programMemory.step(block);
     return result;
 }
 
@@ -31,7 +32,7 @@ export const codeBlockGenerator = (state: State) => {
             return;
         }
         try {
-            label(labelName);
+            label(labelName, state.programMemory.address());
         }
         catch (error) {
             if (state.pass.showErrors() && error instanceof Error) {
@@ -55,14 +56,23 @@ export const codeBlockGenerator = (state: State) => {
         errorMessages = [];
         // Labels are processed before pokes because the label may refer to the poke
         labelWithError(line.label);
-        yield* peek().map(code => codeBlock(code, []));
-        yield codeBlock(translationWithError(line), errorMessages);
+        yield* state.poke.peek().map(code => codeBlock(
+            code,
+            [],
+            state.programMemory
+        ));
+        yield codeBlock(
+            translationWithError(line),
+            errorMessages,
+            state.programMemory
+        );
         yield* macroLines().map(macroLine => {
             errorMessages = [];
             labelWithError(macroLine.label);
             return codeBlock(
                 translationWithError(macroLine),
-                errorMessages
+                errorMessages,
+                state.programMemory
             );
         });
     };

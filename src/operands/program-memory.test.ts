@@ -1,13 +1,12 @@
 import { assertEquals, assertThrows } from "assert";
-import { programMemoryOrigin, newState } from "../state/mod.ts";
+import { newState } from "../state/mod.ts";
 import { blankSlate } from "../coupling/coupling.ts";
 import { chooseDevice } from "../context/mod.ts";
 import { operandConverter } from "./converter.ts";
 
-const state = newState();
-const operands = operandConverter(state);
-
 Deno.test("An address is 0 - 0x3FFFFF", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
     chooseDevice("dummy", { "programEnd": 0xf00000 });
@@ -26,6 +25,8 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
 });
 
 Deno.test("An address is should not exceed program memory", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
     chooseDevice("dummy", { "programEnd": 0x400 });
@@ -37,24 +38,26 @@ Deno.test("An address is should not exceed program memory", () => {
 });
 
 Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
     chooseDevice("dummy", { "programEnd": 8 * 1024 });
 
-    programMemoryOrigin(0);
+    state.programMemory.origin(0);
     assertEquals(operands.numeric("relativeJump", "500"), 499);
 
-    programMemoryOrigin(1010);
+    state.programMemory.origin(1010);
     assertEquals(operands.numeric("relativeJump", "1000"), 0x0fff - 10);
 
-    programMemoryOrigin(0);
+    state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeJump", "-1"),
         RangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not -1"
     );
 
-    programMemoryOrigin(0);
+    state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeJump", "2050"),
         RangeError,
@@ -63,6 +66,8 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
 });
 
 Deno.test("A relative jump should not be outside program memory", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
     chooseDevice("dummy", { "programEnd": 32 });
@@ -74,31 +79,33 @@ Deno.test("A relative jump should not be outside program memory", () => {
 });
 
 Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
     chooseDevice("dummy", { "programEnd": 1024 });
 
-    programMemoryOrigin(0);
+    state.programMemory.origin(0);
     assertEquals(operands.numeric("relativeBranch", "60"), 59);
 
-    programMemoryOrigin(110);
+    state.programMemory.origin(110);
     assertEquals(operands.numeric("relativeBranch", "100"), 127 - 10);
 
-    programMemoryOrigin(0);
+    state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeBranch", "-1"),
         RangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not -1"
     );
 
-    programMemoryOrigin(0);
+    state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeBranch", "0x200"),
         RangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x200"
     );
 
-    programMemoryOrigin(0x200);
+    state.programMemory.origin(0x200);
     assertThrows(
         () => operands.numeric("relativeBranch", "0x180"),
         RangeError,
@@ -107,6 +114,8 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
 });
 
 Deno.test("A relative branch should not be outside program memory", () => {
+    const state = newState();
+    const operands = operandConverter(state);
     blankSlate();
     state.pass.start(2);
     chooseDevice("dummy", { "programEnd": 0x20 });

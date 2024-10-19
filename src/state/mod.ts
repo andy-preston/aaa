@@ -1,33 +1,32 @@
-export {
-    setRamStart, setRamEnd,
-    newDataMemory, allocStack, alloc, ramStart, ramEnd
-} from "./data-memory.ts";
-
-export { newPokeBuffer, peek, poke } from "./poke-peek.ts";
-
-export {
-    programMemoryEnd, programMemoryBytes,
-    programMemoryOrigin, programMemoryAddress, programMemoryStep
-} from "./program-memory.ts";
-
+export { setRamStart, setRamEnd } from "./data-memory.ts";
+export { type ProgramMemory, programMemoryBytes } from "./program-memory.ts";
 export { passes } from "./pass.ts";
 
 import { contextValue } from "./context-value.ts";
-import { resetDataMemory } from "./data-memory.ts";
+import { inContext } from "../context/context.ts";
+import type { SymbolicOperand } from "../operands/mod.ts";
+import { dataMemory } from "./data-memory.ts";
 import { newPass } from "./pass.ts";
-import { programMemoryOrigin } from "./program-memory.ts";
+import { pokeBuffer } from "./poke-peek.ts";
+import { programMemory } from "./program-memory.ts";
 
 export const newState = () => {
-    const pass = newPass(
-        () => {
-            programMemoryOrigin(0);
-            resetDataMemory();
-        }
-    );
+    const data = dataMemory();
+    const program = programMemory();
+    const poke = pokeBuffer();
+    const pass = newPass(() => {
+        program.origin(0);
+        data.reset();
+    });
+
     const getContextValue = contextValue(pass);
+
     return {
         "pass": pass,
-        "contextValue": getContextValue
+        "contextValue": getContextValue,
+        "dataMemory": data.public,
+        "programMemory": program,
+        "poke": poke
     };
 };
 

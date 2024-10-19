@@ -1,6 +1,4 @@
-import {
-    type State, programMemoryAddress, programMemoryEnd
-} from "../state/mod.ts";
+import { type State } from "../state/mod.ts";
 import {
     type Description, type OperandTypes, operandRangeError
 } from "./converter.ts";
@@ -9,7 +7,7 @@ import type { SymbolicOperand } from "./symbolic.ts";
 
 export const programMemoryTypes = (types: OperandTypes, state: State) => {
     const programMemoryCheck = (address: NumericOperand) => {
-        const end = programMemoryEnd();
+        const end = state.programMemory.end();
         if (address > end) {
             operandRangeError(
                 "",
@@ -34,7 +32,7 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
             if (absolute < 0) {
                 operandRangeError("", expectation, symbolic);
             }
-            const distance = absolute - programMemoryAddress() - 1;
+            const distance = absolute - state.programMemory.address() - 1;
             if (distance < -limit || distance >= limit) {
                 operandRangeError("", expectation, symbolic);
             }
