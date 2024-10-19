@@ -1,5 +1,3 @@
-import { programMemoryAddress } from "../state/mod.ts";
-
 type SimpleFunction = (_: number) => number;
 
 export interface Context {
@@ -71,11 +69,11 @@ export const coupledProperty = (name: string, getter: NumericGetter) => {
     });
 }
 
-export const label = (name: string): void => {
+export const label = (name: string, address: number): void => {
     if (!Object.hasOwn(context, name)) {
-        property(name, programMemoryAddress());
+        property(name, address);
     }
-    else if (context[name] != programMemoryAddress()) {
+    else if (context[name] != address) {
         throw new ReferenceError(
             `label ${name} already exists (${context[name]!.toString(16)})`
         );

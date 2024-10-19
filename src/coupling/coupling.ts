@@ -3,11 +3,7 @@ import {
     directive, deviceDirective,
     newContext, newDeviceChecker
 } from "../context/mod.ts";
-import {
-    programMemoryEnd, programMemoryOrigin,
-    newPokeBuffer, poke,
-    newState,
-} from "../state/mod.ts";
+import { newPokeBuffer, poke, newState } from "../state/mod.ts";
 
 import {
     includeFile
@@ -25,11 +21,11 @@ export const coupling = () => {
     const state = newState();
     directive("include", includeFile);
     directive("device", deviceDirective);
-    directive("org", programMemoryOrigin);
+    directive("org", state.programMemory.origin);
     directive("poke", poke);
     directive("allocStack", state.dataMemory.allocStack);
     directive("alloc", state.dataMemory.alloc);
-    coupledProperty("progmemEnd", programMemoryEnd);
+    coupledProperty("progmemEnd", state.programMemory.end);
     coupledProperty("ramStart", state.dataMemory.ramStart);
     coupledProperty("ramEnd", state.dataMemory.ramEnd);
     return state;

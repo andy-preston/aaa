@@ -2,9 +2,7 @@ import { assertEquals, assertThrows } from "assert";
 import { chooseDevice, label } from "../../context/mod.ts";
 import { blankSlate } from "../../coupling/coupling.ts";
 import { tokenLine } from "../../source-code/testing.ts";
-import {
-    programMemoryOrigin, programMemoryStep, newState
-} from "../../state/mod.ts";
+import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
 import { type Tests, description } from "./testing.ts";
 
@@ -25,14 +23,14 @@ Deno.test("Relative Program Code Generation", () => {
     blankSlate();
     chooseDevice("dummy", { "programEnd": 16 * 1024 });
     state.pass.start(2);
-    label("back");
-    programMemoryOrigin(10);
-    label("forward");
-    programMemoryOrigin(3);
+    label("back", state.programMemory.address());
+    state.programMemory.origin(10);
+    label("forward", state.programMemory.address());
+    state.programMemory.origin(3);
     for (const test of tests) {
         const line = tokenLine(...test[0]);
         assertEquals(translate(line), test[1], description(test));
-        programMemoryStep(test[1]);
+        state.programMemory.step(test[1]);
     }
 });
 
@@ -51,7 +49,7 @@ Deno.test("Absolute address too low on RCALL instruction", () => {
     blankSlate();
     chooseDevice("dummy", { "programEnd": 16 * 1024 });
     state.pass.start(2);
-    programMemoryOrigin(0x2000);
+    state.programMemory.origin(0x2000);
     assertThrows(
         () => translate(tokenLine("", "RCALL", ["0x500"])),
         RangeError,
