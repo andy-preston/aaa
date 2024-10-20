@@ -1,3 +1,3 @@
-import { cli } from "./coupling/cli.ts";
+import { cli } from "./cli.ts";
 
 cli("./file1.txt");

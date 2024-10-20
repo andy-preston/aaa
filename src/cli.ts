@@ -1,8 +1,8 @@
-import type { FileName } from "../file-name.ts";
-import { openOutput } from "../output/mod.ts";
-import { newState, passes } from "../state/mod.ts";
-import { sourceLines } from "../source-code/mod.ts";
-import { codeBlockGenerator } from "../translate/mod.ts";
+import type { FileName } from "./file-name.ts";
+import { openOutput } from "./output/mod.ts";
+import { newState, passes } from "./state/mod.ts";
+import { sourceLines } from "./source-code/mod.ts";
+import { codeBlockGenerator } from "./translate/mod.ts";
 
 export const cli = (commandLineSourceFile: FileName) => {
     const state = newState();
