@@ -2,10 +2,10 @@ export { passes } from "./pass.ts";
 
 import { newContext } from "./context.ts";
 import { dataMemory } from "./data-memory.ts";
-import { deviceChooser } from "./device-chooser.ts";
+import { deviceChooser } from "./device/chooser.ts";
 import {
     type DeviceProperties as DevicePropertiesPrivate, deviceProperties
-} from "./device-properties.ts";
+} from "./device/properties.ts";
 import { newPass } from "./pass.ts";
 import { pokeBuffer } from "./poke-peek.ts";
 import {

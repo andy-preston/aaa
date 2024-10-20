@@ -1,7 +1,10 @@
+import { unsupportedInstructions } from "./unsupported-instructions.ts";
+
 export const deviceProperties = () => {
     let deviceErrorShown = false;
-    let reducedCore = false;
     let deviceName = ""
+    let reducedCore = false;
+    const unsupported = unsupportedInstructions();
 
     const name = (reason: string) => {
         if (deviceName == "" && !deviceErrorShown) {
@@ -30,9 +33,11 @@ export const deviceProperties = () => {
         "setName": setDeviceName,
         "name": () => deviceName,
         "reducedCore": setReducedCore,
+        "chooseUnsuuportedInstructions": unsupported.choose,
         "public": {
             "name": name,
-            "hasReducedCore": hasReducedCore
+            "hasReducedCore": hasReducedCore,
+            "isUnsupported": unsupported.isUnsupported
         }
     };
 };

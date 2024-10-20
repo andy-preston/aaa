@@ -1,9 +1,8 @@
-import { InternalError } from "../errors/errors.ts";
-import { setUnsupportedInstructions } from "../translate/translate.ts";
-import type { Context } from "./context.ts";
-import type { DataMemory } from "./data-memory.ts";
-import type { DeviceProperties } from "./device-properties.ts";
-import type { ProgramMemory } from "./program-memory.ts";
+import { InternalError } from "../../errors/errors.ts";
+import type { Context } from "../context.ts";
+import type { DataMemory } from "../data-memory.ts";
+import type { DeviceProperties } from "./properties.ts";
+import type { ProgramMemory } from "../program-memory.ts";
 
 type FullSpec = Record<string, number | boolean | Array<string>>;
 type RawProperty = string | boolean | Array<string>;
@@ -64,7 +63,9 @@ export const deviceChooser = (
         for (const [key, value] of Object.entries(fullSpec)) {
             switch (key) {
                 case "unsupportedInstructions":
-                    setUnsupportedInstructions(value as Array<string>);
+                    properties.chooseUnsuuportedInstructions(
+                        value as Array<string>
+                    );
                     break;
                 case "reducedCore":
                     properties.reducedCore(value as boolean);
