@@ -11,10 +11,8 @@ export const openOutput = (topFileName: FileName) => {
 
     const codeBlock = (block: CodeBlock) => {
         listing.codeBlock(block);
-        block.errors.forEach(([name, message]) => {
-            listing.error(
-                `${name.replace(/([A-Z])/g, " $1").trim()}: ${message}`
-            );
+        block.errors.forEach(error => {
+            listing.error(error);
             hex = undefined;
         });
         hex?.codeBlock(block);

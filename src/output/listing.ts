@@ -1,3 +1,4 @@
+import type { ErrorWithHint } from "../errors/errors.ts";
 import type { Line } from "../source-code/mod.ts";
 import type { CodeBlock } from "../translate/mod.ts";
 import type { File } from "./file.ts";
@@ -42,8 +43,13 @@ export const openListing = (file: File) => {
         newLine = true;
     };
 
-    const error = (message: string) => {
+    const error = (error: ErrorWithHint) => {
+        const humanName = error.name.replace(/([A-Z])/g, " $1").trim();
+        const message = `${humanName}: ${error.message}`;
         file.write(`${arrow} ${numberedLine(message)}`);
+        if (error.hint) {
+            file.write(`${arrow} ${numberedLine(error.hint)}`);
+        }
     };
 
     const codeBlock = (block: CodeBlock) => {

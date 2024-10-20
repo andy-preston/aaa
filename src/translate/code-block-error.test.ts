@@ -2,6 +2,18 @@ import { assertArrayIncludes, assertEquals } from "assert";
 import { tokenLine } from "../source-code/testing.ts";
 import { newState } from "../state/mod.ts";
 import { codeBlockGenerator } from "./code-block.ts";
+import type { ErrorWithHint } from "../errors/errors.ts";
+
+const assertHasError = (
+    errors: Array<ErrorWithHint>,
+    expectedType: string,
+    expectedMessage: string
+) => {
+    assertArrayIncludes(
+        errors.map(error => [error.name, error.message]),
+        [[expectedType, expectedMessage]]
+    );
+};
 
 Deno.test("Returns error if attempt to assemble unavailable instruction", () => {
     const state = newState();
@@ -13,9 +25,11 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
     });
 
     codeBlocksFrom(tokenLine("", "MUL", ["R26", "R28"])).forEach(block => {
-        assertArrayIncludes(block.errors, [
-            ["UnsupportedInstruction", "MUL is not available on dummy"]
-        ]);
+        assertHasError(
+            block.errors,
+            "UnsupportedInstruction",
+            "MUL is not available on dummy"
+        );
     });
 });
 
@@ -26,9 +40,7 @@ Deno.test("Returns error if attempt to assemble non-existant instruction", () =>
     state.device.choose("dummy", { "programEnd": 4096 });
 
     codeBlocksFrom(tokenLine("", "PLOP", ["R26", "R28"])).forEach(block => {
-        assertArrayIncludes(block.errors, [
-            ["UnknownInstruction", "PLOP"]
-        ]);
+        assertHasError(block.errors, "UnknownInstruction", "PLOP");
     });
 });
 
@@ -59,9 +71,12 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
         assertEquals(0, block.errors.length, "no error on blank line");
     });
     codeBlocksFrom(tokenLine("", "ADIW", ["R26", "5"])).forEach(block => {
-        assertArrayIncludes(block.errors, [
-            ["Error", "Without a device selected, it's not possible to determine which instructions are available"]
-        ]);
+        assertHasError(
+            block.errors,
+            // TODO: custom error type
+            "Error",
+            "Without a device selected, it's not possible to determine which instructions are available"
+        );
     });
 });
 
@@ -85,9 +100,12 @@ Deno.test("The device selection error is only shown once", () => {
     const line = tokenLine("", "ADIW", ["26", "5"]);
 
     codeBlocksFrom(line).forEach(block => {
-        assertArrayIncludes(block.errors, [
-            ["Error", "Without a device selected, it's not possible to determine which instructions are available"]
-        ]);
+        assertHasError(
+            block.errors,
+            // TODO: custom error type
+            "Error",
+            "Without a device selected, it's not possible to determine which instructions are available"
+        );
     });
     codeBlocksFrom(line).forEach(block => {
         assertEquals(0, block.errors.length);
@@ -113,8 +131,11 @@ Deno.test("Translation errors are ignored on first pass", () => {
 
     state.pass.start(2);
     codeBlocksFrom(line).forEach(block => {
-        assertArrayIncludes(block.errors, [
-            ["Error", "Incorrect number of operands - expecting none got R2"]
-        ]);
+        assertHasError(
+            block.errors,
+            // TODO: custom error type
+            "Error",
+            "Incorrect number of operands - expecting none got R2"
+        );
     });
 });

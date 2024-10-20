@@ -1,3 +1,4 @@
+import { DeviceSelectionError } from "../../errors/errors.ts";
 import { unsupportedInstructions } from "./unsupported-instructions.ts";
 
 export const deviceProperties = () => {
@@ -9,9 +10,7 @@ export const deviceProperties = () => {
     const name = (reason: string) => {
         if (deviceName == "" && !deviceErrorShown) {
             deviceErrorShown = true;
-            throw new Error(
-                `Without a device selected, it's not possible to ${reason}`
-            );
+            throw new DeviceSelectionError(reason);
         };
         return deviceName;
     };

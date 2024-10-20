@@ -6,7 +6,7 @@ Deno.test("a device must be selected before program memory can be set", () => {
     assertThrows(
         () => { state.programMemory.origin(10); },
         Error,
-        "Without a device selected, it's not possible to determine size of Program Memory"
+        "No device selected - can't determine size of Program Memory"
     );
 });
 

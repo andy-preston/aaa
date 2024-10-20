@@ -1,13 +1,14 @@
 import { assertEquals, assertThrows } from "assert";
 import { newState } from "./mod.ts";
+import { DeviceSelectionError } from "../errors/errors.ts";
 
 Deno.test("A device must be selected before SRAM can be allocated", () => {
     const state = newState();
     state.pass.start(2);
     assertThrows(
         () => { state.dataMemory.alloc(23); },
-        Error,
-        "Without a device selected, it's not possible to determine size of SRAM"
+        DeviceSelectionError,
+        "No device selected - can't determine size of SRAM"
     );
 });
 
