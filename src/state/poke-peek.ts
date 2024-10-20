@@ -1,3 +1,4 @@
+import { NumericError } from "../errors/errors.ts";
 import type { GeneratedCode } from "../translate/mod.ts";
 
 export const pokeBuffer = () => {
@@ -9,7 +10,7 @@ export const pokeBuffer = () => {
             : data;
         for (const byte of bytes) {
             if (byte < 0 || byte > 0xff) {
-                throw new RangeError(`byte value out of range: ${byte}`);
+                throw new NumericError(byte, "00 - FF");
             }
         }
         if (bytes.length % 2 == 1) {

@@ -1,3 +1,4 @@
+import { AssemblerSyntaxError } from "../errors/errors.ts";
 import type { SymbolicOperands } from "../operands/mod.ts";
 import type { Line } from "./line.ts";
 
@@ -20,7 +21,7 @@ const split = (
 
 const forbidWhitespace = (suspect: string) => {
     if (suspect.indexOf(" ") != -1) {
-        throw new SyntaxError("Label must not contain whitespace");
+        throw new AssemblerSyntaxError("Label must not contain whitespace");
     }
 };
 
@@ -45,7 +46,7 @@ const expandIndexOffsetOperands = (operands: Array<string>) => {
     }
     if (operands.length > second && found(second)) {
         if (second == 2) {
-            throw new SyntaxError(
+            throw new AssemblerSyntaxError(
                 "An instruction can only have 1 index offset (Z+qq) operand"
             );
         }

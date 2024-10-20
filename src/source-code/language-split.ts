@@ -1,4 +1,4 @@
-import { InternalError } from "../errors/errors.ts";
+import { InternalError, JavascriptError } from "../errors/errors.ts";
 import type { Context } from "../state/context.ts";
 import type { Line } from "./line.ts";
 
@@ -17,7 +17,9 @@ export const languageSplitter = (context: Context) => {
     const change = (token: string) => {
         const newState: BufferName = token == "{{" ? "javascript" : "assembler";
         if (state == newState) {
-            throw new SyntaxError(`"${token}" when already in ${state} mode`);
+            throw new JavascriptError(
+                `"${token}" when already in ${state} mode`
+            );
         }
         state = newState;
     };
@@ -32,7 +34,9 @@ export const languageSplitter = (context: Context) => {
 
     const check = () => {
         if (state != "assembler") {
-            throw new Error("Final JavaScript block was not closed with \"}}\"");
+            throw new JavascriptError(
+                "Final JavaScript block was not closed with \"}}\""
+            );
         }
         for (const bufferName in buffer) {
             if (buffer[bufferName]!.length != 0) {

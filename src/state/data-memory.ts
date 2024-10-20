@@ -1,3 +1,6 @@
+import {
+    AllocationError, MiscellaneousError, NumericError
+} from "../errors/errors.ts";
 import type { DeviceProperties } from "./mod.ts"; // mod = public
 
 export const dataMemory = (properties: DeviceProperties) => {
@@ -12,15 +15,13 @@ export const dataMemory = (properties: DeviceProperties) => {
         if (bytes == 0) {
             return;
         }
-        if (bytes < 0) {
-            throw new Error("Allocations must be positive");
+        if (bytes <= 0) {
+            throw new NumericError(bytes, "> 0");
         }
         properties.name("determine size of SRAM");
         const available = ramAvailable();
         if (bytes > available) {
-            throw new Error(
-                `Can't allocate ${bytes} bytes in SRAM, there are only ${available} available`
-            );
+            throw new AllocationError(bytes, available);
         }
     };
 
@@ -34,7 +35,7 @@ export const dataMemory = (properties: DeviceProperties) => {
         // but you can if you're worried that your RAM allocations might eat up
         // all the space.
         if (stack != 0) {
-            throw new Error("Stack already allocated");
+            throw new MiscellaneousError("Stack already allocated");
         }
         allocationCheck(bytes);
         stack = bytes;

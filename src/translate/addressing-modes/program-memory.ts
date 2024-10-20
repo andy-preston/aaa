@@ -1,3 +1,4 @@
+import { AssemblerSyntaxError } from "../../errors/errors.ts";
 import type { OperandConverter, SymbolicOperands } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
 import type { OptionalCode } from "../addressing-modes.ts";
@@ -23,7 +24,9 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
         operands.length == 0 || (hasExtraOperand && hasAllowedOperand);
     if (!valid) {
         const allowed = allowedOperands.join(" or ");
-        throw new SyntaxError(`Can only have either no operands or ${allowed}`);
+        throw new AssemblerSyntaxError(
+            `Can only have either no operands or ${allowed}`
+        );
     }
 };
 

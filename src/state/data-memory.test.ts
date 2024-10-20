@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
 import { newState } from "./mod.ts";
-import { DeviceSelectionError } from "../errors/errors.ts";
+import { AllocationError, DeviceSelectionError } from "../errors/errors.ts";
 
 Deno.test("A device must be selected before SRAM can be allocated", () => {
     const state = newState();
@@ -14,23 +14,23 @@ Deno.test("A device must be selected before SRAM can be allocated", () => {
 
 Deno.test("A stack allocation can't be beyond available SRAM", () => {
     const state = newState();
-    state.device.choose("dummy", { "ramEnd": 20 });
+    state.device.choose("dummy", { "ramEnd": 0x20 });
     state.pass.start(2);
     assertThrows(
-        () => { state.dataMemory.allocStack(23); },
-        Error,
-        "Can't allocate 23 bytes in SRAM, there are only 20 available"
+        () => { state.dataMemory.allocStack(0x23); },
+        AllocationError,
+        "Can't allocate 0x23 bytes in SRAM, there are only 0x20 available"
     );
 });
 
 Deno.test("A memory allocation can't be beyond available SRAM", () => {
     const state = newState();
-    state.device.choose("dummy", { "ramEnd": 20 });
+    state.device.choose("dummy", { "ramEnd": 0x20 });
     state.pass.start(2);
     assertThrows(
-        () => { state.dataMemory.allocStack(23); },
-        Error,
-        "Can't allocate 23 bytes in SRAM, there are only 20 available"
+        () => { state.dataMemory.allocStack(0x23); },
+        AllocationError,
+        "Can't allocate 0x23 bytes in SRAM, there are only 0x20 available"
     );
 });
 
@@ -51,8 +51,8 @@ Deno.test("Stack and memory allocations both decrease the available SRAM", () =>
     state.dataMemory.allocStack(25);
     assertThrows(
         () => { state.dataMemory.alloc(23); },
-        Error,
-        "Can't allocate 23 bytes in SRAM, there are only 0 available"
+        AllocationError,
+        "Can't allocate 0x17 bytes in SRAM, there are only 0x0 available"
     );
 });
 

@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "assert";
 import { lineTokens } from "./tokens.ts";
 import type { Line, RawSource } from "./line.ts";
+import { AssemblerSyntaxError } from "../errors/errors.ts";
 
 const testLine = (assemblyLine: RawSource): Line => ({
     "filename": "",
@@ -88,7 +89,7 @@ Deno.test("A label may not contain whitespace", () => {
     const line = testLine("count bytes: LDI R16, 23");
     assertThrows(
         () => lineTokens(line),
-        SyntaxError,
+        AssemblerSyntaxError,
         "Label must not contain whitespace"
     );
 });
@@ -150,7 +151,7 @@ Deno.test("Only one Z+q operand is allowed in an instruction", () => {
     const line = testLine("LDD Z+12, Z+13");
     assertThrows(
         () => lineTokens(line),
-        SyntaxError,
+        AssemblerSyntaxError,
         "An instruction can only have 1 index offset (Z+qq) operand"
     );
 });

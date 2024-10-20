@@ -33,11 +33,22 @@ export class RedefinedError extends ErrorWithHint {
 
 export class JavascriptError extends ErrorWithHint {
     constructor(message: string) {
-        super(
-            `Javascript error: ${message}`,
-            ""
-        );
+        super(message, "");
         this.name = "JavascriptError";
+    }
+};
+
+export class AssemblerSyntaxError extends ErrorWithHint {
+    constructor(message: string) {
+        super(message, "");
+        this.name = "AssemblerSyntaxError";
+    }
+};
+
+export class MiscellaneousError extends ErrorWithHint {
+    constructor(message: string) {
+        super(message, "");
+        this.name = "MiscellaneousError";
     }
 };
 
@@ -53,6 +64,40 @@ export class OperandRangeError extends ErrorWithHint {
         this.name = "OperandRangeError";
         this.operandName = name;
         this.operandValue = actual;
+    }
+};
+
+export class AllocationError extends ErrorWithHint {
+    bytes: number;
+    available: number;
+    constructor(bytes: number, available: number) {
+        const prefix = `Can't allocate 0x${bytes.toString(16)} bytes in SRAM,`;
+        const suffix = `there are only 0x${available.toString(16)} available`;
+        super(`${prefix} ${suffix}`, "");
+        this.name = "AllocationError";
+        this.bytes = bytes;
+        this.available = available;
+    }
+};
+
+export class ProgramMemoryError extends ErrorWithHint {
+    address: number | undefined;
+    endAddress: number;
+    constructor(address: number | undefined, endAddress: number) {
+        const prefix = address == undefined
+            ? "out"
+            : `0x${address.toString(16)} beyond end`;
+        super(`${prefix} of program memory (0x${endAddress.toString(16)})`, "");
+        this.name = "ProgramMemoryError";
+        this.address = address;
+        this.endAddress = endAddress;
+    }
+};
+
+export class NumericError extends ErrorWithHint {
+    constructor(value: number, range: string) {
+        super(`${value} must be: ${range}`, "");
+        this.name = "NumericError";
     }
 };
 

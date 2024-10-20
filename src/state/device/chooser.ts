@@ -1,4 +1,4 @@
-import { InternalError } from "../../errors/errors.ts";
+import { InternalError, MiscellaneousError } from "../../errors/errors.ts";
 import type { Context } from "../context.ts";
 import type { DataMemory } from "../data-memory.ts";
 import type { DeviceProperties } from "./properties.ts";
@@ -57,7 +57,7 @@ export const deviceChooser = (
             return;
         }
         if (previousName != "") {
-            throw new Error(`Device ${name} already chosen`);
+            throw new MiscellaneousError(`Device ${name} already chosen`);
         }
         properties.setName(deviceName);
         for (const [key, value] of Object.entries(fullSpec)) {

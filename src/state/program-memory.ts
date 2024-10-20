@@ -1,3 +1,4 @@
+import { NumericError, ProgramMemoryError } from "../errors/errors.ts";
 import type { GeneratedCode } from "../translate/mod.ts";
 import type { DeviceProperties } from "./mod.ts"; // mod = public interface
 
@@ -11,13 +12,11 @@ export const programMemory = (properties: DeviceProperties) => {
             return;
         }
         if (newAddress < 0) {
-            throw new Error("Addresses must be positive");
+            throw new NumericError(newAddress, ">= 0");
         }
         properties.name("determine size of Program Memory");
         if (end > 0 && newAddress > end) {
-            throw new Error(
-                `${newAddress} beyond end of program memory (0x${end.toString(16)})`
-            );
+            throw new ProgramMemoryError(newAddress, end);
         }
         address = newAddress;
     };
@@ -26,7 +25,7 @@ export const programMemory = (properties: DeviceProperties) => {
         // Flash addresses are in 16-bit words, not bytes
         address += code.length / 2;
         if (end > 0 && address > end ) {
-            throw new Error(`Out of program memory (0x${end.toString(16)})`);
+            throw new ProgramMemoryError(undefined, end);
         }
     };
 

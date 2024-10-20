@@ -1,3 +1,5 @@
+import { InternalError } from "../errors/errors.ts";
+
 export type PairOfBytes = [number, number];
 
 export const hexBuffer = () => {
@@ -7,7 +9,9 @@ export const hexBuffer = () => {
 
     const restartAt = (newByteAddress: number) => {
         if (buffer.length != 0) {
-            throw new Error("Restarting HEX buffer without it being empty");
+            throw new InternalError(
+                "Restarting HEX buffer without it being empty"
+            );
         }
         byteAddress = newByteAddress;
     };
