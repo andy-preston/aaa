@@ -1,3 +1,4 @@
+import { JavascriptError, RedefinedError, NotDefinedError } from "../errors/errors.ts";
 import type { SymbolicOperand } from "../operands/mod.ts";
 import { returnIfExpression } from "./context-magic.ts";
 import type { Pass } from "./pass.ts";
@@ -27,7 +28,10 @@ export const newContext = (pass: Pass) => {
             return result == undefined ? "" : `${result}`;
         } catch (error) {
             if (error instanceof ReferenceError) {
-                error.message = `Javascript error: ${error.message}`;
+                throw new NotDefinedError(error.message);
+            }
+            if (error instanceof Error) {
+                throw new JavascriptError(error.message);
             }
             throw error;
         }
@@ -38,7 +42,7 @@ export const newContext = (pass: Pass) => {
             return value(operand).trim();
         }
         catch (error) {
-            if (pass.ignoreErrors() && error instanceof ReferenceError) {
+            if (pass.ignoreErrors() && error instanceof Error) {
                 return "0";
             }
             throw error;
@@ -72,9 +76,7 @@ export const newContext = (pass: Pass) => {
             });
         }
         else if (context[name] != value) {
-            throw new ReferenceError(
-                `label ${name} already exists (${context[name]!.toString(16)})`
-            );
+            throw new RedefinedError(name, context[name]!.toString(16));
         }
     };
 

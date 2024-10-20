@@ -32,7 +32,7 @@ export const deviceProperties = () => {
         "setName": setDeviceName,
         "name": () => deviceName,
         "reducedCore": setReducedCore,
-        "chooseUnsuuportedInstructions": unsupported.choose,
+        "chooseUnsupportedInstructions": unsupported.choose,
         "public": {
             "name": name,
             "hasReducedCore": hasReducedCore,

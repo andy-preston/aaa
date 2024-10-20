@@ -2,6 +2,7 @@ import { assertEquals, assertThrows } from "assert";
 import { newContext } from "./context.ts";
 import { newPass } from "./pass.ts";
 import { newState } from "./mod.ts";
+import { JavascriptError, NotDefinedError } from "../errors/errors.ts";
 
 Deno.test("Simple expressions do not require a `return`", () => {
     const context = newContext(newPass(() => {}));
@@ -40,7 +41,7 @@ Deno.test("An unknown variable throws a reference error", () => {
     const context = newContext(newPass(() => {}));
     assertThrows(
         () => context.value("this.test = plop * 10;"),
-        ReferenceError,
+        NotDefinedError,
         "plop is not defined"
     );
 });
@@ -60,7 +61,7 @@ Deno.test("Syntax errors get thrown too", () => {
     const context = newContext(newPass(() => {}));
     assertThrows(
         () => context.value("this is just nonsense"),
-        SyntaxError,
+        JavascriptError,
         "Unexpected identifier 'is'"
     );
 });

@@ -10,11 +10,10 @@ export const openOutput = (topFileName: FileName) => {
     let hex: Hex | undefined = newHexFile();
 
     const codeBlock = (block: CodeBlock) => {
-        listing.codeBlock(block);
-        block.errors.forEach(error => {
-            listing.error(error);
+        if (block.errors.length > 0) {
             hex = undefined;
-        });
+        }
+        listing.codeBlock(block);
         hex?.codeBlock(block);
     };
 

@@ -19,50 +19,66 @@ const object = (block: CodeBlock) => {
     return `${addressHex} ${object}`;
 };
 
-const arrow = ">".repeat(addressWidth + 1 + objectWidth);
+const padding = (pad: ">" | " ") => pad.repeat(addressWidth + 1 + objectWidth);
 
 export const openListing = (file: File) => {
     let newLine = false;
-    let sourceLine = "";
+    let rawLine = "";
     let currentLine = 0;
     let currentFile = "";
 
-    const numberedLine = (sourceLine: string) => {
+    const numberedLine = (rawLine: string) => {
         const line = `${currentLine + 1}`.padStart(4, " ");
-        return `${line} ${sourceLine}`;
+        return `${line} ${rawLine}`;
+    };
+
+    const sourceLine = (objectCode: string) => {
+        file.write(`${objectCode.padEnd(objectWidth)} ${numberedLine(rawLine)}`);
+        rawLine = "";
+        newLine = false;
+    };
+
+    const errorLine = (message: string) => {
+        file.write(`${padding(">")} ${numberedLine(message)}`);
     };
 
     const source = (line: Line) => {
+        if (newLine) {
+            sourceLine(padding(" "));
+        }
         if (line.filename != currentFile) {
             const underline = "=".repeat(line.filename.length);
             file.write(`\n${line.filename}\n${underline}\n`);
             currentFile = line.filename;
         }
         currentLine = line.lineNumber;
-        sourceLine = line.rawLine;
+        rawLine = line.rawLine;
         newLine = true;
     };
 
     const error = (error: ErrorWithHint) => {
+        if (newLine) {
+            sourceLine(padding(" "));
+        }
         const humanName = error.name.replace(/([A-Z])/g, " $1").trim();
         const message = `${humanName}: ${error.message}`;
-        file.write(`${arrow} ${numberedLine(message)}`);
+        errorLine(message);
         if (error.hint) {
-            file.write(`${arrow} ${numberedLine(error.hint)}`);
+            errorLine(error.hint);
         }
     };
 
     const codeBlock = (block: CodeBlock) => {
-        if (newLine || block.code.length > 0) {
-            file.write(`${object(block)} ${numberedLine(sourceLine)}`);
-            sourceLine = "";
-            newLine = false;
+        block.errors.forEach(errorObject => {
+            error(errorObject);
+        });
+        if (block.code.length > 0) {
+            sourceLine(object(block));
         }
     };
 
     return {
         "codeBlock": codeBlock,
-        "source": source,
-        "error": error
-    }
+        "source": source
+    };
 };

@@ -63,7 +63,7 @@ export const deviceChooser = (
         for (const [key, value] of Object.entries(fullSpec)) {
             switch (key) {
                 case "unsupportedInstructions":
-                    properties.chooseUnsuuportedInstructions(
+                    properties.chooseUnsupportedInstructions(
                         value as Array<string>
                     );
                     break;

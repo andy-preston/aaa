@@ -1,3 +1,4 @@
+import { OperandCountError } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
 import { dataMemoryTypes } from "./data-memory.ts";
 import type { NumericOperand } from "./numeric.ts";
@@ -31,15 +32,9 @@ export const checkCount = (
     list: SymbolicOperands,
     expected: Array<string>
 ) => {
-    if (list.length == expected.length) {
-        return;
-    }
-    const descriptions = expected.length == 0
-        ? "none"
-        : expected.map(description).join(" and ");
-    throw new Error(
-        `Incorrect number of operands - expecting ${descriptions} got ${list}`
-    );
+    if (list.length != expected.length) {
+        throw new OperandCountError(expected.map(description), list);
+    };
 };
 
 const convertNumeric = (

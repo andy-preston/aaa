@@ -1,8 +1,13 @@
 {
-    "unsupportedInstructions": [
-        "multiply", "readModifyWrite", "DES",
-        "FlashMore128", "FlashMore8", "ELPM", "SPM.Z"
-    ],
+    "unsupportedInstructions": {
+        "value": [
+            "multiply", "readModifyWrite", "DES",
+            "FlashMore128", "FlashMore8", "ELPM", "SPM.Z"
+        ]
+    },
+    "reducedCore": {
+        "value": false
+    },
     "PRR": {
         "value": "20",
         "description": "Power Reduction Register ---------------- IO Address 00"

@@ -2,10 +2,8 @@ export class ErrorWithHint extends Error {
     hint: string;
     constructor(message: string, additionalHint: string) {
         super(message);
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, ErrorWithHint);
-        }
         this.hint = additionalHint;
+        this.name = "ErrorWithHint";
     }
 };
 
@@ -15,9 +13,31 @@ export class InternalError extends ErrorWithHint {
             message,
             "This should no have happened, please report this error"
         );
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, ErrorWithHint);
-        }
+        this.name = "InternalError";
+    }
+};
+
+export class NotDefinedError extends ErrorWithHint {
+    constructor(message: string) {
+        super(message, "");
+        this.name = "NotDefinedError";
+    }
+};
+
+export class RedefinedError extends ErrorWithHint {
+    constructor(name: string, value: string) {
+        super(`${name} already defined (${value})`, "");
+        this.name = "RedefinedError";
+    }
+}
+
+export class JavascriptError extends ErrorWithHint {
+    constructor(message: string) {
+        super(
+            `Javascript error: ${message}`,
+            ""
+        );
+        this.name = "JavascriptError";
     }
 };
 
@@ -30,9 +50,6 @@ export class OperandRangeError extends ErrorWithHint {
             `Operand out of range: ${problem}`,
             ""
         );
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, OperandRangeError);
-        }
         this.name = "OperandRangeError";
         this.operandName = name;
         this.operandValue = actual;
@@ -57,9 +74,6 @@ export class OperandCountError extends ErrorWithHint {
             `Incorrect number of operands - ${description}`,
             ""
         );
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, OperandCountError);
-        }
         this.name = "OperandCountError";
         this.expected = expectedDescriptions;
         this.actual = actualList;
@@ -74,9 +88,6 @@ export class UnsupportedInstruction extends ErrorWithHint {
             `${unsupportedMnemonic} is not available on ${deviceName}`,
             ""
         );
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, UnsupportedInstruction);
-        }
         this.name = "UnsupportedInstruction";
         this.mnemonic = unsupportedMnemonic
         this.device = deviceName;
@@ -87,9 +98,6 @@ export class UnknownInstruction extends ErrorWithHint {
     mnemonic: string;
     constructor(unknownMnemonic: string) {
         super(unknownMnemonic, "");
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, UnknownInstruction);
-        }
         this.name = "UnknownInstruction";
         this.mnemonic = unknownMnemonic
     }
@@ -102,9 +110,7 @@ export class DeviceSelectionError extends ErrorWithHint {
             `No device selected - can't ${reason}`,
             "Select a target device with the \"device\" directive at the top of your source file."
         );
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, UnknownInstruction);
-        }
+        this.name = "DeviceSelectionError",
         this.reason = reason
     }
 };

@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { InternalError } from "../errors/errors.ts";
+import { InternalError, NotDefinedError } from "../errors/errors.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
@@ -20,7 +20,7 @@ Deno.test("Operands must be defined, at least on the second pass", () => {
     state.pass.start(2);
     assertThrows(
         () => operands.numeric("byte", "notDefined"),
-        ReferenceError,
+        NotDefinedError,
         "notDefined is not defined"
     );
     state.pass.start(1);

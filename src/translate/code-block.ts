@@ -14,7 +14,7 @@ export type CodeBlock = {
 type CodeGenerator = Generator<CodeBlock, void, undefined>;
 
 export const codeBlockGenerator = (state: State) => {
-    let errors: Errors;
+    let errors: Errors = [];
     const translate = translator(state);
 
     // deno-lint-ignore no-explicit-any
@@ -59,12 +59,12 @@ export const codeBlockGenerator = (state: State) => {
             }
         } catch (error) {
             saveError(error);
+            return codeBlock([]);
         }
         return undefined;
     };
 
     return function* (line: Line): CodeGenerator {
-        errors = [];
         // Labels are processed before pokes because the label may refer to the poke
         labelWithError(line);
         yield* state.poke.peek().map(code => codeBlock(code));

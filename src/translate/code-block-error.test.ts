@@ -73,9 +73,8 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
     codeBlocksFrom(tokenLine("", "ADIW", ["R26", "5"])).forEach(block => {
         assertHasError(
             block.errors,
-            // TODO: custom error type
-            "Error",
-            "Without a device selected, it's not possible to determine which instructions are available"
+            "DeviceSelectionError",
+            "No device selected - can't determine which instructions are available"
         );
     });
 });
@@ -102,9 +101,8 @@ Deno.test("The device selection error is only shown once", () => {
     codeBlocksFrom(line).forEach(block => {
         assertHasError(
             block.errors,
-            // TODO: custom error type
-            "Error",
-            "Without a device selected, it's not possible to determine which instructions are available"
+            "DeviceSelectionError",
+            "No device selected - can't determine which instructions are available"
         );
     });
     codeBlocksFrom(line).forEach(block => {
@@ -133,8 +131,7 @@ Deno.test("Translation errors are ignored on first pass", () => {
     codeBlocksFrom(line).forEach(block => {
         assertHasError(
             block.errors,
-            // TODO: custom error type
-            "Error",
+            "OperandCountError",
             "Incorrect number of operands - expecting none got R2"
         );
     });
