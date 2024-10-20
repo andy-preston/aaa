@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "assert";
-import { newState } from "../state/mod.ts";
 import { InternalError } from "../errors/errors.ts";
+import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
 const state = newState();

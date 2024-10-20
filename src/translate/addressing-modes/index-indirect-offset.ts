@@ -1,8 +1,5 @@
-import {
-type OperandConverter,
-    type OperandIndex,
-    operandRangeError
-} from "../../operands/mod.ts";
+import { OperandRangeError } from "../../errors/errors.ts";
+import type { OperandConverter, OperandIndex } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
 import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
@@ -43,7 +40,7 @@ export const encode = (operands: OperandConverter) =>
         );
         const index = line.operands[indexIndex]!;
         if (!indexMapping.has(index)) {
-            operandRangeError("index register", indexDesc, index);
+            throw new OperandRangeError("index register", indexDesc, index);
         }
         const secondOperationBit = indexMapping.get(index)!;
         // In the official documentation, the store operations have

@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
+import { OperandRangeError } from "../../errors/errors.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -36,7 +37,7 @@ Deno.test("Absolute address too high on RJMP instruction", () => {
     state.device.choose("dummy", { "programEnd": 16 * 1024 });
     assertThrows(
         () => translate(tokenLine("", "RJMP", ["0x1111"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x1111"
     );
 });
@@ -49,7 +50,7 @@ Deno.test("Absolute address too low on RCALL instruction", () => {
     state.programMemory.origin(0x2000);
     assertThrows(
         () => translate(tokenLine("", "RCALL", ["0x500"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 0x500"
     );
 });

@@ -1,6 +1,6 @@
-import type { Line } from "./line.ts";
 import { InternalError } from "../errors/errors.ts";
 import type { Context } from "../state/context.ts";
+import type { Line } from "./line.ts";
 
 const buffer: Record<string, Array<string>> = {
     "javascript": [],

@@ -1,7 +1,6 @@
+import { OperandRangeError } from "../errors/errors.ts";
 import { type State } from "../state/mod.ts";
-import {
-    type Description, type OperandTypes, operandRangeError
-} from "./converter.ts";
+import { type Description, type OperandTypes } from "./converter.ts";
 import { numericValue, type NumericOperand } from "./numeric.ts";
 import type { SymbolicOperand } from "./symbolic.ts";
 
@@ -9,7 +8,7 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
     const programMemoryCheck = (address: NumericOperand) => {
         const end = state.programMemory.end();
         if (address > end) {
-            operandRangeError(
+            throw new OperandRangeError(
                 "",
                 `within program memory 0 - 0x${end.toString(16)}`,
                 `0x${address.toString(16)}`
@@ -20,7 +19,7 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
         (symbolic: SymbolicOperand, expectation: Description) => {
         const value = numericValue(state, symbolic);
         if (value < min || value > max) {
-            operandRangeError("", expectation, symbolic);
+            throw new OperandRangeError("", expectation, symbolic);
         }
         programMemoryCheck(value);
         return value;
@@ -30,11 +29,11 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
             const absolute = numericValue(state, symbolic);
             programMemoryCheck(absolute);
             if (absolute < 0) {
-                operandRangeError("", expectation, symbolic);
+                throw new OperandRangeError("", expectation, symbolic);
             }
             const distance = absolute - state.programMemory.address() - 1;
             if (distance < -limit || distance >= limit) {
-                operandRangeError("", expectation, symbolic);
+                throw new OperandRangeError("", expectation, symbolic);
             }
             return distance < 0 ? (limit * 2) + distance : distance;
         };

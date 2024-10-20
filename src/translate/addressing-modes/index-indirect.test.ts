@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
+import { OperandRangeError } from "../../errors/errors.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -46,7 +47,7 @@ Deno.test("Bad symbolic operand for LD", () => {
     state.device.choose("dummy", { "reducedCore": false });
     assertThrows(
         () => translate(tokenLine("", "LD", ["R15", "-Q"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: index register should be Z, Z+, -Z, Y, Y+, -Y, X, X+, -X not -Q"
     );
 });
@@ -58,7 +59,7 @@ Deno.test("Bad symbolic operand for ST", () => {
     state.device.choose("dummy", { "reducedCore": false });
     assertThrows(
         () => translate(tokenLine("", "ST", ["plop", "R16"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: index register should be Z, Z+, -Z, Y, Y+, -Y, X, X+, -X not plop"
     );
 });

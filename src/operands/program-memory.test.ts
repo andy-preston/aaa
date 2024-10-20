@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
+import { OperandRangeError } from "../errors/errors.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
@@ -11,12 +12,12 @@ Deno.test("An address is 0 - 0x3FFFFF", () => {
     assertEquals(operands.numeric("address", "0x3FFFFF"), 0x3fffff);
     assertThrows(
         () => operands.numeric("address", "-1"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4M Words) not -1"
     );
     assertThrows(
         () => operands.numeric("address", "0x400000"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4M Words) not 0x400000"
     );
 });
@@ -28,7 +29,7 @@ Deno.test("An address is should not exceed program memory", () => {
     state.device.choose("dummy", { "programEnd": 0x400 });
     assertThrows(
         () => operands.numeric("address", "0x400000"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be 22 bit address (0 - 0x3FFFFF) (4M Words) not 0x400000"
     );
 });
@@ -48,14 +49,14 @@ Deno.test("A relative jump is 0 - 4K after being adjusted from PC", () => {
     state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeJump", "-1"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not -1"
     );
 
     state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeJump", "2050"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative jump to 12 bit range (-2048 - 2047) not 2050"
     );
 });
@@ -67,7 +68,7 @@ Deno.test("A relative jump should not be outside program memory", () => {
     state.device.choose("dummy", { "programEnd": 32 });
     assertThrows(
         () => operands.numeric("relativeJump", "23"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be within program memory 0 - 0x10 not 0x17"
     );
 });
@@ -87,21 +88,21 @@ Deno.test("A relative branch is 0 - 127 after being adjusted from PC", () => {
     state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeBranch", "-1"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not -1"
     );
 
     state.programMemory.origin(0);
     assertThrows(
         () => operands.numeric("relativeBranch", "0x200"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x200"
     );
 
     state.programMemory.origin(0x200);
     assertThrows(
         () => operands.numeric("relativeBranch", "0x180"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 0x180"
     );
 });
@@ -113,7 +114,7 @@ Deno.test("A relative branch should not be outside program memory", () => {
     state.device.choose("dummy", { "programEnd": 0x20 });
     assertThrows(
         () => operands.numeric("relativeBranch", "0x11"),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be within program memory 0 - 0x10 not 0x11"
     );
 });

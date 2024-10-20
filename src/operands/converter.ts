@@ -24,15 +24,6 @@ export type OperandTypes = Map<string, OperandType>;
 
 const types: OperandTypes = new Map();
 
-export const operandRangeError = (
-    name: string,
-    expectation: string,
-    actual: string
-) => {
-    const problem = `${name} should be ${expectation} not ${actual}`.trim();
-    throw new RangeError(`Operand out of range: ${problem}`);
-};
-
 const description = (typeName: string): string =>
     types.has(typeName) ? types.get(typeName)![0] : "UNKNOWN";
 

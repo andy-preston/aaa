@@ -1,7 +1,6 @@
+import { OperandRangeError } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
-import {
-    type Description, type OperandTypes, operandRangeError
-} from "./converter.ts";
+import { type Description, type OperandTypes } from "./converter.ts";
 import { numericValue } from "./numeric.ts";
 import type { SymbolicOperand } from "./symbolic.ts";
 
@@ -20,7 +19,7 @@ export const registerPairTypes = (types: OperandTypes, state: State) => {
     ) => {
         const value = numericValue(state, symbolic);
         if (!pairs.includes(value)) {
-            operandRangeError("", expectation, symbolic);
+            throw new OperandRangeError("", expectation, symbolic);
         }
         return (value - 24) / 2;
     };
@@ -31,7 +30,7 @@ export const registerPairTypes = (types: OperandTypes, state: State) => {
     ) => {
         const value = numericValue(state, symbolic);
         if (!allPairs.includes(value)) {
-            operandRangeError("", expectation, symbolic);
+            throw new OperandRangeError("", expectation, symbolic);
         }
         return value / 2;
     };

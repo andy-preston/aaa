@@ -1,8 +1,7 @@
 import { InternalError } from "../errors/errors.ts";
 import type { FileName } from "../file-name.ts";
 import {
-    type LineGenerator, type LineNumber, type RawSource,
-    newLine
+    type LineGenerator, type LineNumber, type RawSource, newLine
 } from "./line.ts";
 
 type StackEntry = [FileName, IterableIterator<[LineNumber, RawSource]>];

@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
+import { OperandRangeError } from "../../errors/errors.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -73,14 +74,14 @@ Deno.test("Absolute address out of relative range on BRNE instruction", () => {
     state.programMemory.origin(0);
     assertThrows(
         () => translate(tokenLine("", "BRNE", ["130"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 130"
     );
     state.programMemory.origin(500);
     state.pass.start(2);
     assertThrows(
         () => translate(tokenLine("", "BREQ", ["100"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not 100"
     );
 });
@@ -92,7 +93,7 @@ Deno.test("Absolute address outside available program memory", () => {
     state.device.choose("dummy", { "programEnd": 0x40 });
     assertThrows(
         () => translate(tokenLine("", "BRNE", ["0x23"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be within program memory 0 - 0x20 not 0x23"
     );
 });
@@ -104,7 +105,7 @@ Deno.test("Absolute target of branch can't be below 0", () => {
     state.device.choose("dummy", { "programEnd": 0x40 });
     assertThrows(
         () => translate(tokenLine("", "BREQ", ["-1"])),
-        RangeError,
+        OperandRangeError,
         "Operand out of range: should be relative branch to 7 bit range (-64 - 63) not -1"
     );
 });
