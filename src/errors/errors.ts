@@ -14,4 +14,19 @@ export class OperandRangeError extends RangeError {
         this.operandName = name;
         this.operandValue = actual;
     }
-}
+};
+
+export class UnsupportedInstruction extends Error {
+    mnemonic: string;
+    device: string;
+
+    constructor(unsupportedMnemonic: string, deviceName: string) {
+        super(`${unsupportedMnemonic} is not available on ${deviceName}`);
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, OperandRangeError);
+        }
+        this.name = "UnsupportedInstruction";
+        this.mnemonic = unsupportedMnemonic
+        this.device = deviceName;
+    }
+};

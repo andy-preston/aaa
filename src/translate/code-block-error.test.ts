@@ -14,7 +14,7 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
 
     codeBlocksFrom(tokenLine("", "MUL", ["R26", "R28"])).forEach(block => {
         assertArrayIncludes(block.errors, [
-            "Error: MUL is not available on dummy"
+            "UnsupportedInstruction: MUL is not available on dummy"
         ]);
     });
 });
