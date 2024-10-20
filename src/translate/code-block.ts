@@ -2,7 +2,7 @@ import { macroLines, type Line } from "../source-code/mod.ts";
 import { type ProgramMemory, type State } from "../state/mod.ts";
 import { type GeneratedCode, translator } from "./translate.ts";
 
-type ErrorMessages = Array<string>;
+type ErrorMessages = Array<[string, string]>;
 
 const codeBlock = (
     block: GeneratedCode,
@@ -35,7 +35,7 @@ export const codeBlockGenerator = (state: State) => {
         }
         catch (error) {
             if (state.pass.showErrors() && error instanceof Error) {
-                errorMessages.push(`${error.name}: ${error.message}`)
+                errorMessages.push([error.name, error.message])
             }
         }
     };
@@ -45,7 +45,7 @@ export const codeBlockGenerator = (state: State) => {
             return translate(line);
         } catch (error) {
             if (state.pass.showErrors() && error instanceof Error) {
-                errorMessages.push(`${error.name}: ${error.message}`);
+                errorMessages.push([error.name, error.message]);
             }
             return [];
         }

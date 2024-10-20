@@ -14,7 +14,7 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
 
     codeBlocksFrom(tokenLine("", "MUL", ["R26", "R28"])).forEach(block => {
         assertArrayIncludes(block.errors, [
-            "UnsupportedInstruction: MUL is not available on dummy"
+            ["UnsupportedInstruction", "MUL is not available on dummy"]
         ]);
     });
 });
@@ -26,7 +26,9 @@ Deno.test("Returns error if attempt to assemble non-existant instruction", () =>
     state.device.choose("dummy", { "programEnd": 4096 });
 
     codeBlocksFrom(tokenLine("", "PLOP", ["R26", "R28"])).forEach(block => {
-        assertArrayIncludes(block.errors, ["UnknownInstruction: PLOP"]);
+        assertArrayIncludes(block.errors, [
+            ["UnknownInstruction", "PLOP"]
+        ]);
     });
 });
 
@@ -58,7 +60,7 @@ Deno.test("If no device is chosen, warn after the first assembly line", () => {
     });
     codeBlocksFrom(tokenLine("", "ADIW", ["R26", "5"])).forEach(block => {
         assertArrayIncludes(block.errors, [
-            "Error: Without a device selected, it's not possible to determine which instructions are available"
+            ["Error", "Without a device selected, it's not possible to determine which instructions are available"]
         ]);
     });
 });
@@ -84,14 +86,14 @@ Deno.test("The device selection error is only shown once", () => {
 
     codeBlocksFrom(line).forEach(block => {
         assertArrayIncludes(block.errors, [
-            "Error: Without a device selected, it's not possible to determine which instructions are available"
+            ["Error", "Without a device selected, it's not possible to determine which instructions are available"]
         ]);
     });
     codeBlocksFrom(line).forEach(block => {
-        assertEquals(0, block.errors.length, block.errors.join("\n"));
+        assertEquals(0, block.errors.length);
     });
     codeBlocksFrom(line).forEach(block => {
-        assertEquals(0, block.errors.length, block.errors.join("\n"));
+        assertEquals(0, block.errors.length);
     });
 });
 
@@ -111,9 +113,8 @@ Deno.test("Translation errors are ignored on first pass", () => {
 
     state.pass.start(2);
     codeBlocksFrom(line).forEach(block => {
-        assertArrayIncludes(
-            block.errors,
-            ["Error: Incorrect number of operands - expecting none got R2"]
-        );
+        assertArrayIncludes(block.errors, [
+            ["Error", "Incorrect number of operands - expecting none got R2"]
+        ]);
     });
 });
