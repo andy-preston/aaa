@@ -1,4 +1,4 @@
-import { UnsupportedInstruction } from "../errors/errors.ts";
+import { UnknownInstruction, UnsupportedInstruction } from "../errors/errors.ts";
 import type { Line } from "../source-code/mod.ts";
 import type { State } from "../state/mod.ts";
 import { addressingModeList } from "./addressing-modes.ts";
@@ -27,7 +27,7 @@ export const translator = (state: State) => {
             return code != undefined
         });
         if (code == undefined) {
-            throw new SyntaxError(`unknown instruction ${line.mnemonic}`);
+            throw new UnknownInstruction(line.mnemonic);
         }
         return code;
     };

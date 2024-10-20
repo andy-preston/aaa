@@ -3,7 +3,6 @@ export class InternalError extends Error { };
 export class OperandRangeError extends RangeError {
     operandName: string;
     operandValue: string;
-
     constructor(name: string, expectation: string, actual: string) {
         const problem = `${name} should be ${expectation} not ${actual}`.trim();
         super(`Operand out of range: ${problem}`);
@@ -19,14 +18,25 @@ export class OperandRangeError extends RangeError {
 export class UnsupportedInstruction extends Error {
     mnemonic: string;
     device: string;
-
     constructor(unsupportedMnemonic: string, deviceName: string) {
         super(`${unsupportedMnemonic} is not available on ${deviceName}`);
         if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, OperandRangeError);
+            Error.captureStackTrace(this, UnsupportedInstruction);
         }
         this.name = "UnsupportedInstruction";
         this.mnemonic = unsupportedMnemonic
         this.device = deviceName;
+    }
+};
+
+export class UnknownInstruction extends SyntaxError {
+    mnemonic: string;
+    constructor(unknownMnemonic: string) {
+        super(unknownMnemonic);
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, UnknownInstruction);
+        }
+        this.name = "UnknownInstruction";
+        this.mnemonic = unknownMnemonic
     }
 };

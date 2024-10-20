@@ -19,6 +19,17 @@ Deno.test("Returns error if attempt to assemble unavailable instruction", () => 
     });
 });
 
+Deno.test("Returns error if attempt to assemble non-existant instruction", () => {
+    const state = newState();
+    const codeBlocksFrom = codeBlockGenerator(state);
+    state.pass.start(2);
+    state.device.choose("dummy", { "programEnd": 4096 });
+
+    codeBlocksFrom(tokenLine("", "PLOP", ["R26", "R28"])).forEach(block => {
+        assertArrayIncludes(block.errors, ["UnknownInstruction: PLOP"]);
+    });
+});
+
 Deno.test("no unsupported instruction error on first pass", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
