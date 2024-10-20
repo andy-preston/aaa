@@ -103,10 +103,10 @@ export const deviceChooser = (
         };
 
         const baseSpec: DeviceSpec = loadJsonFile(
-            `./src/devices/${name.toLowerCase()}.json`
+            `./devices/${name.toLowerCase()}.json`
         );
         const familySpec: RawItems = "family" in baseSpec
-            ? loadJsonFile(`./src/devices/families/${baseSpec.family}.json`)
+            ? loadJsonFile(`./devices/families/${baseSpec.family}.json`)
             : {};
         loadSpec(baseSpec.spec);
         loadSpec(familySpec);
