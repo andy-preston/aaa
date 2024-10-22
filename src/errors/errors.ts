@@ -57,6 +57,29 @@ export class OperandOutOfRange extends ErrorWithHints {
         this.expectation = expectation;
     }
 };
+
+export class IOPortOutOfRange extends ErrorWithHints {
+    operandName: string;
+    operandValue: string;
+    expectation: string;
+    tooHigh: boolean;
+    constructor(
+        name: string,
+        expectation: string,
+        actual: string,
+        tooHigh: boolean
+    ) {
+        super(`${name} should be ${expectation} not ${actual}`.trim());
+        this.operandName = name;
+        this.operandValue = actual;
+        this.expectation = expectation;
+        this.tooHigh = tooHigh;
+    }
+    hinting(mnemonic: string) {
+        if (this.tooHigh) {
+            this.hint = ioOverflowAlternative(mnemonic);
+        }
+    }
 };
 
 export class DataMemoryUnavailable extends ErrorWithHints {

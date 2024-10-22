@@ -1,4 +1,5 @@
-import type { OperandConverter } from "../../operands/mod.ts";
+import { IOPortOutOfRange } from "../../errors/errors.ts";
+import type { OperandConverter, SymbolicOperand } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
 import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
@@ -12,13 +13,24 @@ const mapping: Map<string, string> = new Map([
 
 export const encode = (operands: OperandConverter) =>
     (line: Line): OptionalCode => {
+        const portAddress = (operand: SymbolicOperand) => {
+            try {
+                return operands.numeric("port", operand);
+            } catch (error) {
+                if (error instanceof IOPortOutOfRange) {
+                    error.hinting(line.mnemonic)
+                }
+                throw error;
+            }
+        };
+
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
         operands.checkCount(line.operands, ["port", "bitIndex"]);
         const operationBits = mapping.get(line.mnemonic)!;
         return template(`1001_10${operationBits} AAAA_Abbb`, [
-            ["A", operands.numeric("port", line.operands[0]!)],
+            ["A", portAddress(line.operands[0]!)],
             ["b", operands.numeric("bitIndex", line.operands[1]!)]
         ]);
     };

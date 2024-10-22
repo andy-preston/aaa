@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { OperandOutOfRange } from "../errors/errors.ts";
+import { IOPortOutOfRange, OperandOutOfRange } from "../errors/errors.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
@@ -69,17 +69,17 @@ Deno.test("A port is between 20 - 5F and is remapped to 00 - 3F", () => {
     assertEquals(operands.numeric("port", "0x5F"), 0x3f);
     assertThrows(
         () => operands.numeric("port", "10"),
-        OperandOutOfRange,
+        IOPortOutOfRange,
         "should be Data Memory mapped into IO space (0x20 - 0x5F) not 10"
     );
     assertThrows(
         () => operands.numeric("port", "-47"),
-        OperandOutOfRange,
+        IOPortOutOfRange,
         "should be Data Memory mapped into IO space (0x20 - 0x5F) not -47"
     );
     assertThrows(
         () => operands.numeric("port", "96"),
-        OperandOutOfRange,
+        IOPortOutOfRange,
         "should be Data Memory mapped into IO space (0x20 - 0x5F) not 96"
     );
 });

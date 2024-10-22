@@ -1,4 +1,4 @@
-import { OperandOutOfRange } from "../errors/errors.ts";
+import { IOPortOutOfRange, OperandOutOfRange } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
 import { type Description, type OperandTypes } from "./converter.ts";
 import { numericValue, type NumericOperand } from "./numeric.ts";
@@ -32,12 +32,16 @@ export const dataMemoryTypes = (types: OperandTypes, state: State) => {
         return value;
     };
 
-    const unscaledIO = dataMemory(0x20, 0x5f);
-
     const ioPort = (
         symbolic: SymbolicOperand,
         expectation: Description
-    ): NumericOperand => unscaledIO(symbolic, expectation) - 0x20;
+    ): NumericOperand => {
+        const value = numericValue(state, symbolic);
+        if (value < 0x20 || value > 0x5f) {
+            throw new IOPortOutOfRange("", expectation, symbolic, value > 0x5f);
+        }
+        return value - 0x20;
+    };
 
     // LDS/STS uses RAMPD to access memory above 64K
     // none of "my" parts have > 16K
