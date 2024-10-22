@@ -1,9 +1,9 @@
-import { type HintedError, ErrorWithHints } from "../errors/errors.ts";
+import { ErrorWithHints } from "../errors/errors.ts";
 import { type Line, macroLines } from "../source-code/mod.ts";
 import type { State } from "../state/mod.ts";
 import { type GeneratedCode, translator } from "./translate.ts";
 
-type Errors = Array<HintedError>;
+type Errors = Array<ErrorWithHints>;
 
 export type CodeBlock = {
     address: number,
@@ -24,7 +24,7 @@ export const codeBlockGenerator = (state: State) => {
             throw error;
         }
         if (state.pass.showErrors()) {
-            errors.push(error as HintedError);
+            errors.push(error);
         }
     }
 

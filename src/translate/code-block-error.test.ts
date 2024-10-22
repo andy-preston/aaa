@@ -2,10 +2,10 @@ import { assertArrayIncludes, assertEquals } from "assert";
 import { tokenLine } from "../source-code/testing.ts";
 import { newState } from "../state/mod.ts";
 import { codeBlockGenerator } from "./code-block.ts";
-import type { HintedError } from "../errors/errors.ts";
+import type { ErrorWithHints } from "../errors/errors.ts";
 
 const assertHasError = (
-    errors: Array<HintedError>,
+    errors: Array<ErrorWithHints>,
     expectedType: string,
     expectedMessage: string
 ) => {
