@@ -36,7 +36,7 @@ const failingTests: Array<TestTokens> = [
     ["", "SPM", ["6"]]
 ];
 
-Deno.test("Program Memory (Bad Syntax) Code Generation", () => {
+Deno.test("Program Memory SPM must have no operands of just Z+", () => {
     const state = newState();
     const translate = translator(state);
     state.pass.start(2);
