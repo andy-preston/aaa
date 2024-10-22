@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { OperandRangeError } from "../../errors/errors.ts";
+import { OperandOutOfRange } from "../../errors/errors.ts";
 import { tokenLine } from "../../source-code/testing.ts";
 import { newState } from "../../state/mod.ts";
 import { translator } from "../translate.ts";
@@ -35,7 +35,7 @@ Deno.test("A jump should not be beyond the end of program memory", () => {
     state.programMemory.origin(0);
     assertThrows(
         () => { translate(tokenLine("", "JMP", ["0x1001"])); },
-        OperandRangeError,
-        "Operand out of range: should be within program memory 0 - 0x1000 not 0x1001"
+        OperandOutOfRange,
+        "should be within program memory 0 - 0x1000 not 0x1001"
     );
 });

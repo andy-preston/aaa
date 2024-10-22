@@ -17,6 +17,7 @@ check)
     deno run -A npm:@biomejs/biome check --javascript-formatter-enabled=false
     ;;
 report)
+    rm -rf _coverage
     deno test --allow-read --coverage=_coverage
     deno coverage _coverage
     deno run -A ./analysis/import-graph.ts

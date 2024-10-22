@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { OperandRangeError } from "../errors/errors.ts";
+import { OperandOutOfRange } from "../errors/errors.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
@@ -15,13 +15,13 @@ Deno.test("A register should be between zero and 31", () => {
     assertEquals(operands.numeric("register", "31"), 31);
     assertThrows(
         () => operands.numeric("register", "-10"),
-        OperandRangeError,
-        "Operand out of range: should be register (R0 - R31) not -10"
+        OperandOutOfRange,
+        "should be register (R0 - R31) not -10"
     );
     assertThrows(
         () => operands.numeric("register", "42"),
-        OperandRangeError,
-        "Operand out of range: should be register (R0 - R31) not 42"
+        OperandOutOfRange,
+        "should be register (R0 - R31) not 42"
     );
 });
 
@@ -35,13 +35,13 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
     assertEquals(operands.numeric("immediateRegister", "31"), 15);
     assertThrows(
         () => operands.numeric("immediateRegister", "R0"),
-        OperandRangeError,
-        "Operand out of range: should be immediate register (R16 - R31) not R0"
+        OperandOutOfRange,
+        "should be immediate register (R16 - R31) not R0"
     );
     assertThrows(
         () => operands.numeric("immediateRegister", "42"),
-       OperandRangeError,
-        "Operand out of range: should be immediate register (R16 - R31) not 42"
+       OperandOutOfRange,
+        "should be immediate register (R16 - R31) not 42"
     );
 });
 
@@ -54,13 +54,13 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
     assertEquals(operands.numeric("multiplyRegister", "22"), 6);
     assertThrows(
         () => operands.numeric("multiplyRegister", "R24"),
-        OperandRangeError,
-        "Operand out of range: should be multiply register (R16 - R23) not R24"
+        OperandOutOfRange,
+        "should be multiply register (R16 - R23) not R24"
     );
     assertThrows(
         () => operands.numeric("multiplyRegister", "15"),
-        OperandRangeError,
-        "Operand out of range: should be multiply register (R16 - R23) not 15"
+        OperandOutOfRange,
+        "should be multiply register (R16 - R23) not 15"
     );
 });
 
@@ -75,13 +75,13 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
     assertEquals(operands.numeric("registerPair", "Z"), 3);
     assertThrows(
         () => operands.numeric("registerPair", "R20"),
-        OperandRangeError,
-        "Operand out of range: should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not R20"
+        OperandOutOfRange,
+        "should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not R20"
     );
     assertThrows(
         () => operands.numeric("registerPair", "200"),
-        OperandRangeError,
-        "Operand out of range: should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not 200"
+        OperandOutOfRange,
+        "should be register pair (R24:R25, R26:R27, R28:29, R30:R31) not 200"
     );
 });
 
@@ -98,13 +98,13 @@ Deno.test("Any register pair is any even numbered register", () => {
     assertEquals(operands.numeric("anyRegisterPair", "R30"), 15);
     assertThrows(
         () => operands.numeric("anyRegisterPair", "R31"),
-        OperandRangeError,
-        "Operand out of range: should be any register pair (R0:R1 - R30:R31) not R31"
+        OperandOutOfRange,
+        "should be any register pair (R0:R1 - R30:R31) not R31"
     );
     assertThrows(
         () => operands.numeric("anyRegisterPair", "32"),
-        OperandRangeError,
-        "Operand out of range: should be any register pair (R0:R1 - R30:R31) not 32"
+        OperandOutOfRange,
+        "should be any register pair (R0:R1 - R30:R31) not 32"
     );
 });
 
@@ -118,17 +118,17 @@ Deno.test("Some instructions require Z and no other register", () => {
     assertEquals(operands.numeric("z", "30"), 30);
     assertThrows(
         () => operands.numeric("z", "R31"),
-        OperandRangeError,
-        "Operand out of range: should be Z Register only (R30:R31) not R31"
+        OperandOutOfRange,
+        "should be Z Register only (R30:R31) not R31"
     );
     assertThrows(
         () => operands.numeric("z", "ZH"),
-        OperandRangeError,
-        "Operand out of range: should be Z Register only (R30:R31) not ZH"
+        OperandOutOfRange,
+        "should be Z Register only (R30:R31) not ZH"
     );
     assertThrows(
         () => operands.numeric("z", "X"),
-        OperandRangeError,
-        "Operand out of range: should be Z Register only (R30:R31) not X"
+        OperandOutOfRange,
+        "should be Z Register only (R30:R31) not X"
     );
 });

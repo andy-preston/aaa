@@ -1,9 +1,9 @@
-import { ErrorWithHint } from "../errors/errors.ts";
-import { macroLines, type Line } from "../source-code/mod.ts";
+import { type HintedError, ErrorWithHints } from "../errors/errors.ts";
+import { type Line, macroLines } from "../source-code/mod.ts";
 import type { State } from "../state/mod.ts";
 import { type GeneratedCode, translator } from "./translate.ts";
 
-type Errors = Array<ErrorWithHint>;
+type Errors = Array<HintedError>;
 
 export type CodeBlock = {
     address: number,
@@ -19,12 +19,12 @@ export const codeBlockGenerator = (state: State) => {
 
     // deno-lint-ignore no-explicit-any
     const saveError = (error: any) => {
-        if (!(error instanceof ErrorWithHint)) {
-            console.error(`UNHINTED ${error.name} - ${error.message}`);
+        if (!(error instanceof ErrorWithHints)) {
+            console.error(`UNEXPECTED ERROR ${error.name} - ${error.message}`);
             throw error;
         }
         if (state.pass.showErrors()) {
-            errors.push(error);
+            errors.push(error as HintedError);
         }
     }
 

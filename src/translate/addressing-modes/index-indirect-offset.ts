@@ -1,4 +1,4 @@
-import { OperandRangeError } from "../../errors/errors.ts";
+import { OperandOutOfRange } from "../../errors/errors.ts";
 import type { OperandConverter, OperandIndex } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
 import type { OptionalCode } from "../addressing-modes.ts";
@@ -15,7 +15,7 @@ const indexMapping: Map<string, string> = new Map([
     ["Y+", "1"]
 ]);
 
-const indexDesc = Array.from(indexMapping.keys()).join(", ");
+const indexDesc = Array.from(indexMapping.keys()).join(" or ");
 
 export const encode = (operands: OperandConverter) =>
     (line: Line): OptionalCode => {
@@ -40,15 +40,14 @@ export const encode = (operands: OperandConverter) =>
         );
         const index = line.operands[indexIndex]!;
         if (!indexMapping.has(index)) {
-            throw new OperandRangeError("index register", indexDesc, index);
+            throw new OperandOutOfRange("index register", indexDesc, index);
         }
         const secondOperationBit = indexMapping.get(index)!;
         // In the official documentation, the store operations have
         // "#### ###r rrrr ####" as their template rather than "d dddd".
         // e.g. `LDD Rd, Y` has "d dddd" but `STD Rd, Y` has "r rrrr".
         return template(
-            `10q0_qq${firstOperationBit}d dddd_${secondOperationBit}qqq`,
-            [
+            `10q0_qq${firstOperationBit}d dddd_${secondOperationBit}qqq`, [
                 ["d", register],
                 ["q", offset]
             ]

@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "assert";
-import { OperandRangeError } from "../errors/errors.ts";
+import { OperandOutOfRange } from "../errors/errors.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
 
@@ -30,13 +30,13 @@ Deno.test("6 bits is between 0 and 0x3F", () => {
     assertEquals(operands.numeric("sixBits", "0x3e"), 0x3e);
     assertThrows(
         () => operands.numeric("sixBits", "0b1111111"),
-        OperandRangeError,
-        "Operand out of range: should be six bit number (0 - 0x3F) not 0b1111111"
+        OperandOutOfRange,
+        "should be six bit number (0 - 0x3F) not 0b1111111"
     );
     assertThrows(
         () => operands.numeric("sixBits", "0x40"),
-        OperandRangeError,
-        "Operand out of range: should be six bit number (0 - 0x3F) not 0x40"
+        OperandOutOfRange,
+        "should be six bit number (0 - 0x3F) not 0x40"
     );
 });
 
@@ -49,8 +49,8 @@ Deno.test("A bit index is 0 - 7", () => {
     assertEquals(operands.numeric("bitIndex", "7"), 7);
     assertThrows(
         () => operands.numeric("bitIndex", "8"),
-        OperandRangeError,
-        "Operand out of range: should be bit index (0 - 7) not 8"
+        OperandOutOfRange,
+        "should be bit index (0 - 7) not 8"
     );
 });
 
@@ -65,13 +65,13 @@ Deno.test("A byte can be -127 - 128 OR 0 - 255", () => {
     assertEquals(operands.numeric("byte", "0"), 0);
     assertThrows(
         () => operands.numeric("byte", "-129"),
-        OperandRangeError,
-        "Operand out of range: should be byte (-127 - 128) or (0 - 0xFF) not -129"
+        OperandOutOfRange,
+        "should be byte (-127 - 128) or (0 - 0xFF) not -129"
     );
     assertThrows(
         () => operands.numeric("byte", "256"),
-        OperandRangeError,
-        "Operand out of range: should be byte (-127 - 128) or (0 - 0xFF) not 256"
+        OperandOutOfRange,
+        "should be byte (-127 - 128) or (0 - 0xFF) not 256"
     );
 });
 
@@ -84,12 +84,12 @@ Deno.test("A nybble should be between 0 and 0x0f", () => {
     assertEquals(operands.numeric("nybble", "15"), 15);
     assertThrows(
         () => operands.numeric("nybble", "17"),
-        OperandRangeError,
-        "Operand out of range: should be nybble (0 - 0x0F) not 17"
+        OperandOutOfRange,
+        "should be nybble (0 - 0x0F) not 17"
     );
     assertThrows(
         () => operands.numeric("nybble", "-1"),
-        OperandRangeError,
-        "Operand out of range: should be nybble (0 - 0x0F) not -1"
+        OperandOutOfRange,
+        "should be nybble (0 - 0x0F) not -1"
     );
 });

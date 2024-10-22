@@ -1,4 +1,4 @@
-import type { ErrorWithHint } from "../errors/errors.ts";
+import type { HintedError } from "../errors/errors.ts";
 import type { Line } from "../source-code/mod.ts";
 import type { CodeBlock } from "../translate/mod.ts";
 import type { File } from "./file.ts";
@@ -56,15 +56,15 @@ export const openListing = (file: File) => {
         newLine = true;
     };
 
-    const error = (error: ErrorWithHint) => {
+    const error = (error: HintedError) => {
         if (newLine) {
             sourceLine(padding(" "));
         }
         const humanName = error.name.replace(/([A-Z])/g, " $1").trim();
-        const message = `${humanName}: ${error.message}`;
-        errorLine(message);
-        if (error.hint) {
-            errorLine(error.hint);
+        errorLine(`${humanName}: ${error.message}`);
+        const hint = error.hint();
+        if (hint) {
+            errorLine(hint);
         }
     };
 

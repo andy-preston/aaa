@@ -1,4 +1,4 @@
-import { OperandRangeError } from "../errors/errors.ts";
+import { OperandOutOfRange } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
 import { type Description, type OperandTypes } from "./converter.ts";
 import { type NumericOperand, numericValue } from "./numeric.ts";
@@ -24,7 +24,7 @@ export const scaledNumericTypes = (
         (symbolic: SymbolicOperand, expectation: Description) => {
             const value = numericValue(state, symbolic);
             if (value < min || value > max) {
-                throw new OperandRangeError("", expectation, symbolic);
+                throw new OperandOutOfRange("", expectation, symbolic);
             }
             return scaler(value);
         };

@@ -1,4 +1,4 @@
-import { OperandCountError } from "../errors/errors.ts";
+import { IncorrectNumberOfOperands } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
 import { dataMemoryTypes } from "./data-memory.ts";
 import type { NumericOperand } from "./numeric.ts";
@@ -33,7 +33,7 @@ export const checkCount = (
     expected: Array<string>
 ) => {
     if (list.length != expected.length) {
-        throw new OperandCountError(expected.map(description), list);
+        throw new IncorrectNumberOfOperands(expected.map(description), list);
     };
 };
 

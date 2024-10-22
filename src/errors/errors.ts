@@ -1,161 +1,184 @@
-export class ErrorWithHint extends Error {
-    hint: string;
-    constructor(message: string, additionalHint: string) {
+export class ErrorWithHints extends Error {
+    constructor(message: string, name: string) {
         super(message);
-        this.hint = additionalHint;
-        this.name = "ErrorWithHint";
+        this.name = name;
     }
 };
 
-export class InternalError extends ErrorWithHint {
-    constructor(message: string) {
-        super(
-            message,
-            "This should no have happened, please report this error"
-        );
-        this.name = "InternalError";
-    }
-};
-
-export class NotDefinedError extends ErrorWithHint {
-    constructor(message: string) {
-        super(message, "");
-        this.name = "NotDefinedError";
-    }
-};
-
-export class RedefinedError extends ErrorWithHint {
-    constructor(name: string, value: string) {
-        super(`${name} already defined (${value})`, "");
-        this.name = "RedefinedError";
-    }
+export interface HintedError {
+    message: string;
+    name: string;
+    hint: () => string;
 }
 
-export class JavascriptError extends ErrorWithHint {
+export class InternalError extends ErrorWithHints implements HintedError {
     constructor(message: string) {
-        super(message, "");
-        this.name = "JavascriptError";
+        super(message, "InternalError");
     }
+    hint() { return "This should no have happened, please report this error"; }
 };
 
-export class AssemblerSyntaxError extends ErrorWithHint {
+export class NotDefinedError extends ErrorWithHints implements HintedError {
     constructor(message: string) {
-        super(message, "");
-        this.name = "AssemblerSyntaxError";
+        super(message, "NotDefinedError");
     }
+    hint() { return ""; }
 };
 
-export class MiscellaneousError extends ErrorWithHint {
-    constructor(message: string) {
-        super(message, "");
-        this.name = "MiscellaneousError";
+export class RedefinedError extends ErrorWithHints implements HintedError {
+    value: string;
+    constructor(name: string, value: string) {
+        super(`${name} already defined`, "RedefinedError");
+        this.value = value;
     }
+    hint() { return `${name} already has the value ${this.value}`; }
+}
+
+export class JavascriptError extends ErrorWithHints implements HintedError {
+    constructor(message: string) {
+        super(message, "JavascriptError");
+    }
+    hint() { return ""; }
 };
 
-export class OperandRangeError extends ErrorWithHint {
+export class AssemblerSyntaxError extends ErrorWithHints implements HintedError {
+    constructor(message: string) {
+        super(message, "AssemblerSyntaxError");
+    }
+    hint() { return ""; }
+};
+
+export class MiscellaneousError extends ErrorWithHints implements HintedError {
+    constructor(message: string) {
+        super(message, "MiscellaneousError");
+    }
+    hint() { return ""; }
+};
+
+export class OperandOutOfRange extends ErrorWithHints implements HintedError {
     operandName: string;
     operandValue: string;
+    expectation: string;
     constructor(name: string, expectation: string, actual: string) {
-        const problem = `${name} should be ${expectation} not ${actual}`.trim();
-        super(
-            `Operand out of range: ${problem}`,
-            ""
-        );
-        this.name = "OperandRangeError";
+        const message = `${name} should be ${expectation} not ${actual}`.trim();
+        super(message, "OperandOutOfRange");
         this.operandName = name;
         this.operandValue = actual;
+        this.expectation = expectation;
     }
+    hint() { return ""; }
 };
 
-export class AllocationError extends ErrorWithHint {
+export class DataMemoryUnavailable extends ErrorWithHints implements HintedError {
     bytes: number;
     available: number;
     constructor(bytes: number, available: number) {
-        const prefix = `Can't allocate 0x${bytes.toString(16)} bytes in SRAM,`;
-        const suffix = `there are only 0x${available.toString(16)} available`;
-        super(`${prefix} ${suffix}`, "");
-        this.name = "AllocationError";
+        const prefix = `Can't allocate ${bytes} bytes in SRAM,`;
+        const suffix = `there are only ${available} available`;
+        super(`${prefix} ${suffix}`, "DataMemoryUnavailable");
         this.bytes = bytes;
         this.available = available;
     }
+    hint() { return ""; }
 };
 
-export class ProgramMemoryError extends ErrorWithHint {
+export class ProgramMemoryUnavailable extends ErrorWithHints implements HintedError {
     address: number | undefined;
     endAddress: number;
     constructor(address: number | undefined, endAddress: number) {
         const prefix = address == undefined
             ? "out"
-            : `0x${address.toString(16)} beyond end`;
-        super(`${prefix} of program memory (0x${endAddress.toString(16)})`, "");
-        this.name = "ProgramMemoryError";
+            : `${address} beyond end`;
+        super(
+            `${prefix} of program memory (${endAddress})`,
+            "ProgramMemoryUnavailable"
+        );
         this.address = address;
         this.endAddress = endAddress;
     }
+    hint() { return ""; }
 };
 
-export class NumericError extends ErrorWithHint {
+export class NumericError extends ErrorWithHints implements HintedError {
+    value: number;
+    range: string;
     constructor(value: number, range: string) {
-        super(`${value} must be: ${range}`, "");
-        this.name = "NumericError";
+        super(`${value} must be: ${range}`, "NumericError");
+        this.value = value;
+        this.range = range;
     }
+    hint() { return ""; }
 };
 
-export class OperandCountError extends ErrorWithHint {
+export class IncorrectNumberOfOperands extends ErrorWithHints implements HintedError {
     expected: Array<string>;
     actual: Array<string>;
     constructor(
         expectedDescriptions: Array<string>,
-        actualList: Array<string>
+        actual: Array<string>
     ) {
         const expectedString = expectedDescriptions.length == 0
             ? "none"
             : expectedDescriptions.join(" and ");
-        const actualString = actualList.length == 0
+        const actualString = actual.length == 0
             ? "none"
-            : actualList.join(" and ");
-        const description = `expecting ${expectedString} got ${actualString}`;
+            : actual.join(" and ");
         super(
-            `Incorrect number of operands - ${description}`,
-            ""
+            `expecting ${expectedString} got ${actualString}`,
+            "IncorrectNumberOfOperands"
         );
-        this.name = "OperandCountError";
         this.expected = expectedDescriptions;
-        this.actual = actualList;
+        this.actual = actual;
     }
+    hint() { return ""; }
 };
 
-export class UnsupportedInstruction extends ErrorWithHint {
+const instructionAlternatives = new Map([
+    ['JMP', 'RJMP'],
+    ['CALL', "RCALL"],
+    ["EICALL", "CALL or RCALL"],
+    ["EIJMP", "JMP or RJMP"],
+])
+
+export class UnsupportedInstruction extends ErrorWithHints implements HintedError {
     mnemonic: string;
     device: string;
-    constructor(unsupportedMnemonic: string, deviceName: string) {
+    constructor(mnemonic: string, deviceName: string) {
         super(
-            `${unsupportedMnemonic} is not available on ${deviceName}`,
-            ""
+            `${mnemonic} is not available on ${deviceName}`,
+            "UnsupportedInstruction"
         );
-        this.name = "UnsupportedInstruction";
-        this.mnemonic = unsupportedMnemonic
+        this.mnemonic = mnemonic;
         this.device = deviceName;
     }
-};
-
-export class UnknownInstruction extends ErrorWithHint {
-    mnemonic: string;
-    constructor(unknownMnemonic: string) {
-        super(unknownMnemonic, "");
-        this.name = "UnknownInstruction";
-        this.mnemonic = unknownMnemonic
+    hint() {
+        if (instructionAlternatives.has(this.mnemonic)) {
+            const alternative = instructionAlternatives.get(this.mnemonic);
+            return `perhaps you should be using ${alternative}?`
+        }
+        return "";
     }
 };
 
-export class DeviceSelectionError extends ErrorWithHint {
+export class UnknownInstruction extends ErrorWithHints implements HintedError {
+    mnemonic: string;
+    constructor(unknownMnemonic: string) {
+        super(unknownMnemonic, "UnknownInstruction");
+        this.mnemonic = unknownMnemonic
+    }
+    hint() { return ""; }
+};
+
+export class DeviceSelectionError extends ErrorWithHints implements HintedError {
     reason: string;
     constructor(reason: string) {
         super(
             `No device selected - can't ${reason}`,
-            "Select a target device with the \"device\" directive at the top of your source file."
+            "DeviceSelectionError"
         );
-        this.name = "DeviceSelectionError",
         this.reason = reason
+    }
+    hint() {
+        return "Select a target device with the \"device\" directive at the top of your source file.";
     }
 };

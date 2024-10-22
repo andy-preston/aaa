@@ -1,5 +1,5 @@
 import {
-    AllocationError, MiscellaneousError, NumericError
+    DataMemoryUnavailable, MiscellaneousError, NumericError
 } from "../errors/errors.ts";
 import type { DeviceProperties } from "./mod.ts"; // mod = public
 
@@ -21,7 +21,7 @@ export const dataMemory = (properties: DeviceProperties) => {
         properties.name("determine size of SRAM");
         const available = ramAvailable();
         if (bytes > available) {
-            throw new AllocationError(bytes, available);
+            throw new DataMemoryUnavailable(bytes, available);
         }
     };
 

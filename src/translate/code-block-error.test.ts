@@ -2,10 +2,10 @@ import { assertArrayIncludes, assertEquals } from "assert";
 import { tokenLine } from "../source-code/testing.ts";
 import { newState } from "../state/mod.ts";
 import { codeBlockGenerator } from "./code-block.ts";
-import type { ErrorWithHint } from "../errors/errors.ts";
+import type { HintedError } from "../errors/errors.ts";
 
 const assertHasError = (
-    errors: Array<ErrorWithHint>,
+    errors: Array<HintedError>,
     expectedType: string,
     expectedMessage: string
 ) => {
@@ -131,8 +131,8 @@ Deno.test("Translation errors are ignored on first pass", () => {
     codeBlocksFrom(line).forEach(block => {
         assertHasError(
             block.errors,
-            "OperandCountError",
-            "Incorrect number of operands - expecting none got R2"
+            "IncorrectNumberOfOperands",
+            "expecting none got R2"
         );
     });
 });

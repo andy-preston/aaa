@@ -1,4 +1,4 @@
-import { OperandRangeError } from "../errors/errors.ts";
+import { OperandOutOfRange } from "../errors/errors.ts";
 import { type State } from "../state/mod.ts";
 import { type Description, type OperandTypes } from "./converter.ts";
 import { numericValue, type NumericOperand } from "./numeric.ts";
@@ -8,7 +8,7 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
     const programMemoryCheck = (address: NumericOperand) => {
         const end = state.programMemory.end();
         if (address > end) {
-            throw new OperandRangeError(
+            throw new OperandOutOfRange(
                 "",
                 `within program memory 0 - 0x${end.toString(16)}`,
                 `0x${address.toString(16)}`
@@ -19,7 +19,7 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
         (symbolic: SymbolicOperand, expectation: Description) => {
         const value = numericValue(state, symbolic);
         if (value < min || value > max) {
-            throw new OperandRangeError("", expectation, symbolic);
+            throw new OperandOutOfRange("", expectation, symbolic);
         }
         programMemoryCheck(value);
         return value;
@@ -29,11 +29,11 @@ export const programMemoryTypes = (types: OperandTypes, state: State) => {
             const absolute = numericValue(state, symbolic);
             programMemoryCheck(absolute);
             if (absolute < 0) {
-                throw new OperandRangeError("", expectation, symbolic);
+                throw new OperandOutOfRange("", expectation, symbolic);
             }
             const distance = absolute - state.programMemory.address() - 1;
             if (distance < -limit || distance >= limit) {
-                throw new OperandRangeError("", expectation, symbolic);
+                throw new OperandOutOfRange("", expectation, symbolic);
             }
             return distance < 0 ? (limit * 2) + distance : distance;
         };

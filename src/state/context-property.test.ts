@@ -15,7 +15,7 @@ Deno.test("A property can't be redefined to a new value", () => {
     assertThrows(
         () => { context.property("plop", 0x99); },
         RedefinedError,
-        "plop already defined (57)"
+        "plop already defined"
     );
 });
 

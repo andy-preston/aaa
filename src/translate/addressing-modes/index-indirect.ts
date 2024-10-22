@@ -1,4 +1,4 @@
-import { OperandRangeError } from "../../errors/errors.ts";
+import { OperandOutOfRange } from "../../errors/errors.ts";
 import type { OperandConverter, OperandIndex } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
 import type { OptionalCode } from "../addressing-modes.ts";
@@ -42,7 +42,7 @@ export const encode = (operands: OperandConverter) =>
         );
         const index = line.operands[indexIndex]!;
         if (!indexMapping.has(index)) {
-            throw new OperandRangeError("index register", indexDesc, index);
+            throw new OperandOutOfRange("index register", indexDesc, index);
         }
         const [firstOperationBit, suffix] = indexMapping.get(index)!;
         // In the official documentation, the store operations have

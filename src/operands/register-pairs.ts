@@ -1,4 +1,4 @@
-import { OperandRangeError } from "../errors/errors.ts";
+import { OperandOutOfRange } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
 import { type Description, type OperandTypes } from "./converter.ts";
 import { numericValue } from "./numeric.ts";
@@ -19,7 +19,7 @@ export const registerPairTypes = (types: OperandTypes, state: State) => {
     ) => {
         const value = numericValue(state, symbolic);
         if (!pairs.includes(value)) {
-            throw new OperandRangeError("", expectation, symbolic);
+            throw new OperandOutOfRange("", expectation, symbolic);
         }
         return (value - 24) / 2;
     };
@@ -30,7 +30,7 @@ export const registerPairTypes = (types: OperandTypes, state: State) => {
     ) => {
         const value = numericValue(state, symbolic);
         if (!allPairs.includes(value)) {
-            throw new OperandRangeError("", expectation, symbolic);
+            throw new OperandOutOfRange("", expectation, symbolic);
         }
         return value / 2;
     };

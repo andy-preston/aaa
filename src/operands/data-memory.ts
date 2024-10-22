@@ -1,4 +1,4 @@
-import { OperandRangeError } from "../errors/errors.ts";
+import { OperandOutOfRange } from "../errors/errors.ts";
 import type { State } from "../state/mod.ts";
 import { type Description, type OperandTypes } from "./converter.ts";
 import { numericValue, type NumericOperand } from "./numeric.ts";
@@ -10,7 +10,7 @@ export const dataMemoryTypes = (types: OperandTypes, state: State) => {
         // are allowed to access registers, IO and SRAM, not just SRAM
         const end = state.dataMemory.ramEnd();
         if (address > end) {
-            throw new OperandRangeError(
+            throw new OperandOutOfRange(
                 "",
                 `within data memory 0 - 0x${end.toString(16)}`,
                 `0x${address.toString(16)}`
@@ -26,7 +26,7 @@ export const dataMemoryTypes = (types: OperandTypes, state: State) => {
     ): NumericOperand => {
         const value = numericValue(state, symbolic);
         if (value < min || value > max) {
-            throw new OperandRangeError("", expectation, symbolic);
+            throw new OperandOutOfRange("", expectation, symbolic);
         }
         dataMemoryCheck(value);
         return value;
