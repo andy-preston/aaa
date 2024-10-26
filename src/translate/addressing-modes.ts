@@ -60,9 +60,9 @@ import type { GeneratedCode } from "./mod.ts";
 import { operandConverter } from "../operands/mod.ts";
 import type { Line } from "../source-code/mod.ts";
 import type { State } from "../state/mod.ts";
+import type { Errors } from "../errors/result.ts";
 
-export type OptionalCode = GeneratedCode | undefined;
-type AddressingMode = (line: Line) => OptionalCode;
+type AddressingMode = (line: Line) => GeneratedCode | Errors | undefined;
 
 export const addressingModeList = (state: State) : Array<AddressingMode> => {
     const converter = operandConverter(state);

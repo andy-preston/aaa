@@ -1,32 +1,32 @@
-import { OperandOutOfRange } from "../errors/errors.ts";
+import { errorResult, OutOfRange, type Errors } from "../errors/result.ts";
 import type { State } from "../state/mod.ts";
 import { type Description, type OperandTypes } from "./converter.ts";
 import { type NumericOperand, numericValue } from "./numeric.ts";
 import type { SymbolicOperand } from "./symbolic.ts";
 
-type Scaler = (unscaled: NumericOperand) =>
-    NumericOperand;
+type Scaler = (unscaled: number) => number;
 
-const noScaler = (value: NumericOperand) =>
-    value;
+const noScaler = (unscaled: number): number => unscaled;
 
-const immediateScaler = (numeric: NumericOperand) =>
-    numeric - 16;
+const immediateScaler = (unscaled: number): number => unscaled - 16;
 
-const signedOrUnsignedByte = (value: NumericOperand) =>
-    value < 0 ? 0x0100 + value : value;
+const signedOrUnsignedByte = (unscaled: number): number =>
+    unscaled < 0 ? 0x0100 + unscaled : unscaled;
 
-export const scaledNumericTypes = (
-    types: OperandTypes,
-    state: State
-) => {
+export const scaledNumericTypes = (types: OperandTypes, state: State) => {
+
     const scaledNumeric = (min: number, max: number, scaler: Scaler) =>
-        (symbolic: SymbolicOperand, expectation: Description) => {
-            const value = numericValue(state, symbolic);
-            if (value < min || value > max) {
-                throw new OperandOutOfRange("", expectation, symbolic);
+        (symbolic: SymbolicOperand, expectation: Description): NumericOperand | Errors => {
+            const numeric = numericValue(state, symbolic);
+            if (numeric.which == "errors") {
+                return numeric;
             }
-            return scaler(value);
+            if (numeric.value < min || numeric.value > max) {
+                return errorResult(
+                    OutOfRange(min, max, numeric.value, expectation)
+                );
+            }
+            return numeric.modify(scaler);
         };
 
     types.set("register", [

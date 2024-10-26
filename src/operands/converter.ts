@@ -1,4 +1,5 @@
 import { IncorrectNumberOfOperands } from "../errors/errors.ts";
+import type { Errors } from "../errors/result.ts";
 import type { State } from "../state/mod.ts";
 import { dataMemoryTypes } from "./data-memory.ts";
 import type { NumericOperand } from "./numeric.ts";
@@ -17,7 +18,7 @@ export type Description = string;
 type NumericValue = (
     operand: SymbolicOperand,
     expected: Description
-) => NumericOperand;
+) => NumericOperand | Errors;
 
 export type OperandType = [Description, NumericValue];
 
@@ -40,7 +41,7 @@ export const checkCount = (
 const convertNumeric = (
     typeName: string,
     symbolic: SymbolicOperand
-): NumericOperand => {
+): NumericOperand | Errors => {
     const [expected, convert] = types.get(typeName)!;
     return convert(symbolic, expected);
 };

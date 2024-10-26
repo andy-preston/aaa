@@ -1,7 +1,8 @@
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [string, number]> = new Map([
     ["CPC", ["0000_01", 2]],
@@ -23,21 +24,33 @@ const mapping: Map<string, [string, number]> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         const [prefix, operandCount] = mapping.get(line.mnemonic)!;
+
         operands.checkCount(
             line.operands,
             operandCount == 1 ? ["register"] : ["register", "register"]
         );
-        const registers = line.operands;
-        if (operandCount == 1) {
-            registers[1] = registers[0]!;
+
+        const firstRegister = operands.numeric("register", line.operands[0]!);
+        if (firstRegister.which == "errors") {
+            return firstRegister;
         }
+
+        const secondRegister = operands.numeric(
+            "register",
+            line.operands[operandCount == 1 ? 0 : 1]!
+        );
+        if (secondRegister.which == "errors") {
+            return secondRegister;
+        }
+
         return template(`${prefix}rd dddd_rrrr`, [
-            ["d", operands.numeric("register", registers[0]!)],
-            ["r", operands.numeric("register", registers[1]!)]
+            ["d", firstRegister.value],
+            ["r", secondRegister.value]
         ]);
     };

@@ -1,7 +1,9 @@
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter } from "../../operands/mod.ts";
+import { numericOperand } from "../../operands/numeric.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BRBC", ["1", undefined]],
@@ -27,24 +29,37 @@ const mapping: Map<string, [string, number?]> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         const [operationBit, impliedOperand] = mapping.get(line.mnemonic)!;
+
         operands.checkCount(
             line.operands,
             impliedOperand == undefined
                 ? ["bitIndex", "relativeBranch"]
                 : ["relativeBranch"]
         );
-        const bit =
-            impliedOperand == undefined
-                ? operands.numeric("bitIndex", line.operands[0]!)
-                : impliedOperand;
-        const branchTarget = line.operands[impliedOperand == undefined ? 1 : 0]!;
+
+        const bit = impliedOperand == undefined
+            ? operands.numeric("bitIndex", line.operands[0]!)
+            : numericOperand(impliedOperand);
+        if (bit.which == "errors") {
+            return bit;
+        }
+
+        const branchTarget = operands.numeric(
+            "relativeBranch",
+            line.operands[impliedOperand == undefined ? 1 : 0]!
+        );
+        if (branchTarget.which == "errors") {
+            return branchTarget;
+        }
+
         return template(`1111_0${operationBit}kk kkkk_ksss`, [
-            ["s", bit],
-            ["k", operands.numeric("relativeBranch", branchTarget)]
+            ["s", bit.value],
+            ["k", branchTarget.value]
         ]);
     };

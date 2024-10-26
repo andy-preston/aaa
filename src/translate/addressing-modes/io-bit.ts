@@ -1,8 +1,9 @@
 import { IOPortOutOfRange } from "../../errors/errors.ts";
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter, SymbolicOperand } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SBI", "10"],
@@ -12,25 +13,27 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
-        const portAddress = (operand: SymbolicOperand) => {
-            try {
-                return operands.numeric("port", operand);
-            } catch (error) {
-                if (error instanceof IOPortOutOfRange) {
-                    error.hinting(line.mnemonic)
-                }
-                throw error;
-            }
-        };
-
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         operands.checkCount(line.operands, ["port", "bitIndex"]);
+
+        const port = operands.numeric("port", line.operands[0]!);
+        if (port.which == "errors") {
+            return port;
+        }
+
+        const bitIndex = operands.numeric("bitIndex", line.operands[1]!);
+        if (bitIndex.which == "errors") {
+            return bitIndex;
+        }
+
         const operationBits = mapping.get(line.mnemonic)!;
+
         return template(`1001_10${operationBits} AAAA_Abbb`, [
-            ["A", portAddress(line.operands[0]!)],
-            ["b", operands.numeric("bitIndex", line.operands[1]!)]
+            ["A", port.value],
+            ["b", bitIndex.value]
         ]);
     };

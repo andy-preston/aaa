@@ -42,20 +42,24 @@ Deno.test("Labels are saved at the current programMemoryPos", () => {
     const state = newState();
     const codeBlocksFrom = codeBlockGenerator(state);
     state.pass.start(2);
-    state.device.choose("dummy", {
-        "programEnd": 4096,
-        "reducedCore": false
-    });
+    state.device.choose("dummy", { "programEnd": 4096, "reducedCore": false });
+
+    const assertLabelIs = (label: string, value: string) => {
+        assertEquals(
+            state.context.value(label),
+            { "which": "value", "value": value }
+        );
+    };
 
     codeBlocksFrom(tokenLine("label1", "INC", ["R5"])).forEach(ignoredBlock);
-    assertEquals(state.context.value("label1"), "0");
+    assertLabelIs("label1", "0");
 
     codeBlocksFrom(tokenLine("label2", "", [])).forEach(ignoredBlock);
-    assertEquals(state.context.value("label2"), "1");
+    assertLabelIs("label2", "1");
 
     codeBlocksFrom(tokenLine("label3", "INC", ["R5"])).forEach(ignoredBlock);
-    assertEquals(state.context.value("label3"), "1");
+    assertLabelIs("label3", "1");
 
     codeBlocksFrom(tokenLine("label4", "", [])).forEach(ignoredBlock);
-    assertEquals(state.context.value("label4"), "2");
+    assertLabelIs("label4", "2");
 });

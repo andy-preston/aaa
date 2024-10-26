@@ -1,18 +1,25 @@
 import { assertEquals, assertThrows } from "assert";
 import { OperandOutOfRange } from "../errors/errors.ts";
+import { Errors } from "../errors/result.ts";
 import { newState } from "../state/mod.ts";
 import { operandConverter } from "./converter.ts";
+import type { NumericOperand } from "./numeric.ts";
+
+const assertValueIs = (result: NumericOperand | Errors, expected: number) => {
+    assertEquals(result.which, "value");
+    assertEquals((result as NumericOperand).value, expected);
+}
 
 Deno.test("A register should be between zero and 31", () => {
     const state = newState();
     const operands = operandConverter(state);
     state.pass.start(2);
     state.device.choose("dummy", { "reducedCore": false })
-    assertEquals(operands.numeric("register", "R0"), 0);
-    assertEquals(operands.numeric("register", "6"), 6);
-    assertEquals(operands.numeric("register", "Z"), 30);
-    assertEquals(operands.numeric("register", "R31"), 31);
-    assertEquals(operands.numeric("register", "31"), 31);
+    assertValueIs(operands.numeric("register", "R0"), 0);
+    assertValueIs(operands.numeric("register", "6"), 6);
+    assertValueIs(operands.numeric("register", "Z"), 30);
+    assertValueIs(operands.numeric("register", "R31"), 31);
+    assertValueIs(operands.numeric("register", "31"), 31);
     assertThrows(
         () => operands.numeric("register", "-10"),
         OperandOutOfRange,
@@ -30,9 +37,9 @@ Deno.test("An immediate register should be 16-31 but converted to 0-15", () => {
     const operands = operandConverter(state);
     state.pass.start(2);
     state.device.choose("dummy", { "reducedCore": false })
-    assertEquals(operands.numeric("immediateRegister", "Z"), 14);
-    assertEquals(operands.numeric("immediateRegister", "R31"), 15);
-    assertEquals(operands.numeric("immediateRegister", "31"), 15);
+    assertValueIs(operands.numeric("immediateRegister", "Z"), 14);
+    assertValueIs(operands.numeric("immediateRegister", "R31"), 15);
+    assertValueIs(operands.numeric("immediateRegister", "31"), 15);
     assertThrows(
         () => operands.numeric("immediateRegister", "R0"),
         OperandOutOfRange,
@@ -50,8 +57,8 @@ Deno.test("A 'multiply register' should be 16-23 but converted to 0-7", () => {
     const operands = operandConverter(state);
     state.pass.start(2);
     state.device.choose("dummy", { "reducedCore": false })
-    assertEquals(operands.numeric("multiplyRegister", "R20"), 4);
-    assertEquals(operands.numeric("multiplyRegister", "22"), 6);
+    assertValueIs(operands.numeric("multiplyRegister", "R20"), 4);
+    assertValueIs(operands.numeric("multiplyRegister", "22"), 6);
     assertThrows(
         () => operands.numeric("multiplyRegister", "R24"),
         OperandOutOfRange,
@@ -69,10 +76,10 @@ Deno.test("A register pair should be R24:R25, R26:R27, R28:29, R30:R31", () => {
     const operands = operandConverter(state);
     state.pass.start(2);
     state.device.choose("dummy", { "reducedCore": false })
-    assertEquals(operands.numeric("registerPair", "R24"), 0);
-    assertEquals(operands.numeric("registerPair", "X"), 1);
-    assertEquals(operands.numeric("registerPair", "Y"), 2);
-    assertEquals(operands.numeric("registerPair", "Z"), 3);
+    assertValueIs(operands.numeric("registerPair", "R24"), 0);
+    assertValueIs(operands.numeric("registerPair", "X"), 1);
+    assertValueIs(operands.numeric("registerPair", "Y"), 2);
+    assertValueIs(operands.numeric("registerPair", "Z"), 3);
     assertThrows(
         () => operands.numeric("registerPair", "R20"),
         OperandOutOfRange,
@@ -90,12 +97,12 @@ Deno.test("Any register pair is any even numbered register", () => {
     const operands = operandConverter(state);
     state.pass.start(2);
     state.device.choose("dummy", { "reducedCore": false })
-    assertEquals(operands.numeric("anyRegisterPair", "R0"), 0);
-    assertEquals(operands.numeric("anyRegisterPair", "R2"), 1);
-    assertEquals(operands.numeric("anyRegisterPair", "R4"), 2);
-    assertEquals(operands.numeric("anyRegisterPair", "R10"), 5);
-    assertEquals(operands.numeric("anyRegisterPair", "R20"), 10);
-    assertEquals(operands.numeric("anyRegisterPair", "R30"), 15);
+    assertValueIs(operands.numeric("anyRegisterPair", "R0"), 0);
+    assertValueIs(operands.numeric("anyRegisterPair", "R2"), 1);
+    assertValueIs(operands.numeric("anyRegisterPair", "R4"), 2);
+    assertValueIs(operands.numeric("anyRegisterPair", "R10"), 5);
+    assertValueIs(operands.numeric("anyRegisterPair", "R20"), 10);
+    assertValueIs(operands.numeric("anyRegisterPair", "R30"), 15);
     assertThrows(
         () => operands.numeric("anyRegisterPair", "R31"),
         OperandOutOfRange,
@@ -113,9 +120,9 @@ Deno.test("Some instructions require Z and no other register", () => {
     const operands = operandConverter(state);
     state.pass.start(2);
     state.device.choose("dummy", { "reducedCore": false })
-    assertEquals(operands.numeric("z", "R30"), 30);
-    assertEquals(operands.numeric("z", "Z"), 30);
-    assertEquals(operands.numeric("z", "30"), 30);
+    assertValueIs(operands.numeric("z", "R30"), 30);
+    assertValueIs(operands.numeric("z", "Z"), 30);
+    assertValueIs(operands.numeric("z", "30"), 30);
     assertThrows(
         () => operands.numeric("z", "R31"),
         OperandOutOfRange,

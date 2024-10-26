@@ -1,8 +1,10 @@
 import { AssemblerSyntaxError } from "../../errors/errors.ts";
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter, SymbolicOperands } from "../../operands/mod.ts";
+import { numericOperand } from "../../operands/numeric.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["SPM", "1001_0101 111b_1000"], //     Implied Z OR explicit Z+
@@ -31,27 +33,34 @@ const validIndexOperand = (isStore: boolean, operands: SymbolicOperands) => {
 };
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         const isStore = line.mnemonic == "SPM";
         validIndexOperand(isStore, line.operands);
-        const register =
-            !isStore && line.operands.length == 2
-                ? operands.numeric("register", line.operands[0]!)
-                : undefined;
+
+        const register = !isStore && line.operands.length == 2
+            ? operands.numeric("register", line.operands[0]!)
+            : { "which": "nothing" as const }
+        if (register.which == "errors") {
+            return register;
+        }
+
         if (isStore) {
             return template(mapping.get(line.mnemonic)!, [
                 ["b", line.operands[0] == "Z+" ? 1 : 0]
             ]);
         }
-        if (register == undefined) {
+
+        if (register.which == "nothing") {
             return template(mapping.get(line.mnemonic)!, []);
         }
-        // This is still a bit horrible and needs more work
+
+        // mnemonic.index is still a bit horrible and needs more work
         const index = operands.symbolic(line.operands[1]!);
         return template(mapping.get(`${line.mnemonic}.${index}`)!, [
-            ["d", register]
+            ["d", register.value]
         ]);
     };

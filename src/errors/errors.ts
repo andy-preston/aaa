@@ -32,11 +32,6 @@ export class RedefinedError extends ErrorWithHints {
     }
 }
 
-export class JavascriptError extends ErrorWithHints {
-    // This comes straight from a JavaScript error
-    // maybe we can construct a hint based on the original message?
-};
-
 export class AssemblerSyntaxError extends ErrorWithHints {
     // TODO: Constructors with `message` should be avoided!
 };

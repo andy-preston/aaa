@@ -1,7 +1,8 @@
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["BREAK", "1001_0101 1001_1000"],
@@ -18,10 +19,12 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         operands.checkCount(line.operands, []);
+
         return template(mapping.get(line.mnemonic)!, []);
     };

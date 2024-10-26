@@ -1,8 +1,9 @@
 import { IOPortOutOfRange } from "../../errors/errors.ts";
+import type { Errors } from "../../errors/result.ts";
 import type {OperandConverter, OperandIndex, SymbolicOperand } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
     ["IN", ["0", 0, 1]],
@@ -10,28 +11,35 @@ const mapping: Map<string, [string, OperandIndex, OperandIndex]> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
-        const portAddress = (operand: SymbolicOperand) => {
-            try {
-                return operands.numeric("port", operand);
-            } catch (error) {
-                if (error instanceof IOPortOutOfRange) {
-                    error.hinting(line.mnemonic)
-                }
-                throw error;
-            }
-        };
-
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
-        const [operationBit, register, port] = mapping.get(line.mnemonic)!;
+
+        const [operationBit, registerPosition, portPosition] = mapping.get(
+            line.mnemonic
+        )!;
+
         operands.checkCount(
             line.operands,
-            register == 0 ? ["register", "port"] : ["port", "register"]
+            registerPosition == 0 ? ["register", "port"] : ["port", "register"]
         );
+
+        const register = operands.numeric(
+            "register",
+            line.operands[registerPosition]!
+        );
+        if (register.which == "errors") {
+            return register;
+        }
+
+        const port = operands.numeric("port", line.operands[portPosition]!);
+        if (port.which == "errors") {
+            return port;
+        }
+
         return template(`1011_${operationBit}AAd dddd_AAAA`, [
-            ["d", operands.numeric("register", line.operands[register]!)],
-            ["A", portAddress(line.operands[port]!)]
+            ["d", register.value],
+            ["A", port.value]
         ]);
     };

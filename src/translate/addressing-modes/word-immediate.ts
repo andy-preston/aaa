@@ -1,7 +1,8 @@
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter } from "../../operands/mod.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, string> = new Map([
     ["ADIW", "0"],
@@ -9,14 +10,27 @@ const mapping: Map<string, string> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         operands.checkCount(line.operands, ["registerPair", "sixBits"]);
+
+        const registerPair = operands.numeric("registerPair", line.operands[0]!);
+        if (registerPair.which == "errors") {
+            return registerPair;
+        }
+
+        const numeric = operands.numeric("sixBits", line.operands[1]!);
+        if (numeric.which == "errors") {
+            return numeric;
+        }
+
         const operationBit = mapping.get(line.mnemonic)!;
+
         return template(`1001_011${operationBit} KKdd_KKKK`, [
-            ["d", operands.numeric("registerPair", line.operands[0]!)],
-            ["K", operands.numeric("sixBits", line.operands[1]!)]
+            ["d", registerPair.value],
+            ["K", numeric.value]
         ]);
     };

@@ -1,7 +1,9 @@
+import type { Errors } from "../../errors/result.ts";
 import type { OperandConverter } from "../../operands/mod.ts";
+import { numericOperand } from "../../operands/numeric.ts";
 import type { Line } from "../../source-code/mod.ts";
-import type { OptionalCode } from "../addressing-modes.ts";
 import { template } from "../template.ts";
+import type { GeneratedCode } from "../translate.ts";
 
 const mapping: Map<string, [string, number?]> = new Map([
     ["BCLR", ["1", undefined]],
@@ -25,18 +27,26 @@ const mapping: Map<string, [string, number?]> = new Map([
 ]);
 
 export const encode = (operands: OperandConverter) =>
-    (line: Line): OptionalCode => {
+    (line: Line): GeneratedCode | Errors | undefined => {
         if (!mapping.has(line.mnemonic)) {
             return undefined;
         }
+
         const [operationBit, impliedOperand] = mapping.get(line.mnemonic)!;
+
         operands.checkCount(
             line.operands,
             impliedOperand == undefined ? ["bitIndex"] : []
         );
-        const operand =
-            impliedOperand == undefined
-                ? operands.numeric("bitIndex", line.operands[0]!)
-                : impliedOperand;
-        return template(`1001_0100 ${operationBit}sss_1000`, [["s", operand]]);
+
+        const operand = impliedOperand == undefined
+            ? operands.numeric("bitIndex", line.operands[0]!)
+            : numericOperand(impliedOperand);
+        if (operand.which == "errors") {
+            return operand;
+        }
+
+        return template(`1001_0100 ${operationBit}sss_1000`, [
+            ["s", operand.value]
+        ]);
     };

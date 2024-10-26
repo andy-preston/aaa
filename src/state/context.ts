@@ -1,4 +1,5 @@
-import { JavascriptError, RedefinedError, NotDefinedError } from "../errors/errors.ts";
+import { RedefinedError } from "../errors/errors.ts";
+import { type Errors, errorResult, javaScriptError } from "../errors/result.ts";
 import type { SymbolicOperand } from "../operands/mod.ts";
 import { returnIfExpression } from "./context-magic.ts";
 import type { Pass } from "./pass.ts";
@@ -11,42 +12,41 @@ type Directive = StringDirective | NumberDirective | ArrayDirective;
 type NumericGetter = () => number;
 type ContextFields = SimpleFunction | Directive | number;
 
+const contextValue = (value: string) => ({
+    "which": "value" as const,
+    "value": value
+});
+
+export type ContextValue = ReturnType<typeof contextValue>;
+
 export const newContext = (pass: Pass) => {
     const context: Record<string, ContextFields> = {
         "low": (n: number) => n & 0xff,
         "high": (n: number) => (n >> 8) & 0xff
     };
 
-    const value = (jsSource: string): string => {
+    const value = (jsSource: string): ContextValue | Errors => {
         const trimmed = jsSource.trim().replace(/;*$/, "").trim();
         if (trimmed == "") {
-            return "";
+            return contextValue("");
         }
         const functionBody = `with (this) { ${returnIfExpression(trimmed)}; }`;
         try {
             const result = new Function(functionBody).call(context);
-            return result == undefined ? "" : `${result}`;
-        } catch (error) {
-            if (error instanceof ReferenceError) {
-                throw new NotDefinedError(error.message);
+            return contextValue(result == undefined ? "" : `${result}`.trim());
+        } catch (exception) {
+            if (exception instanceof Error) {
+                return errorResult(javaScriptError(exception));
             }
-            if (error instanceof Error) {
-                throw new JavascriptError(error.message);
-            }
-            throw error;
+            throw exception;
         }
     };
 
-    const operand = (operand: SymbolicOperand): string => {
-        try {
-            return value(operand).trim();
-        }
-        catch (error) {
-            if (pass.ignoreErrors() && error instanceof Error) {
-                return "0";
-            }
-            throw error;
-        }
+    const operand = (operand: SymbolicOperand): ContextValue | Errors => {
+        const fromContext = value(operand);
+        return fromContext.which == "errors" && pass.ignoreErrors()
+            ? { "which": "value", "value": "0" }
+            : fromContext;
     };
 
     const directive = (name: string, directive: Directive) => {
